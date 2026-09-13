@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Secretary AI</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f7f8fc;
+        color: #172033;
+        line-height: 1.6;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    nav {
+        height: 72px;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 7%;
+        border-bottom: 1px solid #e8eaf0;
+    }
+
+    .logo {
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .home-button {
+        padding: 10px 20px;
+        border: 1px solid #d9dce5;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #202638;
+    }
+
+    .login-button {
+        padding: 11px 21px;
+        border-radius: 8px;
+        background: #5b55e8;
+        color: white !important;
+        font-weight: 600;
+    }
+
+    /* =========================
+       REGISTER AREA
+    ========================= */
+
+    .register-section {
+        min-height: calc(100vh - 72px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 20px;
+
+        background:
+            radial-gradient(circle at 20% 20%, #e8e7ff 0, transparent 32%),
+            radial-gradient(circle at 80% 80%, #eeedff 0, transparent 32%),
+            linear-gradient(135deg, #f8f9ff, #ffffff);
+    }
+
+    .register-container {
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .register-heading {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-label {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 20px;
+        background: #eeedff;
+        color: #514bcf;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .register-heading h1 {
+        font-size: 40px;
+        line-height: 1.1;
+        letter-spacing: -1.5px;
+        margin-bottom: 12px;
+    }
+
+    .register-heading p {
+        color: #687183;
+        font-size: 16px;
+    }
+
+    /* =========================
+       FORM CARD
+    ========================= */
+
+    .register-card {
+        background: white;
+        border: 1px solid #e5e7ee;
+        border-radius: 18px;
+        padding: 35px;
+
+        box-shadow: 0 15px 40px rgba(30, 35, 60, 0.08);
+    }
+
+    .form-group {
+        margin-bottom: 21px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #30384a;
+    }
+
+    .form-group input {
+        width: 100%;
+        height: 48px;
+        padding: 0 14px;
+
+        border: 1px solid #d9dce5;
+        border-radius: 9px;
+
+        background: white;
+        color: #172033;
+
+        font-family: inherit;
+        font-size: 15px;
+
+        outline: none;
+
+        transition:
+            border-color 0.2s,
+            box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+        border-color: #5b55e8;
+        box-shadow: 0 0 0 3px rgba(91, 85, 232, 0.12);
+    }
+
+    .register-submit {
+        width: 100%;
+        height: 50px;
+
+        border: none;
+        border-radius: 9px;
+
+        background: #5b55e8;
+        color: white;
+
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        transition:
+            background 0.2s,
+            transform 0.2s;
+    }
+
+    .register-submit:hover {
+        background: #4f49d8;
+        transform: translateY(-1px);
+    }
+
+    .login-text {
+        text-align: center;
+        margin-top: 24px;
+        color: #687183;
+        font-size: 14px;
+    }
+
+    .login-text a {
+        color: #5b55e8;
+        font-weight: 700;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+        nav {
+            padding: 0 5%;
+        }
+
+        .logo {
+            font-size: 19px;
+        }
+
+        .home-button {
+            display: none;
+        }
+
+        .register-section {
+            padding: 50px 18px;
+        }
+
+        .register-heading h1 {
+            font-size: 34px;
+        }
+
+        .register-card {
+            padding: 28px 22px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav>
+<div class="logo">
+    SECRETARY AI
+</div>
+
+<div class="nav-links">
+
+    <a href="/" class="home-button">
+        Home
+    </a>
+
+    <a href="/login" class="login-button">
+        Login
+    </a>
+
+</div>
+
+</nav>
+
+<!-- =========================
+     REGISTER
+========================= -->
+
+<section class="register-section">
+
+<div class="register-container">
+
+    <div class="register-heading">
+
+        <div class="register-label">
+            GET STARTED
+        </div>
+
+        <h1>
+            Create your account
+        </h1>
+
+        <p>
+            Set up your Secretary AI account and start building
+            your business assistant.
+        </p>
+
+    </div>
+
+
+    <div class="register-card">
+
+        <form action="/register" method="POST">
+
+            <div class="form-group">
+
+                <label for="businessName">
+                    Business name
+                </label>
+
+                <input
+                    type="text"
+                    id="businessName"
+                    name="businessName"
+                    placeholder="Your business name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="register-submit">
+                Create account
+            </button>
+
+        </form>
+
+
+        <div class="login-text">
+
+            Already have an account?
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+</body>
+
+</html>

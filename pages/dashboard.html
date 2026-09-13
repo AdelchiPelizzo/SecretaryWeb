@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Dashboard - Secretary AI</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f7f8fc;
+        color: #172033;
+        line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+        height: 72px;
+        background: #ffffff;
+        border-bottom: 1px solid #e8eaf0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 7%;
+    }
+
+    .logo {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #171b2b;
+        text-decoration: none;
+    }
+
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .business-name {
+        color: #667085;
+        font-weight: 600;
+    }
+
+    .logout {
+        text-decoration: none;
+        color: #5b55e8;
+        font-weight: 700;
+    }
+
+    /* Dashboard */
+    .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 55px 25px;
+    }
+
+    .dashboard-header {
+        margin-bottom: 35px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2.3rem;
+        color: #171b2b;
+        margin-bottom: 8px;
+    }
+
+    .dashboard-header p {
+        color: #667085;
+        font-size: 1.05rem;
+    }
+
+    /* Status */
+    .status-card {
+        background: #ffffff;
+        border: 1px solid #e5e7ee;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .status-info h2 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    .status-info p {
+        color: #667085;
+    }
+
+    .status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        color: #238636;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        background: #238636;
+        border-radius: 50%;
+    }
+
+    /* Cards */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+    }
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #e5e7ee;
+        border-radius: 16px;
+        padding: 28px;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: #171b2b;
+    }
+
+    .card p {
+        color: #667085;
+        margin-bottom: 20px;
+    }
+
+    .card-button {
+        display: inline-block;
+        background: #5b55e8;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 17px;
+        border-radius: 8px;
+        font-weight: 700;
+    }
+
+    .card-button.secondary {
+        background: #eeedff;
+        color: #5b55e8;
+    }
+
+    /* Activity */
+    .activity {
+        margin-top: 30px;
+        background: #ffffff;
+        border: 1px solid #e5e7ee;
+        border-radius: 16px;
+        padding: 28px;
+    }
+
+    .activity h2 {
+        margin-bottom: 18px;
+        color: #171b2b;
+    }
+
+    .activity-empty {
+        color: #667085;
+        padding: 20px 0;
+    }
+
+    /* Mobile */
+    @media (max-width: 850px) {
+        .cards {
+            grid-template-columns: 1fr;
+        }
+
+        .status-card {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .nav-right .business-name {
+            display: none;
+        }
+    }
+
+    @media (max-width: 600px) {
+        nav {
+            padding: 0 5%;
+        }
+
+        .dashboard {
+            padding: 40px 18px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<nav>
+    <a href="/" class="logo">Secretary AI</a>
+
+
+<div class="nav-right">
+    <span class="business-name">Your Business</span>
+    <a href="#" class="logout">Log out</a>
+</div>
+
+
+</nav>
+
+<main class="dashboard">
+
+
+<div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Manage your AI Secretary and business settings.</p>
+</div>
+
+<div class="status-card">
+
+    <div class="status-info">
+        <h2>AI Secretary</h2>
+        <p>Your secretary is ready to handle incoming calls.</p>
+    </div>
+
+    <div class="status">
+        <span class="status-dot"></span>
+        Active
+    </div>
+
+</div>
+
+<div class="cards">
+
+    <div class="card">
+
+        <h2>Business profile</h2>
+
+        <p>
+            Manage your business name, phone number, opening hours
+            and general information.
+        </p>
+
+        <a href="/business" class="card-button">
+            Manage
+        </a>
+
+    </div>
+
+    <div class="card">
+
+        <h2>AI Secretary</h2>
+
+        <p>
+            Choose your secretary's personality and configure
+            how your AI assistant communicates with callers.
+        </p>
+
+        <a href="/secretary" class="card-button">
+            Configure
+        </a>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Appointments</h2>
+
+        <p>
+            Configure appointment rules and connect your
+            business calendar.
+        </p>
+
+        <a href="/appointments" class="card-button">
+            Manage
+        </a>
+
+    </div>
+
+</div>
+
+<div class="activity">
+
+    <h2>Recent activity</h2>
+
+    <p class="activity-empty">
+        No activity yet. Your recent calls and appointments
+        will appear here.
+    </p>
+
+</div>
+
+
+</main>
+
+</body>
+
+</html>
