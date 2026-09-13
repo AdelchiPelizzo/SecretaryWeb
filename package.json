@@ -1,0 +1,13 @@
+{
+  "name": "secretaryweb",
+  "version": "1.0.0",
+  "description": "Secretary AI web application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
