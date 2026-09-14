@@ -1,7 +1,10 @@
 const express = require("express");
 const path = require("path");
+require("dotenv").config();
+const connectDatabase = require("./config/database");
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
 
@@ -28,8 +31,12 @@ app.use(loginRoute);
 
 app.use(registerRoute);
 
+app.use("/locales", express.static(path.join(__dirname, "locales")));
+
 console.log("Register route loaded");
 
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`SecretaryWeb running on port ${PORT}`);
+connectDatabase().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 });

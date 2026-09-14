@@ -1,12 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Secretary AI</title>
-
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Secretary AI</title>
+<style>
         * {
             box-sizing: border-box;
             margin: 0;
@@ -443,393 +442,323 @@
             }
         }
     </style>
+<style>
+.language-selector-wrap{display:flex;align-items:center;margin-left:14px;}
+.language-selector{padding:7px 28px 7px 10px;border:1px solid rgba(0,0,0,.12);border-radius:8px;background:#fff;color:#333;font:inherit;cursor:pointer;max-width:170px;}
+@media(max-width:700px){.language-selector-wrap{margin-left:8px}.language-selector{max-width:130px;padding:6px 22px 6px 8px;}}
+</style>
 </head>
-
 <body>
-
 <!-- =========================
      NAVIGATION
 ========================= -->
-
 <nav>
-    <div class="logo">SECRETARY AI</div>
-
-    <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#personalities">Personalities</a>
-        <a href="#how-it-works">How it works</a>
-
-        <a href="#" class="login-button">Login</a>
-        <a href="/register" class="register-button">Register</a>
-    </div>
-</nav>
-
-
+<div class="logo">SECRETARY AI</div>
+<div class="nav-links">
+<a data-i18n="nav.features" href="#features">Features</a>
+<a data-i18n="nav.personalities" href="#personalities">Personalities</a>
+<a data-i18n="nav.how_it_works" href="#how-it-works">How it works</a>
+<a class="login-button" data-i18n="nav.login" href="#">Login</a>
+<a class="register-button" data-i18n="nav.register" href="/register">Register</a>
+</div>
+<div class="language-selector-wrap">
+<select class="language-selector" data-i18n-aria-label="secretary.language" id="languageSelector">
+<option value="ar">العربية</option>
+<option value="bg">Български</option>
+<option value="cs">Čeština</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="el">Ελληνικά</option>
+<option value="en">English</option>
+<option value="es">Español</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="ga">Gaeilge</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt">Português</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sl">Slovenščina</option>
+<option value="sv">Svenska</option>
+<option value="zh">中文</option>
+</select>
+</div></nav>
 <!-- =========================
      HERO
 ========================= -->
-
 <section class="hero">
-
-    <div class="hero-content">
-
-        <div class="hero-label">
-            YOUR AI BUSINESS SECRETARY
-        </div>
-
-        <h1>
-            Your business is always
-            <span>ready to answer.</span>
-        </h1>
-
-        <p>
+<div class="hero-content">
+<h1 data-i18n="hero.title"></h1>
+<p data-i18n="hero.description">
             An intelligent AI secretary that answers your calls,
             speaks naturally with your customers, manages appointments
             and helps your business stay available around the clock.
         </p>
-
-        <div class="hero-buttons">
-            <a href="/register" class="hero-register">
+<div class="hero-buttons">
+<a class="hero-register" data-i18n="hero.create_account" href="/register">
                 Create your account
             </a>
-
-            <a href="/login" class="hero-login">
+<a class="hero-login" data-i18n="hero.already_registered" href="/login">
                 Already registered?
             </a>
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
-
-
 <!-- =========================
      FEATURES
 ========================= -->
-
 <section class="features" id="features">
-
-    <div class="section-heading">
-        <h2>More than an answering machine</h2>
-
-        <p>
+<div class="section-heading">
+<h2 data-i18n="features.title">More than an answering machine</h2>
+<p data-i18n="features.intro">
             Secretary AI can interact with your customers,
             understand what they need and take action for your business.
         </p>
-    </div>
-
-
-    <div class="feature-grid">
-
-        <div class="feature-card">
-            <div class="feature-icon">☎</div>
-
-            <h3>Answers your calls</h3>
-
-            <p>
+</div>
+<div class="feature-grid">
+<div class="feature-card">
+<div class="feature-icon">☎</div>
+<h3 data-i18n="features.answers_calls">Answers your calls</h3>
+<p data-i18n="features.answers_calls_text">
                 Your AI secretary can answer incoming calls
                 and communicate naturally with your customers.
             </p>
-        </div>
-
-
-        <div class="feature-card">
-            <div class="feature-icon">◉</div>
-
-            <h3>Natural conversations</h3>
-
-            <p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">◉</div>
+<h3 data-i18n="features.natural">Natural conversations</h3>
+<p data-i18n="features.natural_text">
                 Customers can speak normally instead of navigating
                 complicated menus or pressing numbers.
             </p>
-        </div>
-
-
-        <div class="feature-card">
-            <div class="feature-icon">▣</div>
-
-            <h3>Appointments</h3>
-
-            <p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">▣</div>
+<h3 data-i18n="features.appointments">Appointments</h3>
+<p data-i18n="features.appointments_text">
                 Help customers arrange appointments while
                 keeping your business calendar organized.
             </p>
-        </div>
-
-
-        <div class="feature-card">
-            <div class="feature-icon">24</div>
-
-            <h3>Always available</h3>
-
-            <p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">24</div>
+<h3 data-i18n="features.available">Always available</h3>
+<p data-i18n="features.available_text">
                 Your business can have an intelligent first point
                 of contact even outside normal opening hours.
             </p>
-        </div>
-
-
-        <div class="feature-card">
-            <div class="feature-icon">AI</div>
-
-            <h3>Business intelligence</h3>
-
-            <p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">AI</div>
+<h3 data-i18n="features.intelligence">Business intelligence</h3>
+<p data-i18n="features.intelligence_text">
                 Configure how your secretary communicates and
                 how it should handle different customer requests.
             </p>
-        </div>
-
-
-        <div class="feature-card">
-            <div class="feature-icon">⚙</div>
-
-            <h3>Made for your business</h3>
-
-            <p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">⚙</div>
+<h3 data-i18n="features.custom">Made for your business</h3>
+<p data-i18n="features.custom_text">
                 Customize your secretary's personality,
                 behaviour and business information.
             </p>
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
-
-
 <!-- =========================
      PERSONALITIES
 ========================= -->
-
 <section class="personalities" id="personalities">
-
-    <div class="section-heading">
-
-        <h2>Choose your secretary</h2>
-
-        <p>
+<div class="section-heading">
+<h2 data-i18n="personality.title">Choose your secretary</h2>
+<p data-i18n="personality.intro">
             Every business is different.
             Choose the personality that best represents your company.
         </p>
-
-    </div>
-
-
-    <div class="personality-grid">
-
-
-        <!-- PROFESSIONAL -->
-
-        <div class="personality-card">
-
-            <div class="face">
-
-                <div class="hair"></div>
-
-                <div class="eyes">
-                    <div class="eye"></div>
-                    <div class="eye"></div>
-                </div>
-
-                <div class="nose"></div>
-
-                <div class="mouth"></div>
-
-            </div>
-
-            <h3>Professional</h3>
-
-            <div class="tagline">
-                Precise. Reliable. Organized.
-            </div>
-
-            <p>
+</div>
+<div class="personality-grid">
+<!-- PROFESSIONAL -->
+<div class="personality-card">
+<div class="face">
+<div class="hair"></div>
+<div class="eyes">
+<div class="eye"></div>
+<div class="eye"></div>
+</div>
+<div class="nose"></div>
+<div class="mouth"></div>
+</div>
+<h3 data-i18n="personality.professional">Professional</h3>
+<p data-i18n="personality.professional_text">
                 A confident and professional personality
                 designed for businesses where clarity and
                 efficiency are important.
             </p>
-
-        </div>
-
-
-        <!-- FRIENDLY -->
-
-        <div class="personality-card">
-
-            <div class="face">
-
-                <div class="hair"></div>
-
-                <div class="eyes">
-                    <div class="eye"></div>
-                    <div class="eye"></div>
-                </div>
-
-                <div class="nose"></div>
-
-                <div class="mouth"
-                     style="height: 23px;">
-                </div>
-
-            </div>
-
-            <h3>Friendly</h3>
-
-            <div class="tagline">
-                Warm. Helpful. Approachable.
-            </div>
-
-            <p>
+</div>
+<!-- FRIENDLY -->
+<div class="personality-card">
+<div class="face">
+<div class="hair"></div>
+<div class="eyes">
+<div class="eye"></div>
+<div class="eye"></div>
+</div>
+<div class="nose"></div>
+<div class="mouth" style="height: 23px;">
+</div>
+</div>
+<h3 data-i18n="personality.friendly">Friendly</h3>
+<p data-i18n="personality.friendly_text">
                 A welcoming personality that makes customers
                 feel comfortable and creates a more personal
                 conversation.
             </p>
-
-        </div>
-
-
-        <!-- ENERGETIC -->
-
-        <div class="personality-card">
-
-            <div class="face">
-
-                <div class="hair"></div>
-
-                <div class="eyes">
-                    <div class="eye"></div>
-                    <div class="eye"></div>
-                </div>
-
-                <div class="nose"></div>
-
-                <div class="mouth"
-                     style="transform: rotate(-3deg);">
-                </div>
-
-            </div>
-
-            <h3>Energetic</h3>
-
-            <div class="tagline">
-                Positive. Fast. Proactive.
-            </div>
-
-            <p>
+</div>
+<!-- ENERGETIC -->
+<div class="personality-card">
+<div class="face">
+<div class="hair"></div>
+<div class="eyes">
+<div class="eye"></div>
+<div class="eye"></div>
+</div>
+<div class="nose"></div>
+<div class="mouth" style="transform: rotate(-3deg);">
+</div>
+</div>
+<h3 data-i18n="personality.energetic">Energetic</h3>
+<p data-i18n="personality.energetic_text">
                 An enthusiastic personality for businesses
                 that want a lively and energetic customer
                 experience.
             </p>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
-
-
 <!-- =========================
      HOW IT WORKS
 ========================= -->
-
 <section class="how-it-works" id="how-it-works">
-
-    <div class="section-heading">
-
-        <h2>Getting started is simple</h2>
-
-        <p>
+<div class="section-heading">
+<h2 data-i18n="setup.title">Getting started is simple</h2>
+<p data-i18n="setup.intro">
             Set up your AI secretary and let it become
             part of your business.
         </p>
-
-    </div>
-
-
-    <div class="steps">
-
-        <div class="step">
-
-            <div class="step-number">1</div>
-
-            <h3>Create your account</h3>
-
-            <p>
+</div>
+<div class="steps">
+<div class="step">
+<div class="step-number">1</div>
+<h3 data-i18n="setup.account">Create your account</h3>
+<p data-i18n="setup.account_text">
                 Register your business and enter the
                 information your secretary needs.
             </p>
-
-        </div>
-
-
-        <div class="step">
-
-            <div class="step-number">2</div>
-
-            <h3>Configure your secretary</h3>
-
-            <p>
+</div>
+<div class="step">
+<div class="step-number">2</div>
+<h3 data-i18n="setup.configure">Configure your secretary</h3>
+<p data-i18n="setup.configure_text">
                 Choose a personality and configure how
                 your secretary should work.
             </p>
-
-        </div>
-
-
-        <div class="step">
-
-            <div class="step-number">3</div>
-
-            <h3>Connect your phone</h3>
-
-            <p>
+</div>
+<div class="step">
+<div class="step-number">3</div>
+<h3 data-i18n="setup.phone">Connect your phone</h3>
+<p data-i18n="setup.phone_text">
                 Connect your business phone service
                 and let your AI secretary answer calls.
             </p>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
-
-
 <!-- =========================
      FINAL CTA
 ========================= -->
-
 <section class="cta">
-
-    <h2>Give your business an AI secretary.</h2>
-
-    <p>
+<h2 data-i18n="cta.title">Give your business an AI secretary.</h2>
+<p data-i18n="cta.text">
         Let your customers talk to an intelligent assistant
         that is available when you need it.
     </p>
-
-    <a href="/register" class="cta-button">
+<a class="cta-button" data-i18n="hero.create_account" href="/register">
         Create your account
     </a>
-
 </section>
-
-
 <!-- =========================
      FOOTER
 ========================= -->
-
 <footer>
-
-    <div>
+<div>
         © 2026 Secretary AI
     </div>
-
-    <div>
-        Privacy · Terms · Contact
-    </div>
-
 </footer>
+<script>
+(function () {
+    const languages = [{"code": "ar", "name": "العربية"}, {"code": "bg", "name": "Български"}, {"code": "cs", "name": "Čeština"}, {"code": "da", "name": "Dansk"}, {"code": "de", "name": "Deutsch"}, {"code": "el", "name": "Ελληνικά"}, {"code": "en", "name": "English"}, {"code": "es", "name": "Español"}, {"code": "fi", "name": "Suomi"}, {"code": "fr", "name": "Français"}, {"code": "ga", "name": "Gaeilge"}, {"code": "hr", "name": "Hrvatski"}, {"code": "hu", "name": "Magyar"}, {"code": "it", "name": "Italiano"}, {"code": "ja", "name": "日本語"}, {"code": "nl", "name": "Nederlands"}, {"code": "pl", "name": "Polski"}, {"code": "pt", "name": "Português"}, {"code": "ro", "name": "Română"}, {"code": "ru", "name": "Русский"}, {"code": "sk", "name": "Slovenčina"}, {"code": "sl", "name": "Slovenščina"}, {"code": "sv", "name": "Svenska"}, {"code": "zh", "name": "中文"}];
+    const selector = document.getElementById("languageSelector");
 
+    function detectLanguage() {
+        const saved = localStorage.getItem("secretaryLanguage");
+        if (saved && languages.some(l => l.code === saved)) return saved;
+        const browser = (navigator.language || "en").toLowerCase().split("-")[0];
+        return languages.some(l => l.code === browser) ? browser : "en";
+    }
 
+    async function loadLanguage(lang) {
+        try {
+            const response = await fetch("/locales/" + lang + ".json", { cache: "no-store" });
+            if (!response.ok) throw new Error("Locale not found");
+            const translations = await response.json();
+
+            document.documentElement.lang = lang;
+            document.documentElement.dir = translations._meta && translations._meta.direction ? translations._meta.direction : "ltr";
+
+            document.querySelectorAll("[data-i18n]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.textContent = translations[key];
+                }
+            });
+
+            document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n-placeholder");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.placeholder = translations[key];
+                }
+            });
+
+            document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n-aria-label");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.setAttribute("aria-label", translations[key]);
+                }
+            });
+
+            if (selector) selector.value = lang;
+            localStorage.setItem("secretaryLanguage", lang);
+        } catch (error) {
+            console.error("Could not load language:", lang, error);
+            if (lang !== "en") loadLanguage("en");
+        }
+    }
+
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadLanguage(this.value);
+        });
+    }
+
+    loadLanguage(detectLanguage());
+})();
+</script>
 </body>
 </html>
