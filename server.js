@@ -12,6 +12,8 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+
+
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
