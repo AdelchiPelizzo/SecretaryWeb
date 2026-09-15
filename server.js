@@ -4,6 +4,7 @@ require("dotenv").config();
 const connectDatabase = require("./config/database");
 const sessionMiddleware = require("./config/session");
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.urlencoded({ extended: true }));
