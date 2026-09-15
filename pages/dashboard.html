@@ -5,11 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
 
 
 <title>Dashboard - Secretary AI</title>
 
-<style>
+<!-- <style>
     * {
         box-sizing: border-box;
         margin: 0;
@@ -53,9 +54,18 @@
     }
 
     .logout {
-        text-decoration: none;
-        color: #5b55e8;
+        border: none;
+        background: #5b55e8;
+        color: white;
         font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .logout:hover {
+        background: #4943c7;
     }
 
     /* Dashboard */
@@ -205,7 +215,7 @@
             font-size: 2rem;
         }
     }
-</style>
+</style> -->
 
 
 </head>
@@ -217,8 +227,10 @@
 
 
 <div class="nav-right">
-    <span class="business-name">Your Business</span>
-    <a href="#" class="logout">Log out</a>
+    <span class="business-name" id="loggedInUser">{{USER_EMAIL}}</span>
+    <form action="/logout" method="POST">
+        <button type="submit" class="logout">Log out</button>
+    </form>
 </div>
 
 

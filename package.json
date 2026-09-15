@@ -5,12 +5,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --ext js,mjs,cjs,json,html server.js"
+    "dev": "nodemon --ext js,mjs,cjs,json,html,css server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "connect-mongo": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-session": "^1.19.0",
     "mongoose": "^9.10.0",
     "nodemon": "^3.1.10"
   }

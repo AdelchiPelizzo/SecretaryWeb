@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Secretary AI</title>
+    <title>Login - Secretary AI</title>
+    <link rel="stylesheet" href="/css/style.css">
 
 <style>
     * {
@@ -23,7 +24,7 @@
 
     /* Navigation */
 
-    nav {
+    /*nav {
         height: 72px;
         background: #ffffff;
         border-bottom: 1px solid #e8eaf0;
@@ -57,7 +58,7 @@
     .nav-links .register {
         background: #5b55e8;
         color: #ffffff;
-    }
+    }*/
 
     /* Login */
 
@@ -192,8 +193,8 @@
     <a href="/" class="logo">Secretary AI</a>
 
     <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/register" class="register">Register</a>
+        <a href="/" class="home-button">Home</a>
+        <a href="/register" class="register-button">Register</a>
     </div>
 </nav>
 
@@ -208,7 +209,7 @@
 
         <div class="login-card">
            <!--  <form action="/login" method="POST"> -->
-            <form action="/dashboard" method="GET">
+            <form action="/login" method="POST">
 
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -237,9 +238,9 @@
                 <!--<button type="submit" class="login-button">
                     Log in
                 </button>-->
-                <a href="/dashboard" class="login-button">
+                <button type="submit" class="login-button">
                     Log in
-                </a>
+                </button>
 
             </form>
 
