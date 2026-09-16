@@ -1,374 +1,357 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointments - Secretary AI</title>
-    <link rel="stylesheet" href="/css/style.css">
 
-<!--     <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f7f8fc;
-            color: #172033;
-            line-height: 1.6;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointments - Secretary AI</title>
 
-        nav {
-            height: 72px;
-            background: white;
-            border-bottom: 1px solid #e8eaf0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 7%;
-        }
+<link rel="stylesheet" href="/css/style.css">
 
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            color: #5b55e8;
-            text-decoration: none;
-        }
 
-        .nav-links {
-            display: flex;
-            gap: 12px;
-        }
-
-        .nav-button {
-            text-decoration: none;
-            padding: 9px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: #172033;
-        }
-
-        .page-header {
-            text-align: center;
-            padding: 55px 20px 30px;
-        }
-
-        .page-header h1 {
-            margin: 0 0 10px;
-            font-size: 38px;
-        }
-
-        .page-header p {
-            margin: 0;
-            color: #667085;
-            font-size: 17px;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 900px;
-            margin: 0 auto 60px;
-        }
-
-        .card {
-            background: white;
-            border: 1px solid #e5e7ee;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 24px;
-        }
-
-        .card h2 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 22px;
-        }
-
-        .card-description {
-            color: #667085;
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
-
-        .calendar-status {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 20px;
-            border: 1px solid #e5e7ee;
-            border-radius: 12px;
-        }
-
-        .status-text {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .status-dot {
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            background: #98a2b3;
-        }
-
-        .status-label {
-            font-weight: 600;
-        }
-
-        .connect-button {
-            border: none;
-            background: #5b55e8;
-            color: white;
-            padding: 11px 20px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .connect-button:hover {
-            background: #4d47d1;
-        }
-
-        .form-group {
-            margin-bottom: 22px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d9dce5;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 15px;
-            background: white;
-        }
-
-        textarea {
-            min-height: 110px;
-            resize: vertical;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #5b55e8;
-        }
-
-        .hours-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-        }
-
-        .save-section {
-            text-align: right;
-        }
-
-        .save-button {
-            border: none;
-            background: #5b55e8;
-            color: white;
-            padding: 13px 24px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .save-button:hover {
-            background: #4d47d1;
-        }
-
-        @media (max-width: 700px) {
-            .page-header h1 {
-                font-size: 30px;
-            }
-
-            .card {
-                padding: 22px;
-            }
-
-            .calendar-status {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .hours-grid {
-                grid-template-columns: 1fr;
-            }
-
-            nav {
-                padding: 0 5%;
-            }
-        }
-    </style> -->
 </head>
 
 <body>
 
 <nav>
-    <a href="/" class="logo">Secretary AI</a>
 
-    <div class="nav-links">
-        <a href="/dashboard" class="nav-action-button">Dashboard</a>
-        <a href="/business" class="nav-action-button">Business</a>
-        <a href="/secretary" class="nav-action-button">AI Secretary</a>
-    </div>
+
+<a href="/" class="logo">Secretary AI</a>
+
+<div class="nav-links">
+    <a href="/dashboard" class="nav-action-button">Dashboard</a>
+    <a href="/business" class="nav-action-button">Business</a>
+    <a href="/secretary" class="nav-action-button">AI Secretary</a>
+</div>
+
+
 </nav>
 
 <section class="page-header">
-    <h1>Appointments</h1>
-    <p>Configure how your AI secretary handles customer appointments.</p>
+
+
+<h1>Appointments</h1>
+
+<p>Configure how your AI secretary handles customer appointments.</p>
+
+
 </section>
+
 <div class="appointments-page container">
 
-    <div class="card">
-        <h2>Calendar connection</h2>
 
-        <p class="card-description">
-            Connect your business calendar so your AI secretary can check availability
-            and schedule appointments for your customers.
-        </p>
+<div class="card">
 
-        <div class="calendar-status">
+    <h2>Calendar connection</h2>
 
-            <div class="status-text">
-                <span class="status-dot"></span>
+    <p class="card-description">
+        Connect your business calendar so your AI secretary can check availability
+        and schedule appointments for your customers.
+    </p>
 
-                <div>
-                    <div class="status-label">Google Calendar not connected</div>
-                    <div style="color: #667085; font-size: 14px;">
-                        Calendar connection will be available later.
-                    </div>
+    <div class="calendar-status">
+
+        <div class="status-text">
+
+            <span
+                id="calendarStatusDot"
+                class="status-dot"
+                style="background: #98a2b3;"
+            ></span>
+
+            <div>
+
+                <div
+                    id="calendarStatusLabel"
+                    class="status-label"
+                >
+                    Google Calendar not connected
                 </div>
+
+                <div
+                    id="calendarStatusDescription"
+                    style="color: #667085; font-size: 14px;"
+                >
+                    Connect your Google Calendar to enable appointments.
+                </div>
+
             </div>
 
-            <button type="button" class="connect-button">
-                Connect Calendar
-            </button>
-
         </div>
+
+        <a href="/calendar/connect" class="connect-button">
+            Connect Calendar
+        </a>
+
     </div>
 
-    <form action="#" method="POST">
+    <form
+        action="/calendar/select"
+        method="POST"
+        style="margin-top: 24px;"
+    >
 
-        <div class="card">
-            <h2>Appointment settings</h2>
+        <div class="form-group">
 
-            <p class="card-description">
-                Define the basic rules your AI secretary should follow when booking appointments.
-            </p>
+            <label for="calendarSelect">
+                Calendar used for appointments
+            </label>
 
-            <div class="form-group">
-                <label for="appointmentDuration">
-                    Default appointment duration
-                </label>
+            <select
+                id="calendarSelect"
+                name="calendarId"
+            >
+                <option value="">
+                    Select a calendar
+                </option>
+            </select>
 
-                <select id="appointmentDuration" name="appointmentDuration">
-                    <option value="15">15 minutes</option>
-                    <option value="30" selected>30 minutes</option>
-                    <option value="45">45 minutes</option>
-                    <option value="60">60 minutes</option>
-                    <option value="90">90 minutes</option>
-                    <option value="120">120 minutes</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="bookingWindow">
-                    How far in advance can customers book?
-                </label>
-
-                <select id="bookingWindow" name="bookingWindow">
-                    <option value="7">Up to 7 days</option>
-                    <option value="14">Up to 14 days</option>
-                    <option value="30" selected>Up to 30 days</option>
-                    <option value="60">Up to 60 days</option>
-                    <option value="90">Up to 90 days</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="bookingInstructions">
-                    Booking instructions
-                </label>
-
-                <textarea
-                    id="bookingInstructions"
-                    name="bookingInstructions"
-                    placeholder="For example: Ask the customer for their name and phone number before confirming the appointment."
-                ></textarea>
-            </div>
         </div>
 
-        <div class="card">
-            <h2>Availability</h2>
+<!--         <div class="save-section">
 
-            <p class="card-description">
-                These settings describe when the AI secretary is allowed to offer appointments.
-            </p>
-
-            <div class="hours-grid">
-
-                <div class="form-group">
-                    <label for="startTime">Start time</label>
-
-                    <input
-                        type="time"
-                        id="startTime"
-                        name="startTime"
-                        value="09:00"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="endTime">End time</label>
-
-                    <input
-                        type="time"
-                        id="endTime"
-                        name="endTime"
-                        value="18:00"
-                    >
-                </div>
-
-            </div>
-
-            <div class="form-group">
-                <label for="days">
-                    Available days
-                </label>
-
-                <select id="days" name="days">
-                    <option value="weekdays">Monday - Friday</option>
-                    <option value="monday-saturday">Monday - Saturday</option>
-                    <option value="all">Every day</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="save-section">
-            <button type="submit" class="save-button">
-                Save Appointment Settings
+            <button
+                type="submit"
+                class="save-button"
+            >
+                Save Calendar
             </button>
-        </div>
+
+        </div> -->
 
     </form>
 
 </div>
 
+
+<form action="#" method="POST">
+
+    <div class="card">
+
+        <h2>Appointment settings</h2>
+
+        <p class="card-description">
+            Define the basic rules your AI secretary should follow when booking appointments.
+        </p>
+
+        <div class="form-group">
+
+            <label for="appointmentDuration">
+                Default appointment duration
+            </label>
+
+            <select
+                id="appointmentDuration"
+                name="appointmentDuration"
+            >
+                <option value="15">15 minutes</option>
+                <option value="30" selected>30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">60 minutes</option>
+                <option value="90">90 minutes</option>
+                <option value="120">120 minutes</option>
+            </select>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="bookingWindow">
+                How far in advance can customers book?
+            </label>
+
+            <select
+                id="bookingWindow"
+                name="bookingWindow"
+            >
+                <option value="7">Up to 7 days</option>
+                <option value="14">Up to 14 days</option>
+                <option value="30" selected>Up to 30 days</option>
+                <option value="60">Up to 60 days</option>
+                <option value="90">Up to 90 days</option>
+            </select>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="bookingInstructions">
+                Booking instructions
+            </label>
+
+            <textarea
+                id="bookingInstructions"
+                name="bookingInstructions"
+                placeholder="For example: Ask the customer for their name and phone number before confirming the appointment."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Availability</h2>
+
+        <p class="card-description">
+            These settings describe when the AI secretary is allowed to offer appointments.
+        </p>
+
+        <div class="hours-grid">
+
+            <div class="form-group">
+
+                <label for="startTime">
+                    Start time
+                </label>
+
+                <input
+                    type="time"
+                    id="startTime"
+                    name="startTime"
+                    value="09:00"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="endTime">
+                    End time
+                </label>
+
+                <input
+                    type="time"
+                    id="endTime"
+                    name="endTime"
+                    value="18:00"
+                >
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+
+            <label for="days">
+                Available days
+            </label>
+
+            <select
+                id="days"
+                name="days"
+            >
+                <option value="weekdays">
+                    Monday - Friday
+                </option>
+
+                <option value="monday-saturday">
+                    Monday - Saturday
+                </option>
+
+                <option value="all">
+                    Every day
+                </option>
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="save-section">
+
+        <button
+            type="submit"
+            class="save-button"
+        >
+            Save Appointment Settings
+        </button>
+
+    </div>
+
+</form>
+
+
+</div>
+
+<script>
+
+    fetch("/calendar/list")
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            const select = document.getElementById("calendarSelect");
+
+            const statusDot =
+                document.getElementById("calendarStatusDot");
+
+            const statusLabel =
+                document.getElementById("calendarStatusLabel");
+
+            const statusDescription =
+                document.getElementById("calendarStatusDescription");
+
+
+            if (data.calendars && data.calendars.length > 0) {
+
+                statusDot.style.background = "#12b76a";
+
+                statusLabel.textContent =
+                    "Google Calendar connected";
+
+                statusDescription.textContent =
+                    "Your Google Calendar is connected and ready for appointments.";
+
+                data.calendars.forEach(calendar => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = calendar.id;
+
+                    option.textContent = calendar.summary;
+
+                    select.appendChild(option);
+
+
+                    if (calendar.id === data.selectedCalendarId) {
+
+                        option.selected = true;
+
+                    }
+
+                });
+                id="0a7c4e"
+                select.addEventListener("change", () => {
+                    fetch("/calendar/select", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `calendarId=${encodeURIComponent(select.value)}`
+                    });
+                });
+            }
+        })
+
+        .catch(error => {
+
+            console.error(
+                "Failed to load calendars:",
+                error
+            );
+
+        });
+
+</script>
+
 </body>
+
 </html>
