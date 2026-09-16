@@ -52,4 +52,8 @@ const secretaryConfigSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("SecretaryConfig", secretaryConfigSchema);
+module.exports = mongoose.model(
+    "SecretaryConfig",
+    secretaryConfigSchema,
+    "secretaryConfigs"
+);

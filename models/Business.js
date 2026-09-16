@@ -64,7 +64,17 @@ const businessSchema = new mongoose.Schema(
         language: {
             type: String,
             default: "en"
-        }
+        },
+
+        description: {
+            type: String,
+            trim: true
+        },
+
+        hours: {
+            type: String,
+            trim: true
+        },
     },
     {
         timestamps: true

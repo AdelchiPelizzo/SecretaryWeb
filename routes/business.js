@@ -2,9 +2,15 @@ const express = require("express");
 
 const router = express.Router();
 
-const { showBusinessPage } = require("../controllers/businessController");
+const {
+    showBusinessPage,
+    saveBusiness
+} = require("../controllers/businessController");
 
 router.get("/business", showBusinessPage);
 
-module.exports = router;
+router.post("/business", saveBusiness);
 
+console.log("Business route loaded");
+
+module.exports = router;
