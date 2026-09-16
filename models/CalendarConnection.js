@@ -47,5 +47,6 @@ const calendarConnectionSchema = new mongoose.Schema(
 
 module.exports = mongoose.model(
     "CalendarConnection",
-    calendarConnectionSchema
+    calendarConnectionSchema,
+    "calendarConnections"
 );
