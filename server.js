@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname)));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(sessionMiddleware);
 app.use(appointmentsRoute);
 app.use(secretaryRoute);
@@ -38,7 +39,9 @@ app.get("/", (req, res) => {
 console.log("Register route loaded");
 
 connectDatabase().then(() => {
-    app.listen(PORT, () => {
+    console.log("Database connection completed. Starting HTTP server...");
+
+    app.listen(PORT, "0.0.0.0", () => {
         console.log(`Server running on port ${PORT}`);
     });
 });
