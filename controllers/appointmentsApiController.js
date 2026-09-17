@@ -87,9 +87,94 @@ async function createAppointment(req, res) {
         const events = eventsResponse.data.items || [];
 
         if (events.length > 0) {
+            const alternativeSlots = [];
+
+            const checkStart = new Date(startDateTime);
+            checkStart.setHours(checkStart.getHours() - 2);
+
+            const checkEnd = new Date(endDateTime);
+            checkEnd.setHours(checkEnd.getHours() + 2);
+
+            console.log("[API] Checking alternative availability...");
+
+            const alternativeResponse = await calendar.events.list({
+                calendarId: calendarConnection.calendarId,
+                timeMin: checkStart.toISOString(),
+                timeMax: checkEnd.toISOString(),
+                singleEvents: true,
+                orderBy: "startTime"
+            });
+
+            console.log("[API] Alternative availability received.");
+
+            const occupiedEvents = alternativeResponse.data.items || [];
+
+            console.log("[API] Occupied events found:", occupiedEvents.length);
+
+            const candidates = [];
+
+            for (let i = 1; i <= 4; i++) {
+                candidates.push(
+                    new Date(startDateTime.getTime() - i * 30 * 60 * 1000)
+                );
+
+                candidates.push(
+                    new Date(startDateTime.getTime() + i * 30 * 60 * 1000)
+                );
+            }
+
+            for (const candidateStart of candidates) {
+                const candidateEnd = new Date(
+                    candidateStart.getTime() + duration * 60 * 1000
+                );
+
+                const conflict = occupiedEvents.some(event => {
+                    const eventStart = event.start?.dateTime;
+                    const eventEnd = event.end?.dateTime;
+
+                    if (!eventStart || !eventEnd) {
+                        return false;
+                    }
+
+                    return (
+                        candidateStart < new Date(eventEnd) &&
+                        candidateEnd > new Date(eventStart)
+                    );
+                });
+
+                if (!conflict) {
+                    alternativeSlots.push(
+                        candidateStart.toTimeString().slice(0, 5)
+                    );
+                }
+
+                if (alternativeSlots.length >= 3) {
+                    break;
+                }
+            }
+
+            alternativeSlots.sort((a, b) => {
+                const requestedMinutes =
+                    startDateTime.getHours() * 60 + startDateTime.getMinutes();
+
+                const [aHour, aMinute] = a.split(":").map(Number);
+                const [bHour, bMinute] = b.split(":").map(Number);
+
+                const aMinutes = aHour * 60 + aMinute;
+                const bMinutes = bHour * 60 + bMinute;
+
+                return (
+                    Math.abs(aMinutes - requestedMinutes) -
+                    Math.abs(bMinutes - requestedMinutes)
+                );
+            });
+
+            console.log("[API] Alternative slots found:", alternativeSlots);
+
             return res.status(409).json({
                 success: false,
-                error: "Requested time is not available."
+                error: "Requested time is not available.",
+                availableSlots: alternativeSlots
             });
         }
 
