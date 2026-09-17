@@ -1329,7 +1329,10 @@ footer {
 }
 
 .appointments-page .save-section {
+
     text-align: right;
+    margin-top: 24px;
+
 }
 
 .appointments-page .save-button {
