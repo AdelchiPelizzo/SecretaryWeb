@@ -159,6 +159,55 @@
 
 </head>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const timeOptions = [];
+
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const hh = String(hour).padStart(2, "0");
+                const mm = String(minute).padStart(2, "0");
+
+                timeOptions.push(`${hh}:${mm}`);
+            }
+        }
+
+        const days = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+        ];
+
+        days.forEach(day => {
+            const openSelect = document.getElementById(`${day}Open`);
+            const closeSelect = document.getElementById(`${day}Close`);
+
+            if (!openSelect || !closeSelect) {
+                console.error(`Missing select for ${day}`);
+                return;
+            }
+
+            timeOptions.forEach(time => {
+                const openOption = document.createElement("option");
+                openOption.value = time;
+                openOption.textContent = time;
+                openSelect.appendChild(openOption);
+
+                const closeOption = document.createElement("option");
+                closeOption.value = time;
+                closeOption.textContent = time;
+                closeSelect.appendChild(closeOption);
+            });
+        });
+
+    });
+</script>
+
 <body>
 
 <nav>
@@ -290,17 +339,164 @@
             <h2>Opening hours</h2>
 
             <p class="section-description">
-                These hours help your AI Secretary determine when
-                your business is open.
+                Set the opening and closing time for each day.
             </p>
 
-            <div class="form-group">
-                <label for="hours">Opening hours</label>
-                <textarea
-                    id="hours"
-                    name="hours"
-                    placeholder="Example: Monday-Friday 09:00-18:00, Saturday 09:00-13:00, Sunday closed"
-                >{{HOURS}}</textarea>
+            <div class="opening-hours">
+
+                <!-- Monday / Tuesday -->
+                <div class="opening-hours-row">
+
+                    <div class="opening-hours-day">
+                        <label for="mondayOpen">Monday</label>
+
+                        <select id="mondayOpen" name="mondayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="mondayClose" name="mondayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="mondayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                    <div class="opening-hours-day">
+                        <label for="tuesdayOpen">Tuesday</label>
+
+                        <select id="tuesdayOpen" name="tuesdayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="tuesdayClose" name="tuesdayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="tuesdayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- Wednesday / Thursday -->
+                <div class="opening-hours-row">
+
+                    <div class="opening-hours-day">
+                        <label for="wednesdayOpen">Wednesday</label>
+
+                        <select id="wednesdayOpen" name="wednesdayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="wednesdayClose" name="wednesdayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="wednesdayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                    <div class="opening-hours-day">
+                        <label for="thursdayOpen">Thursday</label>
+
+                        <select id="thursdayOpen" name="thursdayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="thursdayClose" name="thursdayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="thursdayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- Friday / Saturday -->
+                <div class="opening-hours-row">
+
+                    <div class="opening-hours-day">
+                        <label for="fridayOpen">Friday</label>
+
+                        <select id="fridayOpen" name="fridayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="fridayClose" name="fridayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="fridayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                    <div class="opening-hours-day">
+                        <label for="saturdayOpen">Saturday</label>
+
+                        <select id="saturdayOpen" name="saturdayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="saturdayClose" name="saturdayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="saturdayClosed">
+                            Closed
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- Sunday -->
+                <div class="opening-hours-row">
+
+                    <div class="opening-hours-day">
+                        <label for="sundayOpen">Sunday</label>
+
+                        <select id="sundayOpen" name="sundayOpen">
+                            <option value="">Open</option>
+                        </select>
+
+                        <span>to</span>
+
+                        <select id="sundayClose" name="sundayClose">
+                            <option value="">Close</option>
+                        </select>
+
+                        <label class="closed-option">
+                            <input type="checkbox" name="sundayClosed" checked>
+                            Closed
+                        </label>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
@@ -315,6 +511,67 @@
 
 
 </main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const timeOptions = [];
+
+        for (let hour = 0; hour < 24; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const hh = String(hour).padStart(2, "0");
+                const mm = String(minute).padStart(2, "0");
+
+                timeOptions.push(`${hh}:${mm}`);
+            }
+        }
+
+        const days = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday"
+        ];
+
+        days.forEach(day => {
+            const openSelect = document.getElementById(`${day}Open`);
+            const closeSelect = document.getElementById(`${day}Close`);
+            const closedCheckbox = document.querySelector(
+                `input[name="${day}Closed"]`
+            );
+
+            if (!openSelect || !closeSelect || !closedCheckbox) {
+                console.error(`Missing opening-hours element for ${day}`);
+                return;
+            }
+
+            timeOptions.forEach(time => {
+                const openOption = document.createElement("option");
+                openOption.value = time;
+                openOption.textContent = time;
+                openSelect.appendChild(openOption);
+
+                const closeOption = document.createElement("option");
+                closeOption.value = time;
+                closeOption.textContent = time;
+                closeSelect.appendChild(closeOption);
+            });
+
+            function updateClosedState() {
+                openSelect.disabled = closedCheckbox.checked;
+                closeSelect.disabled = closedCheckbox.checked;
+            }
+
+            closedCheckbox.addEventListener("change", updateClosedState);
+
+            updateClosedState();
+        });
+
+    });
+</script>
 
 </body>
 </html>

@@ -1360,3 +1360,48 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* Opening hours */
+
+.opening-hours-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+}
+
+.opening-hours-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.opening-hours-day {
+    display: grid;
+    grid-template-columns: 85px 75px 20px 75px auto;
+    align-items: center;
+    gap: 8px;
+}
+
+.opening-hours-day label:first-child {
+    font-weight: 500;
+}
+
+.opening-hours-day select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.opening-hours-day span {
+    text-align: center;
+}
+
+.closed-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.closed-option input {
+    width: auto;
+}
