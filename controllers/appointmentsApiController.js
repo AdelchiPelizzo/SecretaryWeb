@@ -174,7 +174,7 @@ async function createAppointment(req, res) {
 
             const candidates = [];
 
-            for (let dayOffset = -3; dayOffset <= 7; dayOffset++) {
+            for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
 
                 const dayStart = new Date(startDateTime);
                 dayStart.setDate(dayStart.getDate() + dayOffset);
