@@ -70,7 +70,7 @@ async function createAppointment(req, res) {
         }
 
         const business = await Business.findOne({
-            phone: forwardingNumber
+            forwardingNumber: forwardingNumber
         });
 
         if (!business) {
@@ -122,6 +122,19 @@ async function createAppointment(req, res) {
         const endDateTime = new Date(
             startDateTime.getTime() + duration * 60 * 1000
         );
+
+        const withinOpeningHours = isWithinOpeningHours(
+            startDateTime,
+            endDateTime,
+            business.hours
+        );
+
+        if (!withinOpeningHours) {
+            return res.status(409).json({
+                success: false,
+                error: "Requested time is outside business opening hours."
+            });
+        }
 
         const eventsResponse = await calendar.events.list({
             calendarId: calendarConnection.calendarId,

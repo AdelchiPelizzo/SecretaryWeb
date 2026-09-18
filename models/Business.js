@@ -50,6 +50,11 @@ const businessSchema = new mongoose.Schema(
             trim: true
         },
 
+        forwardingNumber: {
+            type: String,
+            trim: true
+        },
+
         email: {
             type: String,
             trim: true,
