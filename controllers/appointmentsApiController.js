@@ -3,6 +3,52 @@ const CalendarConnection = require("../models/CalendarConnection");
 const { google } = require("googleapis");
 const oauth2Client = require("../config/google");
 
+function isWithinOpeningHours(start, end, hours) {
+    const dayNames = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+    ];
+
+    const dayName = dayNames[start.getDay()];
+    const dayHours = hours?.[dayName];
+
+    if (!dayHours || dayHours.closed) {
+        return false;
+    }
+
+    if (!dayHours.open || !dayHours.close) {
+        return false;
+    }
+
+    const startMinutes =
+        start.getHours() * 60 + start.getMinutes();
+
+    const endMinutes =
+        end.getHours() * 60 + end.getMinutes();
+
+    const [openHour, openMinute] =
+        dayHours.open.split(":").map(Number);
+
+    const [closeHour, closeMinute] =
+        dayHours.close.split(":").map(Number);
+
+    const openingMinutes =
+        openHour * 60 + openMinute;
+
+    const closingMinutes =
+        closeHour * 60 + closeMinute;
+
+    return (
+        startMinutes >= openingMinutes &&
+        endMinutes <= closingMinutes
+    );
+}
+
 async function createAppointment(req, res) {
     try {
         console.log("[API] Appointment request received:");
@@ -142,10 +188,20 @@ async function createAppointment(req, res) {
                     );
                 });
 
-                if (!conflict) {
-                    alternativeSlots.push(
-                        candidateStart.toTimeString().slice(0, 5)
-                    );
+                const withinOpeningHours = isWithinOpeningHours(
+                    candidateStart,
+                    candidateEnd,
+                    business.hours
+                );
+
+                if (!conflict && withinOpeningHours) {
+                    const candidateTime = candidateStart
+                        .toTimeString()
+                        .slice(0, 5);
+
+                    if (!alternativeSlots.includes(candidateTime)) {
+                        alternativeSlots.push(candidateTime);
+                    }
                 }
 
                 if (alternativeSlots.length >= 3) {
