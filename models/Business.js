@@ -72,8 +72,41 @@ const businessSchema = new mongoose.Schema(
         },
 
         hours: {
-            type: String,
-            trim: true
+            monday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            tuesday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            wednesday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            thursday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            friday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            saturday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            },
+            sunday: {
+                open: String,
+                close: String,
+                closed: Boolean
+            }
         },
     },
     {

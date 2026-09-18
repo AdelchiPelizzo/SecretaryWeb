@@ -536,7 +536,46 @@
             "sunday"
         ];
 
+        const savedHours = {
+            monday: {
+                open: "{{MONDAY_OPEN}}",
+                close: "{{MONDAY_CLOSE}}",
+                closed: "{{MONDAY_CLOSED}}" === "checked"
+            },
+            tuesday: {
+                open: "{{TUESDAY_OPEN}}",
+                close: "{{TUESDAY_CLOSE}}",
+                closed: "{{TUESDAY_CLOSED}}" === "checked"
+            },
+            wednesday: {
+                open: "{{WEDNESDAY_OPEN}}",
+                close: "{{WEDNESDAY_CLOSE}}",
+                closed: "{{WEDNESDAY_CLOSED}}" === "checked"
+            },
+            thursday: {
+                open: "{{THURSDAY_OPEN}}",
+                close: "{{THURSDAY_CLOSE}}",
+                closed: "{{THURSDAY_CLOSED}}" === "checked"
+            },
+            friday: {
+                open: "{{FRIDAY_OPEN}}",
+                close: "{{FRIDAY_CLOSE}}",
+                closed: "{{FRIDAY_CLOSED}}" === "checked"
+            },
+            saturday: {
+                open: "{{SATURDAY_OPEN}}",
+                close: "{{SATURDAY_CLOSE}}",
+                closed: "{{SATURDAY_CLOSED}}" === "checked"
+            },
+            sunday: {
+                open: "{{SUNDAY_OPEN}}",
+                close: "{{SUNDAY_CLOSE}}",
+                closed: "{{SUNDAY_CLOSED}}" === "checked"
+            }
+        };
+
         days.forEach(day => {
+
             const openSelect = document.getElementById(`${day}Open`);
             const closeSelect = document.getElementById(`${day}Close`);
             const closedCheckbox = document.querySelector(
@@ -559,6 +598,18 @@
                 closeOption.textContent = time;
                 closeSelect.appendChild(closeOption);
             });
+
+            const saved = savedHours[day];
+
+            if (saved.open) {
+                openSelect.value = saved.open;
+            }
+
+            if (saved.close) {
+                closeSelect.value = saved.close;
+            }
+
+            closedCheckbox.checked = saved.closed;
 
             function updateClosedState() {
                 openSelect.disabled = closedCheckbox.checked;
