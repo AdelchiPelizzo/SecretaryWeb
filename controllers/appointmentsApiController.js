@@ -129,12 +129,12 @@ async function createAppointment(req, res) {
             business.hours
         );
 
-        if (!withinOpeningHours) {
+/*         if (!withinOpeningHours) {
             return res.status(409).json({
                 success: false,
                 error: "Requested time is outside business opening hours."
             });
-        }
+        } */
 
         const eventsResponse = await calendar.events.list({
             calendarId: calendarConnection.calendarId,
@@ -145,14 +145,16 @@ async function createAppointment(req, res) {
 
         const events = eventsResponse.data.items || [];
 
-        if (events.length > 0) {
+        if (!withinOpeningHours || events.length > 0) {
             const alternativeSlots = [];
 
             const checkStart = new Date(startDateTime);
-            checkStart.setHours(checkStart.getHours() - 2);
+            checkStart.setDate(checkStart.getDate() - 3);
+            checkStart.setHours(0, 0, 0, 0);
 
-            const checkEnd = new Date(endDateTime);
-            checkEnd.setHours(checkEnd.getHours() + 2);
+            const checkEnd = new Date(startDateTime);
+            checkEnd.setDate(checkEnd.getDate() + 8);
+            checkEnd.setHours(23, 59, 59, 999);
 
             console.log("[API] Checking alternative availability...");
 
@@ -172,6 +174,43 @@ async function createAppointment(req, res) {
 
             const candidates = [];
 
+            for (let dayOffset = -3; dayOffset <= 7; dayOffset++) {
+
+                const dayStart = new Date(startDateTime);
+                dayStart.setDate(dayStart.getDate() + dayOffset);
+                dayStart.setHours(0, 0, 0, 0);
+
+                for (let minutes = 0; minutes < 24 * 60; minutes += 30) {
+
+                    const candidateStart = new Date(dayStart);
+                    candidateStart.setMinutes(minutes);
+
+                    const candidateEnd = new Date(
+                        candidateStart.getTime() + duration * 60 * 1000
+                    );
+
+                    if (!isWithinOpeningHours(
+                        candidateStart,
+                        candidateEnd,
+                        business.hours
+                    )) {
+                        continue;
+                    }
+
+                    candidates.push(candidateStart);
+
+                    if (candidates.length >= 30) {
+                        break;
+                    }
+                }
+
+                if (candidates.length >= 30) {
+                    break;
+                }
+            }
+
+/*             const candidates = [];
+
             for (let i = 1; i <= 4; i++) {
                 candidates.push(
                     new Date(startDateTime.getTime() - i * 30 * 60 * 1000)
@@ -180,7 +219,7 @@ async function createAppointment(req, res) {
                 candidates.push(
                     new Date(startDateTime.getTime() + i * 30 * 60 * 1000)
                 );
-            }
+            } */
 
             for (const candidateStart of candidates) {
                 const candidateEnd = new Date(
@@ -208,12 +247,24 @@ async function createAppointment(req, res) {
                 );
 
                 if (!conflict && withinOpeningHours) {
+                    const candidateDate = candidateStart
+                        .toISOString()
+                        .slice(0, 10);
+
                     const candidateTime = candidateStart
                         .toTimeString()
                         .slice(0, 5);
 
-                    if (!alternativeSlots.includes(candidateTime)) {
-                        alternativeSlots.push(candidateTime);
+                    const candidateSlot = {
+                        date: candidateDate,
+                        time: candidateTime
+                    };
+
+                    if (!alternativeSlots.some(slot =>
+                        slot.date === candidateDate &&
+                        slot.time === candidateTime
+                    )) {
+                        alternativeSlots.push(candidateSlot);
                     }
                 }
 
@@ -223,6 +274,16 @@ async function createAppointment(req, res) {
             }
 
             alternativeSlots.sort((a, b) => {
+                const aDateTime = new Date(`${a.date}T${a.time}:00+02:00`);
+                const bDateTime = new Date(`${b.date}T${b.time}:00+02:00`);
+
+                return (
+                    Math.abs(aDateTime - startDateTime) -
+                    Math.abs(bDateTime - startDateTime)
+                );
+            });
+
+/*             alternativeSlots.sort((a, b) => {
                 const requestedMinutes =
                     startDateTime.getHours() * 60 + startDateTime.getMinutes();
 
@@ -236,7 +297,7 @@ async function createAppointment(req, res) {
                     Math.abs(aMinutes - requestedMinutes) -
                     Math.abs(bMinutes - requestedMinutes)
                 );
-            });
+            }); */
 
             console.log("[API] Alternative slots found:", alternativeSlots);
 
