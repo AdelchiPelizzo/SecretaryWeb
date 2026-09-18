@@ -53,13 +53,13 @@ async function createAppointment(req, res) {
     try {
         console.log("[API] Appointment request received:");
         console.log(req.body);
-
         const {
             forwardingNumber,
             title,
             date,
             time,
-            duration
+            duration,
+            checkOnly
         } = req.body;
 
         if (!forwardingNumber) {
@@ -304,7 +304,14 @@ async function createAppointment(req, res) {
             return res.status(409).json({
                 success: false,
                 error: "Requested time is not available.",
-                availableSlots: alternativeSlots
+                availableSlots: alternativeSlots.slice(0, 3)
+            });
+        }
+
+        if (checkOnly) {
+            return res.status(200).json({
+                success: true,
+                available: true
             });
         }
 
