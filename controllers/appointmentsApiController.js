@@ -96,6 +96,7 @@ async function createAppointment(req, res) {
         console.log("[API] Business identified:");
         console.log("Business ID:", business._id);
         console.log("Business name:", business.name);
+        console.log("[DEBUG] Business timezone:", business.timezone);
 
         const calendarConnection = await CalendarConnection.findOne({
             businessId: business._id
