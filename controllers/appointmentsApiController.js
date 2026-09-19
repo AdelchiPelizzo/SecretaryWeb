@@ -24,6 +24,10 @@ function isWithinOpeningHours(start, end, hours, timezone) {
 
     const dayHours = hours?.[dayName];
 
+    console.log("[DEBUG HOURS] timezone:", timezone);
+    console.log("[DEBUG HOURS] day:", dayName);
+    console.log("[DEBUG HOURS] dayHours:", dayHours);
+
     if (!dayHours || dayHours.closed) {
         return false;
     }
