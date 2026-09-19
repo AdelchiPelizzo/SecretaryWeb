@@ -145,7 +145,21 @@ async function createAppointment(req, res) {
 
         const events = eventsResponse.data.items || [];
 
-        if (!withinOpeningHours || events.length > 0) {
+        const requestedConflict = events.some(event => {
+            const eventStart = event.start?.dateTime;
+            const eventEnd = event.end?.dateTime;
+
+            if (!eventStart || !eventEnd) {
+                return false;
+            }
+
+            return (
+                startDateTime < new Date(eventEnd) &&
+                endDateTime > new Date(eventStart)
+            );
+        });
+
+        if (!withinOpeningHours || requestedConflict) {
             const alternativeSlots = [];
 
             const checkStart = new Date(startDateTime);
