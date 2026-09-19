@@ -145,6 +145,13 @@ async function createAppointment(req, res) {
 
         const events = eventsResponse.data.items || [];
 
+        console.log("[DEBUG] Events for requested appointment:", events.map(event => ({
+            id: event.id,
+            summary: event.summary,
+            start: event.start?.dateTime,
+            end: event.end?.dateTime
+        })));
+
         const requestedConflict = events.some(event => {
             const eventStart = event.start?.dateTime;
             const eventEnd = event.end?.dateTime;
