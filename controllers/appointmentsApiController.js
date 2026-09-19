@@ -166,6 +166,11 @@ async function createAppointment(req, res) {
             );
         });
 
+        console.log("[DEBUG] withinOpeningHours:", withinOpeningHours);
+        console.log("[DEBUG] requestedConflict:", requestedConflict);
+        console.log("[DEBUG] start:", startDateTime.toString());
+        console.log("[DEBUG] end:", endDateTime.toString());
+
         if (!withinOpeningHours || requestedConflict) {
             const alternativeSlots = [];
 
