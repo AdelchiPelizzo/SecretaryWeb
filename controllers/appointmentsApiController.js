@@ -294,13 +294,27 @@ async function createAppointment(req, res) {
                 );
 
                 if (!conflict && withinOpeningHours) {
-                    const candidateDate = candidateStart
-                        .toISOString()
-                        .slice(0, 10);
 
-                    const candidateTime = candidateStart
-                        .toTimeString()
-                        .slice(0, 5);
+                    const localFormatter = new Intl.DateTimeFormat("en-CA", {
+                        timeZone: business.timezone,
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    });
+
+                    const localParts = localFormatter.formatToParts(candidateStart);
+
+                    const getLocalPart = (type) =>
+                        localParts.find(part => part.type === type)?.value;
+
+                    const candidateDate =
+                        `${getLocalPart("year")}-${getLocalPart("month")}-${getLocalPart("day")}`;
+
+                    const candidateTime =
+                        `${getLocalPart("hour")}:${getLocalPart("minute")}`;
 
                     const candidateSlot = {
                         date: candidateDate,
