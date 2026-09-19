@@ -3,18 +3,25 @@ const CalendarConnection = require("../models/CalendarConnection");
 const { google } = require("googleapis");
 const oauth2Client = require("../config/google");
 
-function isWithinOpeningHours(start, end, hours) {
-    const dayNames = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday"
-    ];
+function isWithinOpeningHours(start, end, hours, timezone) {
 
-    const dayName = dayNames[start.getDay()];
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: timezone,
+        weekday: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+    });
+
+    const startParts = formatter.formatToParts(start);
+    const endParts = formatter.formatToParts(end);
+
+    const getPart = (parts, type) =>
+        parts.find(part => part.type === type)?.value;
+
+    const dayName =
+        getPart(startParts, "weekday")?.toLowerCase();
+
     const dayHours = hours?.[dayName];
 
     if (!dayHours || dayHours.closed) {
@@ -25,11 +32,17 @@ function isWithinOpeningHours(start, end, hours) {
         return false;
     }
 
+    const startHour = Number(getPart(startParts, "hour"));
+    const startMinute = Number(getPart(startParts, "minute"));
+
+    const endHour = Number(getPart(endParts, "hour"));
+    const endMinute = Number(getPart(endParts, "minute"));
+
     const startMinutes =
-        start.getHours() * 60 + start.getMinutes();
+        startHour * 60 + startMinute;
 
     const endMinutes =
-        end.getHours() * 60 + end.getMinutes();
+        endHour * 60 + endMinute;
 
     const [openHour, openMinute] =
         dayHours.open.split(":").map(Number);
@@ -126,7 +139,8 @@ async function createAppointment(req, res) {
         const withinOpeningHours = isWithinOpeningHours(
             startDateTime,
             endDateTime,
-            business.hours
+            business.hours,
+            business.timezone
         );
 
 /*         if (!withinOpeningHours) {
@@ -218,7 +232,8 @@ async function createAppointment(req, res) {
                     if (!isWithinOpeningHours(
                         candidateStart,
                         candidateEnd,
-                        business.hours
+                        business.hours,
+                        business.timezone
                     )) {
                         continue;
                     }
@@ -269,7 +284,8 @@ async function createAppointment(req, res) {
                 const withinOpeningHours = isWithinOpeningHours(
                     candidateStart,
                     candidateEnd,
-                    business.hours
+                    business.hours,
+                    business.timezone
                 );
 
                 if (!conflict && withinOpeningHours) {
