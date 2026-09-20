@@ -42,6 +42,25 @@ async function showSecretaryPage(req, res) {
 
         html = html.replace("{{SECRETARY_NAME}}", config.secretaryName || "");
         html = html.replace("{{SECRETARY_TYPE}}", config.secretaryType || "");
+        html = html.replace(
+            `value="general">General secretary`,
+            `value="general" ${config.secretaryType === "general" ? "selected" : ""}>General secretary`
+        );
+
+        html = html.replace(
+            `value="receptionist">Receptionist`,
+            `value="receptionist" ${config.secretaryType === "receptionist" ? "selected" : ""}>Receptionist`
+        );
+
+        html = html.replace(
+            `value="appointment">Appointment secretary`,
+            `value="appointment" ${config.secretaryType === "appointment" ? "selected" : ""}>Appointment secretary`
+        );
+
+        html = html.replace(
+            `value="customer_service">Customer service`,
+            `value="customer_service" ${config.secretaryType === "customer_service" ? "selected" : ""}>Customer service`
+        );
         html = html.replace("{{PERSONALITY}}", config.personality || "");
         html = html.replace("{{LANGUAGE}}", config.language || "");
         html = html.replace("{{GREETING}}", config.greeting || "");
