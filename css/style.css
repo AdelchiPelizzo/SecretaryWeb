@@ -1405,3 +1405,82 @@ footer {
 .closed-option input {
     width: auto;
 }
+
+.language-checkbox-list {
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    background: #fff;
+}
+
+.language-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+}
+
+.language-checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.language-checkbox-item label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.language-limit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.language-limit-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.language-limit-modal {
+    width: min(420px, calc(100% - 40px));
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.language-limit-modal h3 {
+    margin: 0 0 10px;
+    font-size: 20px;
+}
+
+.language-limit-modal p {
+    margin: 0 0 20px;
+    color: #555;
+}
+
+.language-limit-modal button {
+    min-width: 90px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+    font-size: 14px;
+}
+
+.language-limit-modal button:hover {
+    opacity: 0.9;
+}

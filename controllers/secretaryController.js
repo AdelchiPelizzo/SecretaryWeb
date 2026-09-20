@@ -2,6 +2,11 @@ const path = require("path");
 const SecretaryConfig = require("../models/SecretaryConfig");
 const Business = require("../models/Business");
 const fs = require("fs");
+const languagesPath = path.join(__dirname, "../data/languages.json");
+
+const languages = JSON.parse(
+    fs.readFileSync(languagesPath, "utf8")
+);
 
 async function showSecretaryPage(req, res) {
     try {
@@ -62,7 +67,61 @@ async function showSecretaryPage(req, res) {
             `value="customer_service" ${config.secretaryType === "customer_service" ? "selected" : ""}>Customer service`
         );
         html = html.replace("{{PERSONALITY}}", config.personality || "");
-        html = html.replace("{{LANGUAGE}}", config.language || "");
+
+        const languageOptions = languages
+            .map(language => {
+                const selected =
+                    config.language === language.code
+                        ? "selected"
+                        : "";
+
+                return `<option value="${language.code}" ${selected}>${language.name}</option>`;
+            })
+            .join("");
+
+        const supportedLanguages =
+            config.supportedLanguages || [];
+
+        const supportedLanguageOptions = languages
+            .map(language => {
+                const checked =
+                    supportedLanguages.includes(language.code)
+                        ? "checked"
+                        : "";
+
+                const disabled =
+                    config.language === language.code
+                        ? "disabled"
+                        : "";
+
+                return `
+                    <div class="language-checkbox-item">
+                        <input
+                            type="checkbox"
+                            id="language-${language.code}"
+                            name="supportedLanguages"
+                            value="${language.code}"
+                            ${checked}
+                            ${disabled}
+                        >
+                        <label for="language-${language.code}">
+                            ${language.name}
+                        </label>
+                    </div>
+                `;
+            })
+            .join("");
+
+        html = html.replace(
+            "{{LANGUAGE_OPTIONS}}",
+            languageOptions
+        );
+
+        html = html.replace(
+            "{{SUPPORTED_LANGUAGE_OPTIONS}}",
+            supportedLanguageOptions
+        );
+
         html = html.replace("{{GREETING}}", config.greeting || "");
         html = html.replace("{{INSTRUCTIONS}}", config.instructions || "");
 
@@ -97,6 +156,25 @@ async function saveSecretary(req, res) {
         config.secretaryType = req.body.secretaryType;
         config.personality = req.body.personality;
         config.language = req.body.language;
+
+        let supportedLanguages = req.body.supportedLanguages || [];
+
+        if (!Array.isArray(supportedLanguages)) {
+            supportedLanguages = [supportedLanguages];
+        }
+
+        supportedLanguages = supportedLanguages.filter(
+            code => code && code !== req.body.language
+        );
+
+        if (supportedLanguages.length > 3) {
+            return res
+                .status(400)
+                .send("You can select up to 3 additional languages.");
+        }
+
+        config.supportedLanguages = supportedLanguages;
+        
         config.greeting = req.body.greeting;
         config.instructions = req.body.instructions;
         config.enabled = req.body.enabled === "on";

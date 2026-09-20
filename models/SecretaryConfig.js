@@ -32,6 +32,11 @@ const secretaryConfigSchema = new mongoose.Schema(
             default: "en"
         },
 
+        supportedLanguages: {
+            type: [String],
+            default: []
+        },
+
         greeting: {
             type: String,
             trim: true

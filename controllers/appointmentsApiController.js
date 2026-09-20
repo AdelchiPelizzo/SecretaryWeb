@@ -458,7 +458,8 @@ async function getSecretaryConfig(req, res) {
             secretaryType: config.secretaryType,
             personality: config.personality,
             greeting: config.greeting,
-            instructions: config.instructions
+            instructions: config.instructions,
+            supportedLanguages: config.supportedLanguages || [],
         });
 
     } catch (error) {
