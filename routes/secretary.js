@@ -7,7 +7,10 @@ const {
     saveSecretary
 } = require("../controllers/secretaryController");
 
-router.get("/secretary", showSecretaryPage);
-router.post("/secretary", saveSecretary);
+const requireAuth = require("../middleware/auth");
+
+router.get("/secretary", requireAuth, showSecretaryPage);
+
+router.post("/secretary", requireAuth, saveSecretary);
 
 module.exports = router;

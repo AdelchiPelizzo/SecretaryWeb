@@ -7,9 +7,11 @@ const {
     saveBusiness
 } = require("../controllers/businessController");
 
-router.get("/business", showBusinessPage);
+const requireAuth = require("../middleware/auth");
 
-router.post("/business", saveBusiness);
+router.get("/business", requireAuth, showBusinessPage);
+
+router.post("/business", requireAuth, saveBusiness);
 
 console.log("Business route loaded");
 

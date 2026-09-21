@@ -18,7 +18,14 @@ app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 3000;
 
-app.use(express.static(path.join(__dirname)));
+app.use("/pages", (req, res) => {
+    res.status(404).send("Not found.");
+});
+
+app.use(express.static(path.join(__dirname), {
+    index: false,
+    dotfiles: "deny"
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(sessionMiddleware);

@@ -25,10 +25,6 @@ function isWithinOpeningHours(start, end, hours, timezone) {
 
     const dayHours = hours?.[dayName];
 
-    console.log("[DEBUG HOURS] timezone:", timezone);
-    console.log("[DEBUG HOURS] day:", dayName);
-    console.log("[DEBUG HOURS] dayHours:", dayHours);
-
     if (!dayHours || dayHours.closed) {
         return false;
     }
@@ -142,6 +138,31 @@ async function createAppointment(req, res) {
             startDateTime.getTime() + duration * 60 * 1000
         );
 
+        const now = new Date();
+
+        const nowFormatter = new Intl.DateTimeFormat("en-CA", {
+            timeZone: business.timezone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        });
+
+        const nowParts = nowFormatter.formatToParts(now);
+
+        const getNowPart = (type) =>
+            nowParts.find(part => part.type === type)?.value;
+
+        const currentLocalDateTime =
+            `${getNowPart("year")}-${getNowPart("month")}-${getNowPart("day")} ${getNowPart("hour")}:${getNowPart("minute")}`;
+
+        const requestedLocalDateTime = `${date} ${time}`;
+
+        const requestedTimeHasPassed =
+            requestedLocalDateTime < currentLocalDateTime;
+
         const withinOpeningHours = isWithinOpeningHours(
             startDateTime,
             endDateTime,
@@ -191,7 +212,7 @@ async function createAppointment(req, res) {
         console.log("[DEBUG] start:", startDateTime.toString());
         console.log("[DEBUG] end:", endDateTime.toString());
 
-        if (!withinOpeningHours || requestedConflict) {
+        if (!withinOpeningHours || requestedConflict || requestedTimeHasPassed) {
             const alternativeSlots = [];
 
             const checkStart = new Date(startDateTime);
@@ -269,9 +290,14 @@ async function createAppointment(req, res) {
             } */
 
             for (const candidateStart of candidates) {
+
                 const candidateEnd = new Date(
                     candidateStart.getTime() + duration * 60 * 1000
                 );
+                
+                if (candidateStart < now) {
+                    continue;
+                }
 
                 const conflict = occupiedEvents.some(event => {
                     const eventStart = event.start?.dateTime;

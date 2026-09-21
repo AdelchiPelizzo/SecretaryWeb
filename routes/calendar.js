@@ -7,7 +7,7 @@ const requireAuth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/calendar/connect", (req, res) => {
+router.get("/calendar/connect", requireAuth, (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: "offline",
         prompt: "consent",
@@ -19,7 +19,7 @@ router.get("/calendar/connect", (req, res) => {
     res.redirect(authUrl);
 });
 
-router.get("/calendar/callback", async (req, res) => {
+router.get("/calendar/callback", requireAuth, async (req, res) => {
     try {
         const { code } = req.query;
 

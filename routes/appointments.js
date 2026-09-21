@@ -4,6 +4,8 @@ const router = express.Router();
 
 const { showAppointmentsPage } = require("../controllers/appointmentsController");
 
-router.get("/appointments", showAppointmentsPage);
+const requireAuth = require("../middleware/auth");
+
+router.get("/appointments", requireAuth, showAppointmentsPage);
 
 module.exports = router;

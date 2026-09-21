@@ -7,8 +7,18 @@ const {
     getSecretaryConfig
 } = require("../controllers/appointmentsApiController");
 
-router.get("/secretary-config", getSecretaryConfig);
+const requireSecretaryApiKey = require("../middleware/secretaryApiKey");
 
-router.post("/appointments", createAppointment);
+router.get(
+    "/secretary-config",
+    requireSecretaryApiKey,
+    getSecretaryConfig
+);
+
+router.post(
+    "/appointments",
+    requireSecretaryApiKey,
+    createAppointment
+);
 
 module.exports = router;
