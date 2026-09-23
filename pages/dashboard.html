@@ -227,7 +227,7 @@
 
 
 <div class="nav-right">
-    <span class="business-name" id="loggedInUser">{{USER_EMAIL}}</span>
+    <span class="business-name" id="loggedInBusiness">{{BUSINESS_NAME}}</span>
     <form action="/logout" method="POST">
         <button type="submit" class="logout">Log out</button>
     </form>
@@ -301,6 +301,25 @@
 
         <a href="/appointments" class="card-button">
             Manage
+        </a>
+
+    </div>
+
+</div>
+
+<div class="cards notes-section">
+
+    <div class="card">
+
+        <h2>Notes</h2>
+
+        <p>
+            View messages and notes captured by your AI Secretary
+            during calls.
+        </p>
+
+        <a href="/notes" class="card-button">
+            View notes
         </a>
 
     </div>

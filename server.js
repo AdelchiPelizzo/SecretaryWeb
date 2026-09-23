@@ -12,6 +12,7 @@ const secretaryRoute = require("./routes/secretary");
 const appointmentsRoute = require("./routes/appointments");
 const calendarRoute = require("./routes/calendar");
 const appointmentsApiRoutes = require("./routes/appointmentsApiRoutes");
+const notesRoute = require("./routes/notes");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(sessionMiddleware);
 app.use(appointmentsRoute);
+app.use(notesRoute);
 app.use(secretaryRoute);
 app.use(businessRoute);
 app.use(dashboardRoute);

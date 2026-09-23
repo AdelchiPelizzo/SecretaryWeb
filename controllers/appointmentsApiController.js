@@ -1,6 +1,7 @@
 const Business = require("../models/Business");
 const SecretaryConfig = require("../models/SecretaryConfig");
 const CalendarConnection = require("../models/CalendarConnection");
+const Note = require("../models/Note");
 const { google } = require("googleapis");
 const oauth2Client = require("../config/google");
 
@@ -73,6 +74,7 @@ async function createAppointment(req, res) {
             date,
             time,
             duration,
+            description,
             checkOnly
         } = req.body;
 
@@ -403,10 +405,15 @@ async function createAppointment(req, res) {
             });
         }
 
+        console.log("=== APPOINTMENT DESCRIPTION DEBUG ===");
+        console.log("Description received:", description);
+        console.log("=====================================");
+
         const createdEvent = await calendar.events.insert({
             calendarId: calendarConnection.calendarId,
             requestBody: {
                 summary: title,
+                description: description || "",
                 start: {
                     dateTime: startDateTime.toISOString()
                 },
@@ -498,7 +505,68 @@ async function getSecretaryConfig(req, res) {
     }
 }
 
+async function createNote(req, res) {
+    try {
+        console.log("=== CREATE NOTE REQUEST ===");
+        console.log("Body:", req.body);
+
+        const {
+            forwardingNumber,
+            text,
+            callerNumber
+        } = req.body;
+
+        if (!forwardingNumber) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing forwardingNumber."
+            });
+        }
+
+        if (!text) {
+            return res.status(400).json({
+                success: false,
+                message: "Missing note text."
+            });
+        }
+
+        const business = await Business.findOne({
+            forwardingNumber
+        });
+
+        if (!business) {
+            return res.status(404).json({
+                success: false,
+                message: "Business not found."
+            });
+        }
+
+        const note = await Note.create({
+            businessId: business._id,
+            callerNumber: callerNumber || null,
+            text,
+            source: "call"
+        });
+
+        console.log("Note created:", note._id);
+
+        return res.status(201).json({
+            success: true,
+            noteId: note._id
+        });
+
+    } catch (error) {
+        console.error("Failed to create note:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to create note."
+        });
+    }
+}
+
 module.exports = {
     createAppointment,
+    createNote,
     getSecretaryConfig
 };

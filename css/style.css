@@ -1016,6 +1016,14 @@ footer {
     padding: 28px;
 }
 
+.notes-card {
+    grid-column: span 1;
+}
+
+.notes-section {
+    margin-top: 22px;
+}
+
 .card h2 {
     font-size: 1.2rem;
     margin-bottom: 10px;
@@ -1483,4 +1491,21 @@ footer {
 
 .language-limit-modal button:hover {
     opacity: 0.9;
+}
+
+.dashboard-button {
+    display: inline-block;
+    border: none;
+    background: #5b55e8;
+    color: white;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.dashboard-button:hover {
+    background: #4943c7;
 }

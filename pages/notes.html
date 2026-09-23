@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>Notes - Secretary AI</title>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/" class="logo">Secretary AI</a>
+        <div class="nav-right">
+            <span class="business-name">{{BUSINESS_NAME}}</span>
+            <a href="/dashboard" class="dashboard-button">Dashboard</a>
+
+            <form action="/logout" method="POST">
+                <button type="submit" class="logout">Log out</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="dashboard">
+
+        <div class="dashboard-header">
+            <h1>Notes</h1>
+            <p>Messages and notes captured by your AI Secretary.</p>
+        </div>
+
+        <div id="notes-container">
+            <p>Loading notes...</p>
+        </div>
+
+    </main>
+
+<script>
+    const notes = {{NOTES_JSON}};
+
+    console.log("Notes loaded:", notes);
+
+    const container = document.getElementById("notes-container");
+
+    if (notes.length === 0) {
+        container.innerHTML = "<p>No notes yet.</p>";
+    } else {
+        container.innerHTML = notes.map(note => `
+            <div class="note-card">
+                <div class="note-text">${note.text}</div>
+                <div class="note-meta">
+                    ${note.callerNumber ? `From: ${note.callerNumber}` : ""}
+                    ${note.createdAt ? ` · ${new Date(note.createdAt).toLocaleString()}` : ""}
+                </div>
+            </div>
+        `).join("");
+    }
+</script>
+
+</body>
+</html>
