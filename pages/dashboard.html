@@ -221,15 +221,25 @@
 </head>
 
 <body>
+    <script>
+        (function () {
+            const savedLanguage = localStorage.getItem("secretaryLanguage") || "en";
+            document.documentElement.lang = savedLanguage;
 
+            if (savedLanguage === "ar") {
+                document.documentElement.dir = "rtl";
+            }
+        })();
+    </script>
 <nav>
     <a href="/" class="logo">Secretary AI</a>
-
 
 <div class="nav-right">
     <span class="business-name" id="loggedInBusiness">{{BUSINESS_NAME}}</span>
     <form action="/logout" method="POST">
-        <button type="submit" class="logout">Log out</button>
+        <button type="submit" class="logout" data-i18n="dashboard.logout">
+        Log out
+    </button>
     </form>
 </div>
 
@@ -240,20 +250,20 @@
 
 
 <div class="dashboard-header">
-    <h1>Dashboard</h1>
-    <p>Manage your AI Secretary and business settings.</p>
+    <h1 data-i18n="dashboard.title">Dashboard</h1>
+    <p data-i18n="dashboard.intro">Manage your AI Secretary and business settings.</p>
 </div>
 
 <div class="status-card">
 
     <div class="status-info">
-        <h2>AI Secretary</h2>
-        <p>Your secretary is ready to handle incoming calls.</p>
+        <h2 data-i18n="dashboard.secretary">AI Secretary</h2>
+        <p data-i18n="dashboard.status">Your secretary is ready to handle incoming calls.</p>
     </div>
 
     <div class="status">
         <span class="status-dot"></span>
-        Active
+        <span data-i18n="dashboard.active">Active</span>
     </div>
 
 </div>
@@ -261,48 +271,38 @@
 <div class="cards">
 
     <div class="card">
-
-        <h2>Business profile</h2>
-
-        <p>
+        <h2 data-i18n="dashboard.business">Business profile</h2>
+        <p data-i18n="dashboard.business_text">
             Manage your business name, phone number, opening hours
             and general information.
         </p>
-
-        <a href="/business" class="card-button">
+        <a href="/business" class="card-button" data-i18n="dashboard.manage">
             Manage
         </a>
-
     </div>
 
     <div class="card">
 
-        <h2>AI Secretary</h2>
-
-        <p>
+        <h2 data-i18n="dashboard.secretary">AI Secretary</h2>
+        <p data-i18n="dashboard.secretary_text">
             Choose your secretary's personality and configure
             how your AI assistant communicates with callers.
         </p>
-
-        <a href="/secretary" class="card-button">
+        <a href="/secretary" class="card-button" data-i18n="dashboard.configure">
             Configure
         </a>
 
     </div>
 
     <div class="card">
-
-        <h2>Appointments</h2>
-
-        <p>
+        <h2 data-i18n="dashboard.appointments">Appointments</h2>
+        <p data-i18n="dashboard.appointments_text">
             Configure appointment rules and connect your
             business calendar.
         </p>
-
-        <a href="/appointments" class="card-button">
+        <a href="/appointments" class="card-button" data-i18n="dashboard.manage">
             Manage
         </a>
-
     </div>
 
 </div>
@@ -310,35 +310,61 @@
 <div class="cards notes-section">
 
     <div class="card">
-
-        <h2>Notes</h2>
-
-        <p>
+        <h2 data-i18n="dashboard.notes">Notes</h2>
+        <p data-i18n="dashboard.notes_text">
             View messages and notes captured by your AI Secretary
             during calls.
         </p>
-
-        <a href="/notes" class="card-button">
+        <a href="/notes" class="card-button" data-i18n="dashboard.view_notes">
             View notes
         </a>
-
     </div>
 
 </div>
 
 <div class="activity">
-
-    <h2>Recent activity</h2>
-
-    <p class="activity-empty">
+    <h2 data-i18n="dashboard.activity">Recent activity</h2>
+    <p class="activity-empty" data-i18n="dashboard.no_activity">
         No activity yet. Your recent calls and appointments
         will appear here.
     </p>
-
 </div>
 
-
 </main>
+
+    <script>
+    (function () {
+        const language = localStorage.getItem("secretaryLanguage") || "en";
+
+        fetch("/locales/" + language + ".json", { cache: "no-store" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Locale not found");
+                }
+                return response.json();
+            })
+            .then(translations => {
+                document.querySelectorAll("[data-i18n]").forEach(element => {
+                    const key = element.getAttribute("data-i18n");
+
+                    if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                        element.textContent = translations[key];
+                    }
+                });
+
+                document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+                    const key = element.getAttribute("data-i18n-placeholder");
+
+                    if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                        element.placeholder = translations[key];
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Could not load dashboard language:", error);
+            });
+    })();
+    </script>
 
 </body>
 
