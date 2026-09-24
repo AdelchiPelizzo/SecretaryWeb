@@ -1,62 +1,216 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-
     <title>Notes - Secretary AI</title>
 </head>
 
 <body>
 
-    <nav>
-        <a href="/" class="logo">Secretary AI</a>
-        <div class="nav-right">
-            <span class="business-name">{{BUSINESS_NAME}}</span>
-            <a href="/dashboard" class="dashboard-button">Dashboard</a>
+<nav>
 
-            <form action="/logout" method="POST">
-                <button type="submit" class="logout">Log out</button>
-            </form>
-        </div>
-    </nav>
+    <a href="/" class="logo">Secretary AI</a>
 
-    <main class="dashboard">
+    <div class="nav-right">
 
-        <div class="dashboard-header">
-            <h1>Notes</h1>
-            <p>Messages and notes captured by your AI Secretary.</p>
-        </div>
+        <a href="/dashboard" class="dashboard-button">
+            Dashboard
+        </a>
 
-        <div id="notes-container">
-            <p>Loading notes...</p>
-        </div>
+        <span class="business-name" id="loggedInBusiness">
+            {{BUSINESS_NAME}}
+        </span>
 
-    </main>
+        <form action="/logout" method="POST">
+            <button type="submit" class="logout">Log out</button>
+        </form>
+
+    </div>
+
+</nav>
+
+<main class="dashboard">
+
+<div class="dashboard-header">
+
+    <h1>Notes</h1>
+
+    <p>
+        Messages and notes captured by your AI Secretary.
+    </p>
+
+</div>
+
+<div id="notes-container">
+    <p>Loading notes...</p>
+</div>
+
+</main>
 
 <script>
     const notes = {{NOTES_JSON}};
-
-    console.log("Notes loaded:", notes);
+    const language = "{{LANGUAGE}}";
+    const translations = {{TRANSLATIONS_JSON}};
 
     const container = document.getElementById("notes-container");
 
-    if (notes.length === 0) {
-        container.innerHTML = "<p>No notes yet.</p>";
-    } else {
-        container.innerHTML = notes.map(note => `
-            <div class="note-card">
-                <div class="note-text">${note.text}</div>
-                <div class="note-meta">
-                    ${note.callerNumber ? `From: ${note.callerNumber}` : ""}
-                    ${note.createdAt ? ` · ${new Date(note.createdAt).toLocaleString()}` : ""}
-                </div>
-            </div>
-        `).join("");
+    let currentSortField = null;
+    let sortAscending = true;
+
+    function t(key) {
+        return translations[key] || key;
     }
+
+    function sortNotes(field) {
+
+        if (currentSortField === field) {
+            sortAscending = !sortAscending;
+        } else {
+            currentSortField = field;
+            sortAscending = true;
+        }
+
+        notes.sort((a, b) => {
+
+            let valueA;
+            let valueB;
+
+            if (field === "name") {
+                valueA = a.callerName || "";
+                valueB = b.callerName || "";
+
+                return sortAscending
+                    ? valueA.localeCompare(valueB)
+                    : valueB.localeCompare(valueA);
+            }
+
+            if (field === "number") {
+                valueA = a.callerNumber || "";
+                valueB = b.callerNumber || "";
+
+                return sortAscending
+                    ? valueA.localeCompare(valueB)
+                    : valueB.localeCompare(valueA);
+            }
+
+            if (field === "date") {
+                valueA = a.createdAt
+                    ? new Date(a.createdAt).getTime()
+                    : 0;
+
+                valueB = b.createdAt
+                    ? new Date(b.createdAt).getTime()
+                    : 0;
+
+                return sortAscending
+                    ? valueA - valueB
+                    : valueB - valueA;
+            }
+
+            return 0;
+        });
+
+        renderNotes();
+    }
+
+    function renderNotes() {
+
+        if (notes.length === 0) {
+
+            container.innerHTML = `
+                <div class="notes-empty">
+                    ${t("notes.empty")}
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="notes-table-wrapper">
+                <table class="notes-table">
+
+                    <thead>
+                        <tr>
+
+                            <th>
+                                <button
+                                    type="button"
+                                    onclick="sortNotes('name')"
+                                >
+                                    ${t("notes.name")}
+                                </button>
+                            </th>
+
+                            <th>
+                                <button
+                                    type="button"
+                                    onclick="sortNotes('number')"
+                                >
+                                    ${t("notes.number")}
+                                </button>
+                            </th>
+
+                            <th>
+                                <button
+                                    type="button"
+                                    onclick="sortNotes('date')"
+                                >
+                                    ${t("notes.date")}
+                                </button>
+                            </th>
+
+                            <th>
+                                ${t("notes.note")}
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        ${notes.map(note => `
+                            <tr>
+
+                                <td>
+                                    ${note.callerName || t("notes.unknown")}
+                                </td>
+
+                                <td>
+                                    ${note.callerNumber || ""}
+                                </td>
+
+                                <td>
+                                    ${
+                                        note.createdAt
+                                            ? new Date(
+                                                note.createdAt
+                                            ).toLocaleString(language)
+                                            : ""
+                                    }
+                                </td>
+
+                                <td>
+                                    ${note.text || ""}
+                                </td>
+
+                            </tr>
+                        `).join("")}
+
+                    </tbody>
+
+                </table>
+            </div>
+        `;
+    }
+
+    renderNotes();
 </script>
 
 </body>
+
 </html>

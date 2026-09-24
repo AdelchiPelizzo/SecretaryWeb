@@ -27,7 +27,24 @@ async function showNotesPage(req, res) {
         let html = fs.readFileSync(filePath, "utf8");
 
         const notesJson = JSON.stringify(notes);
+        const language = business.language || "en";
 
+        console.log("[NOTES] Business language:", language);
+        console.log("[NOTES] Business object:", business);
+
+        const localePath = path.join(
+            __dirname,
+            "../locales",
+            `${language}.json`
+        );
+
+        let translations = {};
+
+        if (fs.existsSync(localePath)) {
+            translations = JSON.parse(
+                fs.readFileSync(localePath, "utf8")
+            );
+        }
         html = html.replace(
             "{{NOTES_JSON}}",
             notesJson
@@ -37,6 +54,16 @@ async function showNotesPage(req, res) {
             "{{BUSINESS_NAME}}",
             business.name
         );
+        
+        html = html.replace(
+            "{{LANGUAGE}}",
+            language
+        );
+
+        html = html.replace(
+             "{{TRANSLATIONS_JSON}}",
+              JSON.stringify(translations) 
+        );        
 
         res.send(html);
     } catch (error) {

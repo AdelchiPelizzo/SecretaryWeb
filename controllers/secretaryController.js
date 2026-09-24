@@ -133,6 +133,7 @@ async function showSecretaryPage(req, res) {
 }
 
 async function saveSecretary(req, res) {
+    console.log("[SECRETARY] saveSecretary called");
     try {
         const business = await Business.findOne({
             ownerUserId: req.session.userId
@@ -155,7 +156,10 @@ async function saveSecretary(req, res) {
         config.secretaryName = req.body.secretaryName;
         config.secretaryType = req.body.secretaryType;
         config.personality = req.body.personality;
+        console.log("[SECRETARY] Language received from web:", req.body.language);
         config.language = req.body.language;
+
+        business.language = req.body.language;
 
         let supportedLanguages = req.body.supportedLanguages || [];
 
@@ -180,6 +184,8 @@ async function saveSecretary(req, res) {
         config.enabled = req.body.enabled === "on";
 
         await config.save();
+        await business.save();
+
         console.log(
             "Secretary config saved:",
             config._id,

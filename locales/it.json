@@ -135,6 +135,17 @@
   "calendar.not_connected": "Google Calendar non collegato",
   "language.english": "Inglese",
   "language.italian": "Italiano",
+
+  "notes.title": "Note",
+  "notes.intro": "Messaggi e note raccolti dal tuo Assistente AI.",
+  "notes.name": "Nome",
+  "notes.number": "Numero",
+  "notes.date": "Data / Ora",
+  "notes.note": "Nota",
+  "notes.unknown": "Sconosciuto",
+  "notes.loading": "Caricamento delle note...",
+  "notes.empty": "Nessuna nota ancora.",
+
   "_meta": {
     "language": "it",
     "direction": "ltr"

@@ -135,6 +135,17 @@
   "calendar.not_connected": "Google Calendar not connected",
   "language.english": "English",
   "language.italian": "Italian",
+
+  "notes.title": "Notes",
+  "notes.intro": "Messages and notes captured by your AI Secretary.",
+  "notes.name": "Name",
+  "notes.number": "Number",
+  "notes.date": "Date / Time",
+  "notes.note": "Note",
+  "notes.unknown": "Unknown",
+  "notes.loading": "Loading notes...",
+  "notes.empty": "No notes yet.",
+
   "_meta": {
     "language": "en",
     "direction": "ltr"
