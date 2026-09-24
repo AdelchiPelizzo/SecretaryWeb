@@ -244,6 +244,18 @@
 
 <body>
 
+    <script>
+        (function () {
+            const savedLanguage = localStorage.getItem("secretaryLanguage") || "en";
+
+            document.documentElement.lang = savedLanguage;
+
+            if (savedLanguage === "ar") {
+                document.documentElement.dir = "rtl";
+            }
+        })();
+    </script>
+
 <!-- =========================
      NAVIGATION
 ========================= -->
@@ -255,11 +267,11 @@
 
 <div class="nav-links">
 
-    <a href="/" class="home-button">
+    <a href="/" class="home-button" data-i18n="nav.home">
         Home
     </a>
 
-    <a class="register-login-button" href="/login">
+    <a class="register-login-button" href="/login" data-i18n="nav.login">
         Login
     </a>
 
@@ -281,25 +293,21 @@
             GET STARTED
         </div>
 
-        <h1>
+        <h1 data-i18n="register.title">
             Create your account
         </h1>
 
-        <p>
-            Set up your Secretary AI account and start building
-            your business assistant.
+        <p data-i18n="register.intro">
+            Set up your Secretary AI account and start building your business assistant.
         </p>
 
     </div>
 
-
     <div class="register-card">
-
         <form action="/register" method="POST">
 
             <div class="form-group">
-
-                <label for="businessName">
+                <label for="businessName" data-i18n="register.business_name">
                     Business name
                 </label>
 
@@ -307,16 +315,14 @@
                     type="text"
                     id="businessName"
                     name="businessName"
+                    data-i18n-placeholder="register.business_name_placeholder"
                     placeholder="Your business name"
                     required
                 >
-
             </div>
 
-
             <div class="form-group">
-
-                <label for="email">
+                <label for="email" data-i18n="register.email">
                     Email
                 </label>
 
@@ -324,16 +330,14 @@
                     type="email"
                     id="email"
                     name="email"
+                    data-i18n-placeholder="register.email_placeholder"
                     placeholder="you@example.com"
                     required
                 >
-
             </div>
 
-
             <div class="form-group">
-
-                <label for="password">
+                <label for="password" data-i18n="register.password">
                     Password
                 </label>
 
@@ -341,30 +345,22 @@
                     type="password"
                     id="password"
                     name="password"
+                    data-i18n-placeholder="register.password_placeholder"
                     placeholder="Create a password"
                     required
                 >
-
             </div>
 
-
-            <button
-                type="submit"
-                class="register-submit">
+            <button type="submit" class="register-submit" data-i18n="register.create">
                 Create account
             </button>
-
         </form>
 
-
         <div class="login-text">
-
-            Already have an account?
-
-            <a href="/login">
-                Login
-            </a>
-
+            <span data-i18n="register.already_have_account">
+                Already have an account?
+            </span>
+            <a href="/login" data-i18n="nav.login">Login</a>
         </div>
 
     </div>
@@ -372,6 +368,40 @@
 </div>
 
 </section>
+
+    <script>
+        (function () {
+            const language = localStorage.getItem("secretaryLanguage") || "en";
+
+            fetch("/locales/" + language + ".json", { cache: "no-store" })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Locale not found");
+                    }
+                    return response.json();
+                })
+                .then(translations => {
+                    document.querySelectorAll("[data-i18n]").forEach(element => {
+                        const key = element.getAttribute("data-i18n");
+
+                        if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                            element.textContent = translations[key];
+                        }
+                    });
+
+                    document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+                        const key = element.getAttribute("data-i18n-placeholder");
+
+                        if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                            element.placeholder = translations[key];
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("Could not load registration language:", error);
+                });
+        })();
+    </script>
 
 </body>
 
