@@ -13,6 +13,7 @@ const appointmentsRoute = require("./routes/appointments");
 const calendarRoute = require("./routes/calendar");
 const appointmentsApiRoutes = require("./routes/appointmentsApiRoutes");
 const notesRoute = require("./routes/notes");
+const privacyRoutes = require("./routes/privacy");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -40,6 +41,7 @@ app.use(registerRoute);
 app.use("/locales", express.static(path.join(__dirname, "locales")));
 app.use(calendarRoute);
 app.use("/api", appointmentsApiRoutes);
+app.use("/", privacyRoutes);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

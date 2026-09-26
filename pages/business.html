@@ -6,157 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-
-
-<title>Business Profile - Secretary AI</title>
-
-<!-- Original page CSS moved to /css/style.css
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f7f8fc;
-        color: #172033;
-        line-height: 1.6;
-    }
-    nav {
-        height: 72px;
-        background: #ffffff;
-        border-bottom: 1px solid #e8eaf0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 7%;
-    }
-    .logo {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #171b2b;
-        text-decoration: none;
-    }
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-    .back {
-        text-decoration: none;
-        color: #5b55e8;
-        font-weight: 700;
-    }
-    .page {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 55px 25px;
-    }
-    .page-header {
-        margin-bottom: 30px;
-    }
-    .page-header h1 {
-        font-size: 2.3rem;
-        color: #171b2b;
-        margin-bottom: 8px;
-    }
-    .page-header p {
-        color: #667085;
-        font-size: 1.05rem;
-    }
-    .card {
-        background: #ffffff;
-        border: 1px solid #e5e7ee;
-        border-radius: 18px;
-        padding: 35px;
-        box-shadow: 0 8px 25px rgba(23, 27, 43, 0.05);
-    }
-    .section {
-        margin-bottom: 35px;
-    }
-    .section:last-child {
-        margin-bottom: 0;
-    }
-    .section h2 {
-        font-size: 1.25rem;
-        margin-bottom: 18px;
-        color: #171b2b;
-    }
-    .section-description {
-        color: #667085;
-        margin-bottom: 20px;
-    }
-    .form-group {
-        margin-bottom: 20px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #172033;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        width: 100%;
-        padding: 13px 14px;
-        border: 1px solid #d9dce5;
-        border-radius: 9px;
-        font-family: inherit;
-        font-size: 1rem;
-        outline: none;
-    }
-    .form-group textarea {
-        min-height: 120px;
-        resize: vertical;
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-        border-color: #5b55e8;
-        box-shadow: 0 0 0 3px rgba(91, 85, 232, 0.12);
-    }
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-    .save-button {
-        border: none;
-        background: #5b55e8;
-        color: #ffffff;
-        padding: 14px 24px;
-        border-radius: 9px;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-    }
-    .save-button:hover {
-        background: #4d47d5;
-    }
-    @media (max-width: 600px) {
-        nav {
-            padding: 0 5%;
-        }
-        .page {
-            padding: 40px 18px;
-        }
-        .page-header h1 {
-            font-size: 2rem;
-        }
-        .card {
-            padding: 25px 20px;
-        }
-        .form-row {
-            grid-template-columns: 1fr;
-            gap: 0;
-        }
-    }
-</style>
--->
-
-
+    <title>Business Profile - Secretary AI</title>
 </head>
 
 <script>
@@ -210,10 +60,20 @@
 
 <body>
 
+    <script>
+        const language = "{{LANGUAGE}}";
+
+        document.documentElement.lang = language;
+
+        if (language === "ar") {
+            document.documentElement.dir = "rtl";
+        }
+    </script>
+
 <nav>
     <a href="/" class="logo">Secretary AI</a>
     <div class="nav-right">
-        <a href="/dashboard" class="nav-action-button">Dashboard</a>
+        <a href="/dashboard" class="nav-action-button" data-i18n="nav.dashboard">Dashboard</a>
     </div>
 </nav>
 
@@ -221,8 +81,8 @@
 
 
 <div class="page-header">
-    <h1>Business Profile</h1>
-    <p>Tell your AI Secretary about your business.</p>
+    <h1 data-i18n="business.title">Business Profile</h1>
+    <p data-i18n="business.intro">Tell your AI Secretary about your business.</p>
 </div>
 
 <div class="card">
@@ -231,19 +91,19 @@
 
         <div class="section">
 
-            <h2>Basic information</h2>
-
-            <p class="section-description">
+            <h2 data-i18n="business.basic_information">Basic information</h2>
+            <p class="section-description" data-i18n="business.basic_information_description">
                 This information helps your AI Secretary identify and
                 describe your business to callers.
             </p>
 
             <div class="form-group">
-                <label for="businessName">Business name</label>
+                <label for="businessName" data-i18n="business.name">Business name</label>
                 <input
                     type="text"
                     id="businessName"
                     name="businessName"
+                    data-i18n-placeholder="business.name_placeholder"
                     placeholder="Your business name"
                     value="{{BUSINESS_NAME}}"
                     required
@@ -253,7 +113,7 @@
             <div class="form-row">
 
                 <div class="form-group">
-                    <label for="phone">Business phone number</label>
+                    <label for="phone" data-i18n="business.phone">Business phone number</label>
                     <input
                         type="tel"
                         id="phone"
@@ -264,7 +124,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Business email</label>
+                    <label for="email" data-i18n="business.email">Business email</label>
                     <input
                         type="email"
                         id="email"
@@ -277,7 +137,7 @@
             </div>
 
             <div class="form-group">
-                <label for="description">Business description</label>
+                <label for="description" data-i18n="business.description">Business description</label>
                 <textarea
                     id="description"
                     name="description"
@@ -285,14 +145,22 @@
                 >{{DESCRIPTION}}</textarea>
             </div>
 
+            <div class="form-group">
+                <label for="language" data-i18n="business.language">Language</label>
+                <select id="language" name="language">
+                    <option value="en">English</option>
+                    <option value="it">Italiano</option>
+                </select>
+            </div>
+
         </div>
 
         <div class="section">
 
-            <h2>Address</h2>
+            <h2 data-i18n="business.address">Address</h2>
 
             <div class="form-group">
-                <label for="address">Street address</label>
+                <label for="address" data-i18n="business.street_address">Street address</label>
                 <input
                     type="text"
                     id="address"
@@ -305,7 +173,7 @@
             <div class="form-row">
 
                 <div class="form-group">
-                    <label for="city">City</label>
+                    <label for="city" data-i18n="business.city">City</label>
                     <input
                         type="text"
                         id="city"
@@ -316,7 +184,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="postalCode">Postal code</label>
+                    <label for="postalCode" data-i18n="business.postal_code">Postal code</label>
                     <input
                         type="text"
                         id="postalCode"
@@ -332,9 +200,8 @@
 
         <div class="section">
 
-            <h2>Opening hours</h2>
-
-            <p class="section-description">
+            <h2 data-i18n="business.opening_hours">Opening hours</h2>
+            <p class="section-description" data-i18n="business.opening_hours_description">
                 Set the opening and closing time for each day.
             </p>
 
@@ -344,40 +211,40 @@
                 <div class="opening-hours-row">
 
                     <div class="opening-hours-day">
-                        <label for="mondayOpen">Monday</label>
+                        <label for="mondayOpen" data-i18n="days.monday">Monday</label>
 
                         <select id="mondayOpen" name="mondayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="mondayClose" name="mondayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="mondayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
                     <div class="opening-hours-day">
-                        <label for="tuesdayOpen">Tuesday</label>
+                        <label for="tuesdayOpen" data-i18n="days.tuesday">Tuesday</label>
 
                         <select id="tuesdayOpen" name="tuesdayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="tuesdayClose" name="tuesdayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="tuesdayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
@@ -387,40 +254,41 @@
                 <div class="opening-hours-row">
 
                     <div class="opening-hours-day">
-                        <label for="wednesdayOpen">Wednesday</label>
+                        <label for="wednesdayOpen" data-i18n="days.wednesday">Wednesday</label>
 
                         <select id="wednesdayOpen" name="wednesdayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="wednesdayClose" name="wednesdayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="wednesdayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
+
                     </div>
 
                     <div class="opening-hours-day">
-                        <label for="thursdayOpen">Thursday</label>
+                        <label for="thursdayOpen" data-i18n="days.thursday">Thursday</label>
 
                         <select id="thursdayOpen" name="thursdayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="thursdayClose" name="thursdayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="thursdayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
@@ -430,40 +298,40 @@
                 <div class="opening-hours-row">
 
                     <div class="opening-hours-day">
-                        <label for="fridayOpen">Friday</label>
+                        <label for="fridayOpen" data-i18n="days.friday">Friday</label>
 
                         <select id="fridayOpen" name="fridayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="fridayClose" name="fridayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="fridayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
                     <div class="opening-hours-day">
-                        <label for="saturdayOpen">Saturday</label>
+                        <label for="saturdayOpen" data-i18n="days.saturday">Saturday</label>
 
                         <select id="saturdayOpen" name="saturdayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="saturdayClose" name="saturdayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="saturdayClosed">
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
@@ -473,21 +341,21 @@
                 <div class="opening-hours-row">
 
                     <div class="opening-hours-day">
-                        <label for="sundayOpen">Sunday</label>
+                        <label for="sundayOpen" data-i18n="days.sunday">Sunday</label>
 
                         <select id="sundayOpen" name="sundayOpen">
-                            <option value="">Open</option>
+                            <option value="" data-i18n="business.open">Open</option>
                         </select>
 
-                        <span>to</span>
+                        <span data-i18n="business.to">to</span>
 
                         <select id="sundayClose" name="sundayClose">
-                            <option value="">Close</option>
+                            <option value="" data-i18n="business.close">Close</option>
                         </select>
 
                         <label class="closed-option">
                             <input type="checkbox" name="sundayClosed" checked>
-                            Closed
+                            <span data-i18n="business.closed">Closed</span>
                         </label>
                     </div>
 
@@ -497,7 +365,7 @@
 
         </div>
 
-        <button type="submit" class="save-button">
+        <button type="submit" class="save-button" data-i18n="business.save">
             Save business profile
         </button>
 
@@ -618,6 +486,33 @@
         });
 
     });
+</script>
+<script>
+    fetch("/locales/" + language + ".json", { cache: "no-store" })
+        .then(response => {
+            if (!response.ok) throw new Error("Locale not found");
+            return response.json();
+        })
+        .then(translations => {
+            document.querySelectorAll("[data-i18n]").forEach(element => {
+                const key = element.getAttribute("data-i18n");
+
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.textContent = translations[key];
+                }
+            });
+
+            document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+                const key = element.getAttribute("data-i18n-placeholder");
+
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.placeholder = translations[key];
+                }
+            });
+        })
+        .catch(error => {
+            console.error("Could not load business language:", error);
+        });
 </script>
 
 </body>

@@ -305,7 +305,7 @@
 
     <div class="register-card">
         <form action="/register" method="POST">
-
+            <input type="hidden" id="language" name="language" value="en">
             <div class="form-group">
                 <label for="businessName" data-i18n="register.business_name">
                     Business name
@@ -372,6 +372,11 @@
     <script>
         (function () {
             const language = localStorage.getItem("secretaryLanguage") || "en";
+
+            const languageField = document.getElementById("language");
+            if (languageField) {
+                languageField.value = language;
+            }
 
             fetch("/locales/" + language + ".json", { cache: "no-store" })
                 .then(response => {

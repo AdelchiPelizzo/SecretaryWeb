@@ -10,226 +10,27 @@
 
 <title>Dashboard - Secretary AI</title>
 
-<!-- <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f7f8fc;
-        color: #172033;
-        line-height: 1.6;
-    }
-
-    /* Navigation */
-    nav {
-        height: 72px;
-        background: #ffffff;
-        border-bottom: 1px solid #e8eaf0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 7%;
-    }
-
-    .logo {
-        font-size: 1.35rem;
-        font-weight: 700;
-        color: #171b2b;
-        text-decoration: none;
-    }
-
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .business-name {
-        color: #667085;
-        font-weight: 600;
-    }
-
-    .logout {
-        border: none;
-        background: #5b55e8;
-        color: white;
-        font-weight: 700;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-    }
-
-    .logout:hover {
-        background: #4943c7;
-    }
-
-    /* Dashboard */
-    .dashboard {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 55px 25px;
-    }
-
-    .dashboard-header {
-        margin-bottom: 35px;
-    }
-
-    .dashboard-header h1 {
-        font-size: 2.3rem;
-        color: #171b2b;
-        margin-bottom: 8px;
-    }
-
-    .dashboard-header p {
-        color: #667085;
-        font-size: 1.05rem;
-    }
-
-    /* Status */
-    .status-card {
-        background: #ffffff;
-        border: 1px solid #e5e7ee;
-        border-radius: 16px;
-        padding: 25px;
-        margin-bottom: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-    }
-
-    .status-info h2 {
-        font-size: 1.2rem;
-        margin-bottom: 5px;
-    }
-
-    .status-info p {
-        color: #667085;
-    }
-
-    .status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 700;
-        color: #238636;
-    }
-
-    .status-dot {
-        width: 10px;
-        height: 10px;
-        background: #238636;
-        border-radius: 50%;
-    }
-
-    /* Cards */
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 22px;
-    }
-
-    .card {
-        background: #ffffff;
-        border: 1px solid #e5e7ee;
-        border-radius: 16px;
-        padding: 28px;
-    }
-
-    .card h2 {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-        color: #171b2b;
-    }
-
-    .card p {
-        color: #667085;
-        margin-bottom: 20px;
-    }
-
-    .card-button {
-        display: inline-block;
-        background: #5b55e8;
-        color: #ffffff;
-        text-decoration: none;
-        padding: 10px 17px;
-        border-radius: 8px;
-        font-weight: 700;
-    }
-
-    .card-button.secondary {
-        background: #eeedff;
-        color: #5b55e8;
-    }
-
-    /* Activity */
-    .activity {
-        margin-top: 30px;
-        background: #ffffff;
-        border: 1px solid #e5e7ee;
-        border-radius: 16px;
-        padding: 28px;
-    }
-
-    .activity h2 {
-        margin-bottom: 18px;
-        color: #171b2b;
-    }
-
-    .activity-empty {
-        color: #667085;
-        padding: 20px 0;
-    }
-
-    /* Mobile */
-    @media (max-width: 850px) {
-        .cards {
-            grid-template-columns: 1fr;
-        }
-
-        .status-card {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .nav-right .business-name {
-            display: none;
-        }
-    }
-
-    @media (max-width: 600px) {
-        nav {
-            padding: 0 5%;
-        }
-
-        .dashboard {
-            padding: 40px 18px;
-        }
-
-        .dashboard-header h1 {
-            font-size: 2rem;
-        }
-    }
-</style> -->
-
-
 </head>
 
 <body>
     <script>
-        (function () {
-            const savedLanguage = localStorage.getItem("secretaryLanguage") || "en";
-            document.documentElement.lang = savedLanguage;
+        const registrationSuccess = {{REGISTRATION_SUCCESS}};
+    </script>
+    <div id="registration-success-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 data-i18n="registration.success_title">Registration successful</h2>
+            <p data-i18n="registration.success_message">Your account has been created successfully.</p>
+            <button type="button" id="registration-success-close" data-i18n="registration.ok">OK</button>
+        </div>
+    </div>
+    <script>
+        const language = "{{LANGUAGE}}";
 
-            if (savedLanguage === "ar") {
-                document.documentElement.dir = "rtl";
-            }
-        })();
+        document.documentElement.lang = language;
+
+        if (language === "ar") {
+            document.documentElement.dir = "rtl";
+        }
     </script>
 <nav>
     <a href="/" class="logo">Secretary AI</a>
@@ -334,8 +135,6 @@
 
     <script>
     (function () {
-        const language = localStorage.getItem("secretaryLanguage") || "en";
-
         fetch("/locales/" + language + ".json", { cache: "no-store" })
             .then(response => {
                 if (!response.ok) {
@@ -363,6 +162,20 @@
             .catch(error => {
                 console.error("Could not load dashboard language:", error);
             });
+            if (registrationSuccess) {
+                const modal = document.getElementById("registration-success-modal");
+                const closeButton = document.getElementById("registration-success-close");
+
+                if (modal) {
+                    modal.style.display = "flex";
+                }
+
+                if (closeButton) {
+                    closeButton.addEventListener("click", function () {
+                        modal.style.display = "none";
+                    });
+                }
+            }
     })();
     </script>
 

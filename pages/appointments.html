@@ -15,170 +15,151 @@
 </head>
 
 <body>
+    <script>
+        const language = "{{LANGUAGE}}";
 
-<nav>
+        document.documentElement.lang = language;
+
+        if (language === "ar") {
+            document.documentElement.dir = "rtl";
+        }
+    </script>
+
+    <nav>
+        <a href="/" class="logo">Secretary AI</a>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-action-button" data-i18n="nav.dashboard">Dashboard</a>
+            <a href="/business" class="nav-action-button" data-i18n="nav.business">Business</a>
+            <a href="/secretary" class="nav-action-button" data-i18n="secretary.title">AI Secretary</a>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <h1 data-i18n="appointments.title">Appointments</h1>
+        <p data-i18n="appointments.intro">
+            Configure how your AI secretary handles customer appointments.
+        </p>
+    </section>
+
+    <div class="appointments-page container">
 
 
-<a href="/" class="logo">Secretary AI</a>
+    <div class="card">
+        <h2 data-i18n="appointments.calendar">Calendar connection</h2>
+        <p class="card-description" data-i18n="appointments.calendar_text">
+            Connect your business calendar so your AI secretary can check availability
+            and schedule appointments for your customers.
+        </p>
+        <div class="calendar-status">
+            <div class="status-text">
+                <span
+                    id="calendarStatusDot"
+                    class="status-dot"
+                    style="background: #98a2b3;"
+                ></span>
 
-<div class="nav-links">
-    <a href="/dashboard" class="nav-action-button">Dashboard</a>
-    <a href="/business" class="nav-action-button">Business</a>
-    <a href="/secretary" class="nav-action-button">AI Secretary</a>
-</div>
+                <div>
+                    <div
+                        id="calendarStatusLabel"
+                        class="status-label"
+                        data-i18n="appointments.calendar_not_connected"
+                    >
+                        Google Calendar not connected
+                    </div>
+                    <div
+                        id="calendarStatusDescription"
+                        style="color: #667085; font-size: 14px;"
+                        data-i18n="appointments.calendar_not_connected_description"
+                    >
+                        Connect your Google Calendar to enable appointments.
+                    </div>
 
-
-</nav>
-
-<section class="page-header">
-
-
-<h1>Appointments</h1>
-
-<p>Configure how your AI secretary handles customer appointments.</p>
-
-
-</section>
-
-<div class="appointments-page container">
-
-
-<div class="card">
-
-    <h2>Calendar connection</h2>
-
-    <p class="card-description">
-        Connect your business calendar so your AI secretary can check availability
-        and schedule appointments for your customers.
-    </p>
-
-    <div class="calendar-status">
-
-        <div class="status-text">
-
-            <span
-                id="calendarStatusDot"
-                class="status-dot"
-                style="background: #98a2b3;"
-            ></span>
-
-            <div>
-
-                <div
-                    id="calendarStatusLabel"
-                    class="status-label"
-                >
-                    Google Calendar not connected
                 </div>
-
-                <div
-                    id="calendarStatusDescription"
-                    style="color: #667085; font-size: 14px;"
-                >
-                    Connect your Google Calendar to enable appointments.
-                </div>
-
             </div>
+
+            <a href="/calendar/connect" class="connect-button" data-i18n="appointments.connect">
+                Connect Calendar
+            </a>
 
         </div>
 
-        <a href="/calendar/connect" class="connect-button">
-            Connect Calendar
-        </a>
+        <form
+            action="/calendar/select"
+            method="POST"
+            style="margin-top: 24px;"
+        >
 
-    </div>
+            <div class="form-group">
 
-    <form
-        action="/calendar/select"
-        method="POST"
-        style="margin-top: 24px;"
-    >
-
-        <div class="form-group">
-
-            <label for="calendarSelect">
+            <label for="calendarSelect" data-i18n="appointments.calendar_used">
                 Calendar used for appointments
             </label>
 
-            <select
-                id="calendarSelect"
-                name="calendarId"
-            >
-                <option value="">
-                    Select a calendar
-                </option>
-            </select>
+                <select
+                    id="calendarSelect"
+                    name="calendarId"
+                >
+                    <option value="" data-i18n="appointments.select_calendar">
+                        Select a calendar
+                    </option>
+                </select>
 
-        </div>
+            </div>
 
-<!--         <div class="save-section">
+        </form>
 
-            <button
-                type="submit"
-                class="save-button"
-            >
-                Save Calendar
-            </button>
-
-        </div> -->
-
-    </form>
-
-</div>
+    </div>
 
 
-<form action="#" method="POST">
+    <form action="#" method="POST">
 
-    <div class="card">
+        <div class="card">
 
-        <h2>Appointment settings</h2>
+            <h2 data-i18n="appointments.settings">Appointment settings</h2>
+            <p class="card-description" data-i18n="appointments.settings_text">
+                Define the basic rules your AI secretary should follow when booking appointments.
+            </p>
 
-        <p class="card-description">
-            Define the basic rules your AI secretary should follow when booking appointments.
-        </p>
+            <div class="form-group">
 
-        <div class="form-group">
+                <label for="appointmentDuration" data-i18n="appointments.duration">
+                    Default appointment duration
+                </label>
 
-            <label for="appointmentDuration">
-                Default appointment duration
-            </label>
+                <select
+                    id="appointmentDuration"
+                    name="appointmentDuration"
+                >
+                    <option value="15" data-i18n="appointments.15m">15 minutes</option>
+                    <option value="30" selected data-i18n="appointments.30m">30 minutes</option>
+                    <option value="45" data-i18n="appointments.45m">45 minutes</option>
+                    <option value="60" data-i18n="appointments.60m">60 minutes</option>
+                    <option value="90" data-i18n="appointments.90m">90 minutes</option>
+                    <option value="120" data-i18n="appointments.120m">120 minutes</option>
+                </select>
 
-            <select
-                id="appointmentDuration"
-                name="appointmentDuration"
-            >
-                <option value="15">15 minutes</option>
-                <option value="30" selected>30 minutes</option>
-                <option value="45">45 minutes</option>
-                <option value="60">60 minutes</option>
-                <option value="90">90 minutes</option>
-                <option value="120">120 minutes</option>
-            </select>
+            </div>
 
-        </div>
+            <div class="form-group">
+                <label for="bookingWindow" data-i18n="appointments.advance">
+                    How far in advance can customers book?
+                </label>
 
-        <div class="form-group">
+                <select
+                    id="bookingWindow"
+                    name="bookingWindow"
+                >
+                    <option value="7" data-i18n="appointments.7">Up to 7 days</option>
+                    <option value="14" data-i18n="appointments.14">Up to 14 days</option>
+                    <option value="30" selected data-i18n="appointments.30">Up to 30 days</option>
+                    <option value="60" data-i18n="appointments.60">Up to 60 days</option>
+                    <option value="90" data-i18n="appointments.90">Up to 90 days</option>
+                </select>
+            </div>
 
-            <label for="bookingWindow">
-                How far in advance can customers book?
-            </label>
+            <div class="form-group">
 
-            <select
-                id="bookingWindow"
-                name="bookingWindow"
-            >
-                <option value="7">Up to 7 days</option>
-                <option value="14">Up to 14 days</option>
-                <option value="30" selected>Up to 30 days</option>
-                <option value="60">Up to 60 days</option>
-                <option value="90">Up to 90 days</option>
-            </select>
-
-        </div>
-
-        <div class="form-group">
-
-            <label for="bookingInstructions">
+                <label for="bookingInstructions" data-i18n="appointments.instructions">
                 Booking instructions
             </label>
 
@@ -186,167 +167,163 @@
                 id="bookingInstructions"
                 name="bookingInstructions"
                 placeholder="For example: Ask the customer for their name and phone number before confirming the appointment."
+                data-i18n-placeholder="appointments.instructions_placeholder"
             ></textarea>
 
-        </div>
-
-    </div>
-
-
-    <div class="card">
-
-        <h2>Availability</h2>
-
-        <p class="card-description">
-            These settings describe when the AI secretary is allowed to offer appointments.
-        </p>
-
-        <div class="hours-grid">
-
-            <div class="form-group">
-
-                <label for="startTime">
-                    Start time
-                </label>
-
-                <input
-                    type="time"
-                    id="startTime"
-                    name="startTime"
-                    value="09:00"
-                >
-
-            </div>
-
-            <div class="form-group">
-
-                <label for="endTime">
-                    End time
-                </label>
-
-                <input
-                    type="time"
-                    id="endTime"
-                    name="endTime"
-                    value="18:00"
-                >
-
             </div>
 
         </div>
 
-        <div class="form-group">
+        <div class="card">
+            <h2 data-i18n="appointments.availability">Availability</h2>
+            <p class="card-description" data-i18n="appointments.availability_text">
+                These settings describe when the AI secretary is allowed to offer appointments.
+            </p>
 
-            <label for="days">
-                Available days
-            </label>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="startTime" data-i18n="appointments.start">Start time</label>
+                    <input
+                        type="time"
+                        id="startTime"
+                        name="startTime"
+                    >
+                </div>
 
-            <select
-                id="days"
-                name="days"
+                <div class="form-group">
+                    <label for="endTime" data-i18n="appointments.end">End time</label>
+                    <input
+                        type="time"
+                        id="endTime"
+                        name="endTime"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="days" data-i18n="appointments.days">Available days</label>
+
+                <select id="days" name="days">
+                    <option value="weekdays" data-i18n="appointments.week">Monday - Friday</option>
+                    <option value="monday-saturday" data-i18n="appointments.sat">Monday - Saturday</option>
+                    <option value="all" data-i18n="appointments.every">Every day</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="save-section">
+
+            <button
+                type="submit"
+                class="save-button"
+                data-i18n="appointments.save"
             >
-                <option value="weekdays">
-                    Monday - Friday
-                </option>
-
-                <option value="monday-saturday">
-                    Monday - Saturday
-                </option>
-
-                <option value="all">
-                    Every day
-                </option>
-            </select>
+                Save Appointment Settings
+            </button>
 
         </div>
 
+    </form>
     </div>
+    <script>
+
+        fetch("/calendar/list")
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                const select = document.getElementById("calendarSelect");
+
+                const statusDot =
+                    document.getElementById("calendarStatusDot");
+
+                const statusLabel =
+                    document.getElementById("calendarStatusLabel");
+
+                const statusDescription =
+                    document.getElementById("calendarStatusDescription");
 
 
-    <div class="save-section">
+                if (data.calendars && data.calendars.length > 0) {
 
-        <button
-            type="submit"
-            class="save-button"
-        >
-            Save Appointment Settings
-        </button>
+                    statusDot.style.background = "#12b76a";
 
-    </div>
+                    statusLabel.textContent = window.translations["appointments.calendar_connected"];
+                    statusDescription.textContent = window.translations["appointments.calendar_connected_description"];
 
-</form>
-</div>
-<script>
+                    data.calendars.forEach(calendar => {
 
-    fetch("/calendar/list")
+                        const option =
+                            document.createElement("option");
 
-        .then(response => response.json())
+                        option.value = calendar.id;
 
-        .then(data => {
+                        option.textContent = calendar.summary;
 
-            const select = document.getElementById("calendarSelect");
-
-            const statusDot =
-                document.getElementById("calendarStatusDot");
-
-            const statusLabel =
-                document.getElementById("calendarStatusLabel");
-
-            const statusDescription =
-                document.getElementById("calendarStatusDescription");
+                        select.appendChild(option);
 
 
-            if (data.calendars && data.calendars.length > 0) {
+                        if (calendar.id === data.selectedCalendarId) {
 
-                statusDot.style.background = "#12b76a";
+                            option.selected = true;
 
-                statusLabel.textContent =
-                    "Google Calendar connected";
+                        }
 
-                statusDescription.textContent =
-                    "Your Google Calendar is connected and ready for appointments.";
-
-                data.calendars.forEach(calendar => {
-
-                    const option =
-                        document.createElement("option");
-
-                    option.value = calendar.id;
-
-                    option.textContent = calendar.summary;
-
-                    select.appendChild(option);
-
-
-                    if (calendar.id === data.selectedCalendarId) {
-
-                        option.selected = true;
-
-                    }
-
-                });
-                select.addEventListener("change", () => {
-                    fetch("/calendar/select", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: `calendarId=${encodeURIComponent(select.value)}`
                     });
+                    select.addEventListener("change", () => {
+                        fetch("/calendar/select", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: `calendarId=${encodeURIComponent(select.value)}`
+                        });
+                    });
+                }
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Failed to load calendars:",
+                    error
+                );
+
+            });
+
+    </script>
+    <script>
+        fetch("/locales/" + language + ".json", { cache: "no-store" })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Locale not found");
+                }
+
+                return response.json();
+            })
+            .then(translations => {
+                window.translations = translations;
+                document.querySelectorAll("[data-i18n]").forEach(element => {
+                    const key = element.getAttribute("data-i18n");
+
+                    if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                        element.textContent = translations[key];
+                    }
                 });
-            }
-        })
 
-        .catch(error => {
+                document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+                    const key = element.getAttribute("data-i18n-placeholder");
 
-            console.error(
-                "Failed to load calendars:",
-                error
-            );
-
-        });
-
-</script>
+                    if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                        element.placeholder = translations[key];
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Could not load appointments language:", error);
+            });
+    </script>
 
 </body>
 

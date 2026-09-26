@@ -1,6 +1,34 @@
 const path = require("path");
 const fs = require("fs");
 const Business = require("../models/Business");
+const SecretaryConfig = require("../models/SecretaryConfig");
+
+const supportedLanguages = [
+    { code: "ar", name: "العربية" },
+    { code: "bg", name: "Български" },
+    { code: "cs", name: "Čeština" },
+    { code: "da", name: "Dansk" },
+    { code: "de", name: "Deutsch" },
+    { code: "el", name: "Ελληνικά" },
+    { code: "en", name: "English" },
+    { code: "es", name: "Español" },
+    { code: "fi", name: "Suomi" },
+    { code: "fr", name: "Français" },
+    { code: "ga", name: "Gaeilge" },
+    { code: "hr", name: "Hrvatski" },
+    { code: "hu", name: "Magyar" },
+    { code: "it", name: "Italiano" },
+    { code: "ja", name: "日本語" },
+    { code: "nl", name: "Nederlands" },
+    { code: "pl", name: "Polski" },
+    { code: "pt", name: "Português" },
+    { code: "ro", name: "Română" },
+    { code: "ru", name: "Русский" },
+    { code: "sk", name: "Slovenčina" },
+    { code: "sl", name: "Slovenščina" },
+    { code: "sv", name: "Svenska" },
+    { code: "zh", name: "中文" }
+];
 
 async function showBusinessPage(req, res) {
     try {
@@ -14,6 +42,26 @@ async function showBusinessPage(req, res) {
 
         const filePath = path.join(__dirname, "../pages/business.html");
         let html = fs.readFileSync(filePath, "utf8");
+
+        html = html.replace("{{LANGUAGE}}", business.language || "en");
+
+        const languageOptions = supportedLanguages
+            .map(language => {
+                const selected =
+                    business.language === language.code
+                        ? "selected"
+                        : "";
+
+                return `<option value="${language.code}" ${selected}>${language.name}</option>`;
+            })
+            .join("");
+
+        const languageSelectRegex = /<option value="en">English<\/option>\s*<option value="it">Italiano<\/option>/;
+
+        html = html.replace(
+            languageSelectRegex,
+            languageOptions
+        );
 
         html = html.replace("{{BUSINESS_NAME}}", business.name || "");
         html = html.replace("{{PHONE}}", business.phone || "");
@@ -66,6 +114,24 @@ async function saveBusiness(req, res) {
 
         if (!business) {
             return res.status(404).send("Business not found.");
+        }
+
+        const newLanguage = req.body.language || "en";
+
+        business.language = newLanguage;
+
+        const secretaryConfig = await SecretaryConfig.findOne({
+            businessId: business._id
+        });
+
+        if (secretaryConfig) {
+            secretaryConfig.language = newLanguage;
+
+            secretaryConfig.supportedLanguages =
+                (secretaryConfig.supportedLanguages || [])
+                    .filter(code => code !== newLanguage);
+
+            await secretaryConfig.save();
         }
 
         business.name = req.body.businessName;

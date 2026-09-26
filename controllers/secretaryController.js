@@ -24,12 +24,14 @@ async function showSecretaryPage(req, res) {
 
         if (!config) {
             config = await SecretaryConfig.create({
-                businessId: business._id
+                businessId: business._id,
+                language: business.language || "en"
             });
         }
 
         const filePath = path.join(__dirname, "../pages/secretary.html");
         let html = fs.readFileSync(filePath, "utf8");
+        html = html.replace("{{LANGUAGE}}", business.language || "en");
         html = html.replace(
             "{{PERSONALITY_PROFESSIONAL}}",
             config.personality === "professional" ? "checked" : ""
@@ -149,7 +151,8 @@ async function saveSecretary(req, res) {
 
         if (!config) {
             config = await SecretaryConfig.create({
-                businessId: business._id
+                businessId: business._id,
+                language: business.language || "en"
             });
         }
 

@@ -10,7 +10,17 @@ function showRegisterPage(req, res) {
 
 async function handleRegistration(req, res) {
     try {
-        const { businessName, email, password } = req.body;
+        const { businessName, email, password, language } = req.body;
+
+        const supportedLanguages = [
+            "ar", "bg", "cs", "da", "de", "el", "en", "es",
+            "fi", "fr", "ga", "hr", "hu", "it", "ja", "nl",
+            "pl", "pt", "ro", "ru", "sk", "sl", "sv", "zh"
+        ];
+
+        const selectedLanguage = supportedLanguages.includes(language)
+            ? language
+            : "en";
 
         if (!businessName || !email || !password) {
             return res.status(400).send("All fields are required.");
@@ -33,10 +43,13 @@ async function handleRegistration(req, res) {
 
         await Business.create({
             ownerUserId: user._id,
-            name: businessName.trim()
+            name: businessName.trim(),
+            language: selectedLanguage
         });
 
-        res.send("Registration successful.");
+        req.session.userId = user._id;
+        req.session.registrationSuccess = true;
+        res.redirect("/dashboard");
     } catch (error) {
         console.error("Registration failed:", error);
         res.status(500).send("Registration failed.");
