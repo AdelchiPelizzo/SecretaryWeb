@@ -11,6 +11,7 @@ router.get("/calendar/connect", requireAuth, (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
         access_type: "offline",
         prompt: "consent",
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
         scope: [
             "https://www.googleapis.com/auth/calendar"
         ]
@@ -70,10 +71,22 @@ router.get("/calendar/callback", requireAuth, async (req, res) => {
             }))
         );
 
-        res.send("Google Calendar connected successfully.");
+        req.session.calendarConnected = true;
+
+        console.log("calendarConnected session flag set:", req.session.calendarConnected);
+
+        req.session.save((err) => {
+            if (err) {
+                console.error("Could not save calendar connection session:", err);
+                return res.status(500).send("Could not save calendar connection status.");
+            }
+
+            res.redirect("/appointments");
+        });
     } catch (error) {
         console.error("Google OAuth failed:", error);
-        res.status(500).send("Google Calendar connection failed.");
+        req.session.calendarConnectionFailed = true;
+        res.redirect("/appointments");
     }
 });
 

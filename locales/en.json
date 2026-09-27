@@ -184,6 +184,12 @@
   "appointments.calendar_not_connected_description": "Connect your Google Calendar to enable appointments.",
   "appointments.calendar_used": "Calendar used for appointments",
   "appointments.select_calendar": "Select a calendar",
+  "appointments.instructions_placeholder": "For example: Ask the customer for their name and phone number before confirming the appointment.",
+  "appointments.calendar_connected": "Google Calendar connected",
+  "appointments.calendar_connected_description": "Your Google Calendar is connected and ready for appointments.",
+  "appointments.calendar_connected_title": "Google Calendar connected",
+  "appointments.calendar_connected_message": "Your Google Calendar has been connected successfully.",
+  "appointments.ok": "OK",
 
   "calendar.not_connected": "Google Calendar not connected",
   "language.english": "English",

@@ -18,6 +18,9 @@
     <script>
         const language = "{{LANGUAGE}}";
 
+        const calendarConnected = "{{CALENDAR_CONNECTED}}" === "true";
+        const calendarConnectionFailed = "{{CALENDAR_CONNECTION_FAILED}}" === "true";
+
         document.documentElement.lang = language;
 
         if (language === "ar") {
@@ -304,6 +307,7 @@
             })
             .then(translations => {
                 window.translations = translations;
+
                 document.querySelectorAll("[data-i18n]").forEach(element => {
                     const key = element.getAttribute("data-i18n");
 
@@ -319,11 +323,41 @@
                         element.placeholder = translations[key];
                     }
                 });
+
+                if (calendarConnected) {
+                    document.getElementById("calendar-connected-modal").style.display = "flex";
+                }
             })
             .catch(error => {
                 console.error("Could not load appointments language:", error);
             });
+
+            function closeCalendarModal() {
+                document.getElementById("calendar-connected-modal").style.display = "none";
+            }
     </script>
+    <!-- Calendar connection success modal -->
+<div id="calendar-connected-modal" class="modal-overlay">
+    <div class="modal">
+        <h2>Google Calendar Connected</h2>
+        <p>Your Google Calendar has been connected successfully.</p>
+        <button type="button" onclick="closeCalendarModal()">
+            OK
+        </button>
+    </div>
+</div>
+
+<!-- Calendar connection failure modal -->
+<div id="calendarErrorModal" class="modal-overlay">
+    <div class="modal">
+        <h2>Calendar Connection Failed</h2>
+        <p>We could not connect your Google Calendar. Please try again.</p>
+        <button type="button" onclick="closeCalendarErrorModal()">
+            OK
+        </button>
+    </div>
+</div>
+
 
 </body>
 

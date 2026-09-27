@@ -188,6 +188,9 @@
   "appointments.calendar_connected": "Google Calendar collegato",
   "appointments.calendar_connected_description": "Il tuo Google Calendar è collegato e pronto per gli appuntamenti.",
   "calendar.not_connected": "Google Calendar non collegato",
+  "appointments.calendar_connected_title": "Google Calendar collegato",
+  "appointments.calendar_connected_message": "Il tuo Google Calendar è stato collegato correttamente.",
+  "appointments.ok": "OK",
   "language.english": "Inglese",
   "language.italian": "Italiano",
 
