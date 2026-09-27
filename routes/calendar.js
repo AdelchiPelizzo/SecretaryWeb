@@ -17,6 +17,9 @@ router.get("/calendar/connect", requireAuth, (req, res) => {
         ]
     });
 
+    console.log("GOOGLE REDIRECT URI:", process.env.GOOGLE_REDIRECT_URI);
+    console.log("GOOGLE AUTH URL:", authUrl);
+
     res.redirect(authUrl);
 });
 
