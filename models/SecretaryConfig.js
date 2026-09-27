@@ -50,6 +50,42 @@ const secretaryConfigSchema = new mongoose.Schema(
         enabled: {
             type: Boolean,
             default: true
+        },
+
+        enabled: {
+            type: Boolean,
+            default: true
+        },
+
+        appointmentDuration: {
+            type: Number,
+            default: 30
+        },
+
+        bookingWindow: {
+            type: Number,
+            default: 30
+        },
+
+        bookingInstructions: {
+            type: String,
+            trim: true,
+            default: ""
+        },
+
+        startTime: {
+            type: String,
+            default: ""
+        },
+
+        endTime: {
+            type: String,
+            default: ""
+        },
+
+        days: {
+            type: String,
+            default: "weekdays"
         }
     },
     {
