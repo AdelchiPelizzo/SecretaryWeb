@@ -35,19 +35,19 @@
 
 <main class="dashboard">
 
-<div class="dashboard-header">
+    <div class="dashboard-header">
 
-    <h1>Notes</h1>
+        <h1 data-i18n="notes.title">Notes</h1>
 
-    <p>
-        Messages and notes captured by your AI Secretary.
-    </p>
+        <p data-i18n="notes.intro">
+            Messages and notes captured by your AI Secretary.
+        </p>
 
-</div>
+    </div>
 
-<div id="notes-container">
-    <p>Loading notes...</p>
-</div>
+    <div id="notes-container">
+        <p data-i18n="notes.loading">Loading notes...</p>
+    </div>
 
 </main>
 
@@ -64,6 +64,11 @@
     function t(key) {
         return translations[key] || key;
     }
+
+    document.querySelectorAll("[data-i18n]").forEach(element => {
+        const key = element.getAttribute("data-i18n");
+        element.textContent = t(key);
+    });
 
     function sortNotes(field) {
 
@@ -133,44 +138,40 @@
         container.innerHTML = `
             <div class="notes-table-wrapper">
                 <table class="notes-table">
-
                     <thead>
                         <tr>
-
-                            <th>
+                           <th>
                                 <button
                                     type="button"
+                                    class="notes-header-button"
                                     onclick="sortNotes('name')"
                                 >
                                     ${t("notes.name")}
                                 </button>
                             </th>
-
                             <th>
                                 <button
                                     type="button"
+                                    class="notes-header-button"
                                     onclick="sortNotes('number')"
                                 >
                                     ${t("notes.number")}
                                 </button>
                             </th>
-
                             <th>
                                 <button
                                     type="button"
+                                    class="notes-header-button"
                                     onclick="sortNotes('date')"
                                 >
                                     ${t("notes.date")}
                                 </button>
                             </th>
-
                             <th>
                                 ${t("notes.note")}
                             </th>
-
                         </tr>
                     </thead>
-
                     <tbody>
 
                         ${notes.map(note => `
@@ -194,9 +195,7 @@
                                     }
                                 </td>
 
-                                <td>
-                                    ${note.text || ""}
-                                </td>
+                                <td>${(note.text || "").trim()}</td>
 
                             </tr>
                         `).join("")}
