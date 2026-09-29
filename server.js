@@ -15,6 +15,8 @@ const appointmentsApiRoutes = require("./routes/appointmentsApiRoutes");
 const notesRoute = require("./routes/notes");
 const privacyRoutes = require("./routes/privacy");
 const termsRoutes = require("./routes/terms");
+console.log("Contact route path:", require.resolve("./routes/contact"));
+const contactRoutes = require("./routes/contact");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -44,6 +46,7 @@ app.use(calendarRoute);
 app.use("/api", appointmentsApiRoutes);
 app.use("/", privacyRoutes);
 app.use("/", termsRoutes);
+app.use(contactRoutes);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

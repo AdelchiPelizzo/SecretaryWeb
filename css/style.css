@@ -55,11 +55,15 @@ nav {
 }
 
 .login-button {
+    display: inline-block;
     padding: 10px 20px;
-    border: 1px solid #d9dce5;
+    border: 1px solid #6c63ff;
     border-radius: 8px;
+    background: #6c63ff;
+    color: #ffffff !important;
+    text-decoration: none;
     font-weight: 600;
-    color: #202638 !important;
+    line-height: 1.4;
 }
 
 .nav-action-button {
@@ -449,7 +453,8 @@ nav {
 /* Customization cards */
 
 .customization-highlights {
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .customization-item {
@@ -500,7 +505,8 @@ nav {
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
     max-width: 1000px;
-    margin: auto;
+    margin: 0 auto;
+    justify-content: center;
 }
 
 .step {
@@ -528,6 +534,18 @@ nav {
 .step p {
     color: #6b7280;
     font-size: 15px;
+}
+
+@media (max-width: 900px) {
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .steps {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* =========================
@@ -1726,4 +1744,67 @@ footer {
 
 .phone-forwarding-note strong {
     color: #171b2b;
+}
+
+.contact {
+    padding: 90px 7%;
+    background: #f7f8fc;
+}
+
+.contact-form {
+    max-width: 700px;
+    margin: 40px auto 0;
+    padding: 32px;
+    background: #ffffff;
+    border: 1px solid #e5e7ee;
+    border-radius: 16px;
+}
+
+.contact-field {
+    margin-bottom: 20px;
+}
+
+.contact-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #171b2b;
+    font-weight: 600;
+}
+
+.contact-field input,
+.contact-field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d9dce5;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #202638;
+    font-family: inherit;
+    font-size: 15px;
+}
+
+.contact-field textarea {
+    resize: vertical;
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+    outline: none;
+    border-color: #6c63ff;
+}
+
+.contact-submit {
+    display: inline-block;
+    padding: 11px 22px;
+    border: 1px solid #6c63ff;
+    border-radius: 8px;
+    background: #6c63ff;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.contact-submit:hover {
+    background: #5b52e8;
 }
