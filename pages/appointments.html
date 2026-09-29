@@ -329,7 +329,7 @@
                     const key = element.getAttribute("data-i18n");
 
                     if (Object.prototype.hasOwnProperty.call(translations, key)) {
-                        element.textContent = translations[key];
+                        element.innerHTML = translations[key];
                     }
                 });
 

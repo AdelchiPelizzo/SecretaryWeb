@@ -41,6 +41,17 @@
   "personality.instructions_text": "Spiega al tuo Assistente AI la tua attività e come vuoi che gestisca le diverse richieste dei clienti.",
   "personality.business_title": "Personalizzalo per la tua attività",
   "personality.business_text": "Configura i saluti, le informazioni sulla tua attività e le altre impostazioni per adattare il tuo Assistente AI alle tue esigenze.",
+
+  "contact.title": "Contattaci",
+  "contact.intro": "Hai una domanda o vuoi prenotare una demo di Secretary AI?<br>Contattaci per richiedere una settimana di prova.",
+  "contact.name": "Nome",
+  "contact.name_placeholder": "Il tuo nome",
+  "contact.email": "Email",
+  "contact.email_placeholder": "[tua@email.com](mailto:tua@email.com)",
+  "contact.message": "Messaggio",
+  "contact.message_placeholder": "Scrivi il tuo messaggio...",
+  "contact.send": "Invia messaggio",
+
   "setup.title": "Iniziare è semplice",
   "setup.intro": "Configura il tuo assistente AI e rendilo parte della tua attività.",
   "setup.account": "Crea il tuo account",
