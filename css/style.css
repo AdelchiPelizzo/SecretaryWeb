@@ -54,7 +54,8 @@ nav {
     color: #111827;
 }
 
-.login-button {
+.login-button,
+.register-button {
     display: inline-block;
     padding: 10px 20px;
     border: 1px solid #6c63ff;
@@ -741,7 +742,7 @@ footer {
     cursor: pointer;
 }
 
-.login-card .login-button:hover {
+.login-card .login-button:hover .register-button:hover{
     background: #4d47d5;
 }
 
@@ -953,7 +954,6 @@ footer {
 }
 
 /* Status */
-
 .status-card {
     background: #ffffff;
     border: 1px solid #e5e7ee;
@@ -962,25 +962,44 @@ footer {
     margin-bottom: 30px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+}
+
+.status-info {
+    flex: 0 0 calc(66.6667% - 10px);
+    min-width: 0;
 }
 
 .status-info h2 {
     font-size: 1.2rem;
     margin-bottom: 5px;
+    text-align: center;
 }
 
-.status-info p {
+.status-info > p {
     color: #667085;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .status {
+    flex: 0 0 calc(33.3333% - 10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    font-weight: 700;
+    color: #238636;
+}
+
+.status-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 700;
-    color: #238636;
 }
 
 .status-dot {
@@ -988,6 +1007,32 @@ footer {
     height: 10px;
     background: #238636;
     border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-description {
+    margin: 6px 0 0;
+    color: #667085;
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.status-card-title {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+}
+
+.status-card-title h2 {
+    text-align: center;
+}
+
+.status-card-title p {
+    text-align: center;
+    margin: 0;
+    color: #667085;
 }
 
 .nav-right {
@@ -1068,21 +1113,93 @@ footer {
 /* Activity */
 
 .activity {
-    margin-top: 30px;
     background: #ffffff;
     border: 1px solid #e5e7ee;
     border-radius: 16px;
-    padding: 28px;
+    padding: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .activity h2 {
-    margin-bottom: 18px;
-    color: #171b2b;
+    font-size: 1.2rem;
+    margin: 0 0 18px;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid #eef0f4;
+    font-size: 0.92rem;
+}
+
+.activity-row:first-child {
+    border-top: none;
+}
+
+.activity-date {
+    color: #344054;
+}
+
+.activity-time {
+    color: #667085;
+}
+
+.activity-type {
+    color: #344054;
+    font-weight: 600;
 }
 
 .activity-empty {
+    margin: 0;
     color: #667085;
-    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+.activity-header {
+    display: grid;
+    grid-template-columns: 140px 80px 1fr;
+    padding: 0 0 8px;
+    color: #667085;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+@media (max-width: 600px) {
+
+    .activity-header {
+        grid-template-columns: 1fr 70px;
+    }
+
+    .activity-header span:nth-child(3) {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .activity-row {
+        grid-template-columns: 1fr 70px;
+        row-gap: 4px;
+    }
+
+    .activity-date {
+        grid-column: 1;
+    }
+
+    .activity-time {
+        grid-column: 2;
+        text-align: right;
+    }
+
+    .activity-type {
+        grid-column: 1 / -1;
+        font-size: 0.85rem;
+    }
 }
 
 /* Mobile */
@@ -1807,4 +1924,43 @@ footer {
 
 .contact-submit:hover {
     background: #5b52e8;
+}
+
+/* =========================================================
+   Setup Progress Section
+========================================================= */
+.setup-item {
+    margin-bottom: 18px;
+}
+
+.setup-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 7px;
+    font-weight: 600;
+}
+
+.setup-percentage {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.setup-progress-bar {
+    display: block;
+    width: 100%;
+    height: 10px;
+    background-color: #afb2b6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.setup-progress-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    max-width: 100%;
+    background-color: #4caf50;
+    border-radius: 999px;
+    transition: width 0.3s ease;
 }

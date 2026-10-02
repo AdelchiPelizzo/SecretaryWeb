@@ -57,14 +57,103 @@
 
 <div class="status-card">
 
+    <div class="status-card-title">
+
+        <h2 data-i18n="dashboard.secretary">
+            AI Secretary
+        </h2>
+
+        <p data-i18n="dashboard.status">
+            Complete your business setup to prepare your AI Secretary
+            for effective customer calls and service.
+        </p>
+
+    </div>
+
     <div class="status-info">
-        <h2 data-i18n="dashboard.secretary">AI Secretary</h2>
-        <p data-i18n="dashboard.status">Your secretary is ready to handle incoming calls.</p>
+
+        <div class="setup-progress">
+
+            <div class="setup-item">
+
+                <div class="setup-item-header">
+                    <span data-i18n="dashboard.business_setup">
+                        Business Profile
+                    </span>
+
+                    <span class="setup-percentage">
+                        {{BUSINESS_PERCENTAGE}}%
+                    </span>
+                </div>
+
+                <div class="setup-progress-bar">
+                    <div
+                        class="setup-progress-fill"
+                        style="width: {{BUSINESS_PERCENTAGE}}%;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="setup-item">
+
+                <div class="setup-item-header">
+                    <span data-i18n="dashboard.secretary_setup">
+                        AI Secretary
+                    </span>
+
+                    <span class="setup-percentage">
+                        {{SECRETARY_PERCENTAGE}}%
+                    </span>
+                </div>
+
+                <div class="setup-progress-bar">
+                    <div
+                        class="setup-progress-fill"
+                        style="width: {{SECRETARY_PERCENTAGE}}%;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="setup-item">
+
+                <div class="setup-item-header">
+                    <span data-i18n="dashboard.appointments_setup">
+                        Appointments
+                    </span>
+
+                    <span class="setup-percentage">
+                        {{CALENDAR_PERCENTAGE}}%
+                    </span>
+                </div>
+
+                <div class="setup-progress-bar">
+                    <div
+                        class="setup-progress-fill"
+                        style="width: {{CALENDAR_PERCENTAGE}}%;">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
     <div class="status">
-        <span class="status-dot"></span>
-        <span data-i18n="dashboard.active">Active</span>
+
+        <div class="status-header">
+            <span class="status-dot {{OVERALL_STATUS}}"></span>
+            <span>{{OVERALL_STATUS_TEXT}}</span>
+        </div>
+
+        <p
+            class="status-description"
+            data-i18n="{{OVERALL_STATUS_DESCRIPTION_KEY}}">
+            Email and Calendar are connected.
+        </p>
+
     </div>
 
 </div>
@@ -124,12 +213,101 @@
 </div>
 
 <div class="activity">
-    <h2 data-i18n="dashboard.activity">Recent activity</h2>
-    <p class="activity-empty" data-i18n="dashboard.no_activity">
+
+    <h2 data-i18n="dashboard.activity">
+        Recent activity
+    </h2>
+
+    <div class="activity-header">
+        <span data-i18n="dashboard.activity_date">Date</span>
+        <span data-i18n="dashboard.activity_time">Time</span>
+        <span data-i18n="dashboard.activity_type">Type</span>
+    </div>
+
+<div id="activity-list"></div>
+
+    <p
+        id="activity-empty"
+        class="activity-empty"
+        data-i18n="dashboard.no_activity">
         No activity yet. Your recent calls and appointments
         will appear here.
     </p>
+
 </div>
+
+<script>
+    const activities = {{ACTIVITIES_JSON}};
+    const translations = {{TRANSLATIONS_JSON}};
+
+    const activityList =
+        document.getElementById("activity-list");
+
+    const activityEmpty =
+        document.getElementById("activity-empty");
+
+    if (activities.length > 0) {
+
+        activityEmpty.style.display = "none";
+
+        activities.forEach(activity => {
+
+            const row = document.createElement("div");
+            row.className = "activity-row";
+
+            const date = new Date(activity.date);
+
+            const dateText =
+                date.toLocaleDateString(
+                    undefined,
+                    {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric"
+                    }
+                );
+
+            const timeText =
+                date.toLocaleTimeString(
+                    undefined,
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }
+                );
+
+            const activityIcon =
+                activity.type === "Note"
+                    ? "📝"
+                    : "📅";
+
+            const activityTypeKey =
+                activity.type === "Note"
+                    ? "dashboard.activity_note"
+                    : "dashboard.activity_appointment";
+
+            const activityType =
+                translations[activityTypeKey] || activity.type;
+
+            row.innerHTML = `
+                <span class="activity-date">
+                    ${dateText}
+                </span>
+
+                <span class="activity-time">
+                    ${timeText}
+                </span>
+
+                <span class="activity-type">
+                    <span class="activity-icon">${activityIcon}</span>
+                    ${activityType}
+                </span>
+            `;
+
+            activityList.appendChild(row);
+        });
+    }
+</script>
 
 </main>
 

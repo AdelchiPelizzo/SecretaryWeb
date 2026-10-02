@@ -13,7 +13,8 @@ router.get("/calendar/connect", requireAuth, (req, res) => {
         prompt: "consent",
         redirect_uri: process.env.GOOGLE_REDIRECT_URI,
         scope: [
-            "https://www.googleapis.com/auth/calendar"
+            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/userinfo.email"
         ]
     });
 
@@ -39,11 +40,25 @@ router.get("/calendar/callback", requireAuth, async (req, res) => {
 
         console.log("Google OAuth tokens received.");
 
+        oauth2Client.setCredentials(tokens);
+
+        const oauth2 = google.oauth2({
+            version: "v2",
+            auth: oauth2Client
+        });
+
+        const userInfo = await oauth2.userinfo.get();
+
+        const accountEmail = userInfo.data.email;
+
+        console.log("Google account email:", accountEmail);
+
         const connection = await CalendarConnection.findOneAndUpdate(
             { businessId: business._id },
             {
                 businessId: business._id,
                 provider: "google",
+                accountEmail: accountEmail,
                 accessToken: tokens.access_token,
                 refreshToken: tokens.refresh_token,
                 tokenExpiry: tokens.expiry_date
@@ -56,8 +71,6 @@ router.get("/calendar/callback", requireAuth, async (req, res) => {
                 upsert: true
             }
         );
-
-        oauth2Client.setCredentials(tokens);
 
         const calendar = google.calendar({
             version: "v3",
@@ -76,19 +89,30 @@ router.get("/calendar/callback", requireAuth, async (req, res) => {
 
         req.session.calendarConnected = true;
 
-        console.log("calendarConnected session flag set:", req.session.calendarConnected);
+        console.log(
+            "calendarConnected session flag set:",
+            req.session.calendarConnected
+        );
 
         req.session.save((err) => {
             if (err) {
-                console.error("Could not save calendar connection session:", err);
-                return res.status(500).send("Could not save calendar connection status.");
+                console.error(
+                    "Could not save calendar connection session:",
+                    err
+                );
+
+                return res.status(500).send(
+                    "Could not save calendar connection status."
+                );
             }
 
             res.redirect("/appointments");
         });
     } catch (error) {
         console.error("Google OAuth failed:", error);
+
         req.session.calendarConnectionFailed = true;
+
         res.redirect("/appointments");
     }
 });
@@ -100,7 +124,9 @@ router.get("/calendar/list", requireAuth, async (req, res) => {
         });
 
         if (!business) {
-            return res.status(404).json({ error: "Business not found." });
+            return res.status(404).json({
+                error: "Business not found."
+            });
         }
 
         const connection = await CalendarConnection.findOne({
@@ -109,7 +135,9 @@ router.get("/calendar/list", requireAuth, async (req, res) => {
         });
 
         if (!connection) {
-            return res.status(404).json({ error: "Google Calendar not connected." });
+            return res.status(404).json({
+                error: "Google Calendar not connected."
+            });
         }
 
         oauth2Client.setCredentials({
@@ -133,7 +161,10 @@ router.get("/calendar/list", requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error("Loading Google calendars failed:", error);
-        res.status(500).json({ error: "Failed to load Google calendars." });
+
+        res.status(500).json({
+            error: "Failed to load Google calendars."
+        });
     }
 });
 
@@ -157,7 +188,10 @@ router.post("/calendar/select", requireAuth, async (req, res) => {
         res.redirect("/appointments");
     } catch (error) {
         console.error("Saving selected calendar failed:", error);
-        res.status(500).send("Failed to save selected calendar.");
+
+        res.status(500).send(
+            "Failed to save selected calendar."
+        );
     }
 });
 
@@ -280,7 +314,10 @@ router.get("/calendar/availability", requireAuth, async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Checking calendar availability failed:", error);
+        console.error(
+            "Checking calendar availability failed:",
+            error
+        );
 
         res.status(500).json({
             error: "Failed to check calendar availability."
@@ -353,7 +390,10 @@ router.post("/calendar/event", requireAuth, async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Creating calendar event failed:", error);
+        console.error(
+            "Creating calendar event failed:",
+            error
+        );
 
         res.status(500).json({
             error: "Failed to create calendar event."
