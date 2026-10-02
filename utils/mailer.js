@@ -1,4 +1,4 @@
-const nodemailer = require("nodemailer");
+/* const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
@@ -52,6 +52,116 @@ If you did not request a password reset, you can safely ignore this email.`
     });
 
 }
+
+module.exports = {
+    sendContactEmail,
+    sendPasswordResetEmail
+}; */
+
+
+async function sendEmail({
+    to,
+    subject,
+    text,
+    replyTo
+}) {
+
+    const response = await fetch(
+        "https://api.resend.com/emails",
+        {
+            method: "POST",
+
+            headers: {
+                "Authorization":
+                    `Bearer ${process.env.RESEND_API_KEY}`,
+
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+                from:
+                    "Secretary AI <contact@adelforce.com>",
+
+                to,
+
+                subject,
+
+                text,
+
+                ...(replyTo
+                    ? { reply_to: replyTo }
+                    : {})
+            })
+        }
+    );
+
+
+    if (!response.ok) {
+
+        const errorText =
+            await response.text();
+
+        throw new Error(
+            `Resend API error: ${response.status} ${errorText}`
+        );
+
+    }
+
+}
+
+
+async function sendContactEmail({
+    name,
+    email,
+    message
+}) {
+
+    await sendEmail({
+
+        to: process.env.CONTACT_EMAIL,
+
+        subject:
+            `Secretary AI Contact Form - ${name}`,
+
+        replyTo: email,
+
+        text:
+            `Name: ${name}
+Email: ${email}
+Message:
+${message}`
+    });
+
+}
+
+
+async function sendPasswordResetEmail({
+    email,
+    resetUrl
+}) {
+
+    await sendEmail({
+
+        to: email,
+
+        subject:
+            "Secretary AI - Password Reset",
+
+        text:
+            `You requested a password reset for your Secretary AI account.
+
+Click the following link to reset your password:
+
+${resetUrl}
+
+This link will expire in 1 hour.
+
+If you did not request a password reset, you can safely ignore this email.`
+    });
+
+}
+
 
 module.exports = {
     sendContactEmail,
