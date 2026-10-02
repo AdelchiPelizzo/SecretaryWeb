@@ -33,6 +33,27 @@ async function sendContactEmail({ name, email, message }) {
 
 }
 
+async function sendPasswordResetEmail({ email, resetUrl }) {
+
+    await transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: email,
+        subject: "Secretary AI - Password Reset",
+        text:
+            `You requested a password reset for your Secretary AI account.
+
+Click the following link to reset your password:
+
+${resetUrl}
+
+This link will expire in 1 hour.
+
+If you did not request a password reset, you can safely ignore this email.`
+    });
+
+}
+
 module.exports = {
-    sendContactEmail
+    sendContactEmail,
+    sendPasswordResetEmail
 };

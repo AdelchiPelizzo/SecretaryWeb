@@ -217,6 +217,39 @@
             <p data-i18n="login.intro">Log in to manage your AI Secretary.</p>
         </div>
 
+        <div
+            id="password-changed-modal"
+            class="password-changed-modal">
+
+            <div class="password-changed-modal-content">
+
+                <button
+                    type="button"
+                    id="password-changed-close"
+                    class="password-changed-close">
+                    &times;
+                </button>
+
+                <h2 data-i18n="login.password_changed_title">
+                    Password changed
+                </h2>
+
+                <p data-i18n="login.password_changed">
+                    Your password has been changed successfully.
+                </p>
+
+                <button
+                    type="button"
+                    id="password-changed-ok"
+                    class="password-changed-ok"
+                    data-i18n="login.password_changed_ok">
+                    OK
+                </button>
+
+            </div>
+
+        </div>
+
         <div class="login-card">
            <!--  <form action="/login" method="POST"> -->
             <form action="/login" method="POST">
@@ -245,7 +278,9 @@
                     >
                 </div>
 
-                <a href="#" class="forgot-password" data-i18n="login.forgot">Forgot password?</a>
+                <a href="/forgot-password" class="forgot-password" data-i18n="login.forgot">
+                    Forgot password?
+                </a>
 
                 <button type="submit" class="login-button" data-i18n="login.submit">
                     Log in
@@ -268,6 +303,53 @@
 
     <script>
         (function () {
+
+            const passwordChangedModal =
+                document.getElementById("password-changed-modal");
+
+            const passwordChangedClose =
+                document.getElementById("password-changed-close");
+
+            const passwordChangedOk =
+                document.getElementById("password-changed-ok");
+
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+
+            if (params.get("passwordChanged") === "true") {
+
+                passwordChangedModal.style.display =
+                    "flex";
+
+                window.history.replaceState(
+                    {},
+                    document.title,
+                    "/login"
+                );
+
+            }
+
+
+            function closePasswordChangedModal() {
+
+                passwordChangedModal.style.display =
+                    "none";
+
+            }
+
+
+            passwordChangedClose.addEventListener(
+                "click",
+                closePasswordChangedModal
+            );
+
+            passwordChangedOk.addEventListener(
+                "click",
+                closePasswordChangedModal
+            );
+
             const language = localStorage.getItem("secretaryLanguage") || "en";
 
             fetch("/locales/" + language + ".json", { cache: "no-store" })

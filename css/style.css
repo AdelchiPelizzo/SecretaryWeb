@@ -1964,3 +1964,320 @@ footer {
     border-radius: 999px;
     transition: width 0.3s ease;
 }
+
+/* Forgot Password */
+
+.forgot-section {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #eeedff 0%,
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #f7f8fc 0%,
+            #ffffff 100%
+        );
+}
+
+.forgot-container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.forgot-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.forgot-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+    color: #171b2b;
+}
+
+.forgot-header p {
+    color: #667085;
+    font-size: 1rem;
+}
+
+.forgot-card {
+    background: #ffffff;
+    border: 1px solid #e5e7ee;
+    border-radius: 18px;
+    padding: 38px;
+    box-shadow: 0 12px 35px rgba(23, 27, 43, 0.08);
+}
+
+.forgot-card .form-group {
+    margin-bottom: 22px;
+}
+
+.forgot-card .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #172033;
+}
+
+.forgot-card .form-group input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9dce5;
+    border-radius: 9px;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.forgot-card .form-group input:focus {
+    border-color: #5b55e8;
+    box-shadow: 0 0 0 3px rgba(91, 85, 232, 0.12);
+}
+
+.forgot-button {
+    width: 100%;
+    border: none;
+    background: #5b55e8;
+    color: #ffffff;
+    padding: 14px;
+    border-radius: 9px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.forgot-button:hover {
+    background: #4d47d5;
+}
+
+.forgot-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.forgot-footer a {
+    color: #5b55e8;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+
+    .forgot-section {
+        padding: 40px 18px;
+    }
+
+    .forgot-header h1 {
+        font-size: 2rem;
+    }
+
+    .forgot-card {
+        padding: 28px 22px;
+    }
+
+}
+
+/* Reset Password */
+
+.reset-section {
+    min-height: calc(100vh - 72px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            #eeedff 0%,
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #f7f8fc 0%,
+            #ffffff 100%
+        );
+}
+
+.reset-container {
+    width: 100%;
+    max-width: 440px;
+}
+
+.reset-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.reset-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+    color: #171b2b;
+}
+
+.reset-header p {
+    color: #667085;
+    font-size: 1rem;
+}
+
+.reset-card {
+    background: #ffffff;
+    border: 1px solid #e5e7ee;
+    border-radius: 18px;
+    padding: 38px;
+    box-shadow: 0 12px 35px rgba(23, 27, 43, 0.08);
+}
+
+.reset-card .form-group {
+    margin-bottom: 22px;
+}
+
+.reset-card .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #172033;
+}
+
+.reset-card .form-group input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9dce5;
+    border-radius: 9px;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.reset-card .form-group input:focus {
+    border-color: #5b55e8;
+    box-shadow: 0 0 0 3px rgba(91, 85, 232, 0.12);
+}
+
+.reset-button {
+    width: 100%;
+    border: none;
+    background: #5b55e8;
+    color: #ffffff;
+    padding: 14px;
+    border-radius: 9px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.reset-button:hover {
+    background: #4d47d5;
+}
+
+.reset-footer {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.reset-footer a {
+    color: #5b55e8;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+
+    .reset-section {
+        padding: 40px 18px;
+    }
+
+    .reset-header h1 {
+        font-size: 2rem;
+    }
+
+    .reset-card {
+        padding: 28px 22px;
+    }
+
+}
+
+/* Password Changed Modal */
+
+.password-changed-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(23, 27, 43, 0.45);
+    padding: 20px;
+}
+
+.password-changed-modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 420px;
+
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 35px;
+
+    text-align: center;
+
+    box-shadow: 0 20px 50px rgba(23, 27, 43, 0.2);
+}
+
+.password-changed-modal-content h2 {
+    margin: 0 0 10px;
+    color: #171b2b;
+}
+
+.password-changed-modal-content p {
+    margin: 0 0 25px;
+    color: #667085;
+    line-height: 1.5;
+}
+
+.password-changed-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+
+    border: none;
+    background: none;
+
+    font-size: 1.6rem;
+    color: #667085;
+
+    cursor: pointer;
+}
+
+.password-changed-close:hover {
+    color: #171b2b;
+}
+
+.password-changed-ok {
+    border: none;
+    background: #5b55e8;
+    color: #ffffff;
+
+    padding: 12px 28px;
+    border-radius: 9px;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.password-changed-ok:hover {
+    background: #4d47d5;
+}
