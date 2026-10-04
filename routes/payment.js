@@ -6,11 +6,8 @@ const {
     showPaymentRequiredPage
 } = require("../controllers/paymentController");
 
-const requireAuth = require("../middleware/auth");
-
 router.get(
-    "/payment",
-    requireAuth,
+    "/payment/:paymentReference",
     showPaymentRequiredPage
 );
 

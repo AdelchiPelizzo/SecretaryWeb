@@ -7,13 +7,15 @@ async function showPaymentRequiredPage(req, res) {
 
     try {
 
-        const business = await Business.findOne({
-            ownerUserId: req.session.userId
-        });
+        const business =
+            await Business.findOne({
+                paymentReference:
+                    req.params.paymentReference
+            });
 
         if (!business) {
             return res.status(404).send(
-                "Business not found."
+                "Payment reference not found."
             );
         }
 

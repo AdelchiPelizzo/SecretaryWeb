@@ -2,6 +2,7 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 
 const User = require("../models/User");
+const Business = require("../models/Business");
 
 function showLoginPage(req, res) {
     res.sendFile(path.join(__dirname, "../pages/login.html"));
@@ -30,6 +31,36 @@ async function handleLogin(req, res) {
 
         if (!passwordMatches) {
             return res.status(401).send("Invalid email or password.");
+        }
+
+        const business = await Business.findOne({
+            ownerUserId: user._id
+        });
+
+        if (!business) {
+            return res.status(404).send("Business not found.");
+        }
+
+        const now = new Date();
+
+        if (
+            business.paymentStatus === "expired" ||
+            (
+                business.paymentStatus === "trial" &&
+                business.trialEndsAt &&
+                business.trialEndsAt <= now
+            ) ||
+            (
+                business.paymentStatus === "valid" &&
+                business.paymentValidUntil &&
+                business.paymentValidUntil <= now
+            )
+        ) {
+            req.session.userId = user._id.toString();
+
+            return res.redirect(
+                `/payment/${business.paymentReference}`
+            );
         }
 
         req.session.userId = user._id.toString();

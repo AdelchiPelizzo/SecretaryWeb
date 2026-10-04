@@ -20,6 +20,7 @@ const termsRoutes = require("./routes/terms");
 console.log("Contact route path:", require.resolve("./routes/contact"));
 const contactRoutes = require("./routes/contact");
 const paymentRoute = require("./routes/payment");
+const adminPaymentsRoute = require("./routes/adminPayments");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -53,6 +54,7 @@ app.use("/", privacyRoutes);
 app.use("/", termsRoutes);
 app.use(contactRoutes);
 app.use(paymentRoute);
+app.use(adminPaymentsRoute);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

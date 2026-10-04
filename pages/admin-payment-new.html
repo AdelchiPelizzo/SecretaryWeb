@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Record Payment</title>
+
+</head>
+
+<body>
+
+    <h1>Record Payment</h1>
+
+    <form
+        method="POST"
+        action="/admin/payments/new">
+
+        <div>
+
+            <label>
+                Business
+            </label>
+
+            <select name="businessId" required>
+
+                {{BUSINESS_OPTIONS}}
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label>
+                Amount
+            </label>
+
+            <input
+                type="number"
+                name="amount"
+                step="0.01"
+                min="0"
+                required>
+
+        </div>
+
+        <div>
+
+            <label>
+                Payment date
+            </label>
+
+            <input
+                type="date"
+                name="paymentDate"
+                required>
+
+        </div>
+
+        <div>
+
+            <label>
+                Payer name
+            </label>
+
+            <input
+                type="text"
+                name="payerName">
+
+        </div>
+
+        <div>
+
+            <label>
+                Transaction reference
+            </label>
+
+            <input
+                type="text"
+                name="transactionReference">
+
+        </div>
+
+        <div>
+
+            <label>
+                Notes
+            </label>
+
+            <textarea
+                name="notes"></textarea>
+
+        </div>
+
+        <button type="submit">
+            Record payment
+        </button>
+
+    </form>
+
+    <p>
+        <a href="/admin/payments">
+            Back to payments
+        </a>
+    </p>
+
+</body>
+
+</html>
