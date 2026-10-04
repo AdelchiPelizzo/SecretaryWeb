@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="{{LANGUAGE}}">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title data-i18n="payment.title">
+        Payment required
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="payment-card">
+
+            <h1 data-i18n="payment.title">
+                Payment required
+            </h1>
+
+            <p data-i18n="payment.trial_ended">
+                Your free trial has ended.
+            </p>
+
+            <p data-i18n="payment.instructions">
+                To continue using Secretary AI, please make your
+                monthly payment by bank transfer.
+            </p>
+
+            <div class="payment-details">
+
+                <div class="payment-detail">
+
+                    <span
+                        class="payment-label"
+                        data-i18n="payment.amount">
+                        Monthly subscription
+                    </span>
+
+                    <strong>€35</strong>
+
+                </div>
+
+                <div class="payment-detail">
+
+                    <span
+                        class="payment-label"
+                        data-i18n="payment.reference">
+                        Payment reference
+                    </span>
+
+                    <strong>{{PAYMENT_REFERENCE}}</strong>
+
+                </div>
+
+            </div>
+
+            <div class="payment-bank-details">
+
+                <h2 data-i18n="payment.bank_details">
+                    Bank transfer details
+                </h2>
+
+                <p data-i18n="payment.bank_details_placeholder">
+                    Bank payment details will be provided here.
+                </p>
+
+            </div>
+
+            <p
+                class="payment-note"
+                data-i18n="payment.reference_note">
+                Please include your payment reference with your
+                bank transfer.
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+        const translations =
+            {{TRANSLATIONS_JSON}};
+
+        document
+            .querySelectorAll("[data-i18n]")
+            .forEach(element => {
+
+                const key =
+                    element.getAttribute("data-i18n");
+
+                if (translations[key]) {
+                    element.textContent =
+                        translations[key];
+                }
+
+            });
+    </script>
+
+</body>
+</html>

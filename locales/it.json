@@ -43,6 +43,15 @@
   "personality.business_title": "Personalizzalo per la tua attività",
   "personality.business_text": "Configura i saluti, le informazioni sulla tua attività e le altre impostazioni per adattare il tuo Assistente AI alle tue esigenze.",
 
+  "payment.title": "Pagamento richiesto",
+  "payment.trial_ended": "Il tuo periodo di prova gratuito è terminato.",
+  "payment.instructions": "Per continuare a utilizzare Secretary AI, effettua il pagamento mensile tramite bonifico bancario.",
+  "payment.amount": "Abbonamento mensile",
+  "payment.reference": "Riferimento pagamento",
+  "payment.bank_details": "Dati per il bonifico bancario",
+  "payment.bank_details_placeholder": "I dati per il pagamento bancario saranno indicati qui.",
+  "payment.reference_note": "Inserisci il tuo riferimento di pagamento nel bonifico bancario.",
+
   "contact.title": "Contattaci",
   "contact.intro": "Hai una domanda o vuoi prenotare una demo di Secretary AI?<br>Contattaci per richiedere una settimana di prova.",
   "contact.name": "Nome",

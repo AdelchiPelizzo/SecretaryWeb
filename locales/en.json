@@ -42,6 +42,16 @@
   "personality.instructions_text": "Tell your AI Secretary about your business and how you want it to handle different customer requests.",
   "personality.business_title": "Make it yours",
   "personality.business_text": "Configure greetings, business information and other settings to make your AI Secretary fit your business.",
+
+  "payment.title": "Payment required",
+  "payment.trial_ended": "Your free trial has ended.",
+  "payment.instructions": "To continue using Secretary AI, please make your monthly payment by bank transfer.",
+  "payment.amount": "Monthly subscription",
+  "payment.reference": "Payment reference",
+  "payment.bank_details": "Bank transfer details",
+  "payment.bank_details_placeholder": "Bank payment details will be provided here.",
+  "payment.reference_note": "Please include your payment reference with your bank transfer.",
+
   "contact.title": "Contact us",
   "contact.intro": "Have a question or would you like to book a demo of Secretary AI? Contact us to request a week test drive.",
   "contact.name": "Name",

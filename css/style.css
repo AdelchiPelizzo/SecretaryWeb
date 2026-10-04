@@ -2281,3 +2281,62 @@ footer {
 .password-changed-ok:hover {
     background: #4d47d5;
 }
+
+.payment-card {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 35px;
+    background: #ffffff;
+    border: 1px solid #e5e7ee;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.payment-card h1 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+.payment-card p {
+    color: #667085;
+    line-height: 1.5;
+}
+
+.payment-details {
+    margin: 30px 0;
+    padding: 20px;
+    background: #f8f9fb;
+    border-radius: 12px;
+}
+
+.payment-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7ee;
+}
+
+.payment-detail:last-child {
+    border-bottom: none;
+}
+
+.payment-label {
+    color: #667085;
+}
+
+.payment-bank-details {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7ee;
+}
+
+.payment-bank-details h2 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.payment-note {
+    margin-top: 25px;
+    font-size: 0.9rem;
+}

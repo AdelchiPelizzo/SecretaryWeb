@@ -4,6 +4,10 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const Business = require("../models/Business");
 
+const {
+    generatePaymentReference
+} = require("../utils/paymentReference");
+
 function showRegisterPage(req, res) {
     res.sendFile(path.join(__dirname, "../pages/register.html"));
 }
@@ -41,10 +45,23 @@ async function handleRegistration(req, res) {
             passwordHash
         });
 
+        const paymentReference =
+            await generatePaymentReference();
+
         await Business.create({
             ownerUserId: user._id,
             name: businessName.trim(),
-            language: selectedLanguage
+            language: selectedLanguage,
+
+            paymentReference,
+
+            trialStartedAt: new Date(),
+
+            trialEndsAt: new Date(
+                Date.now() + 15 * 24 * 60 * 60 * 1000
+            ),
+
+            paymentStatus: "trial"
         });
 
         req.session.userId = user._id;

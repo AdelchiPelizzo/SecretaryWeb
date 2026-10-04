@@ -55,6 +55,31 @@ const businessSchema = new mongoose.Schema(
             trim: true
         },
 
+        paymentReference: {
+            type: String,
+            unique: true,
+            sparse: true,
+            trim: true
+        },
+
+        paymentStatus: {
+            type: String,
+            enum: ["trial", "valid", "expired"],
+            default: "trial"
+        },
+
+        trialStartedAt: {
+            type: Date
+        },
+
+        trialEndsAt: {
+            type: Date
+        },
+
+        paymentValidUntil: {
+            type: Date
+        },
+
         email: {
             type: String,
             trim: true,
