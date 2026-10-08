@@ -2,6 +2,13 @@
 
 <html lang="en">
 <head>
+
+    <meta property="og:title" content="Secretary AI | Virtual Secretary for Your Business">
+    <meta property="og:description" content="Secretary AI answers business calls, speaks naturally with customers, manages appointments and keeps your business available around the clock.">
+    <meta property="og:url" content="https://secretary.adelforce.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://secretary.adelforce.com/images/web_logo.jpg">
+
     <meta charset="utf-8">
 
     <meta
@@ -92,15 +99,80 @@
                     and helps your business stay available around the clock.
                 </p>
         <div class="hero-buttons">
-        <a class="hero-register" data-i18n="hero.create_account" href="/register">
-                        Create your account
-                    </a>
-        <a class="hero-login" data-i18n="hero.already_registered" href="/login">
-                        Already registered?
-                    </a>
+        <a class="hero-register" data-i18n="hero.start_trial" href="#" onclick="openTrialModal(); return false;">Start your free trial</a>
+        <a class="hero-login" data-i18n="hero.already_registered" href="/login"> Already registered? </a>
         </div>
     </div>
 </section>
+
+<div id="trial-modal" class="trial-modal" hidden>
+    <div class="trial-modal-content">
+
+        <button
+            type="button"
+            class="trial-modal-close"
+            aria-label="Close"
+            onclick="closeTrialModal()"
+        >
+            ×
+        </button>
+
+        <h2 data-i18n="trial.title">
+            Start your free trial
+        </h2>
+
+        <p data-i18n="trial.intro">
+            Getting started is simple.
+        </p>
+
+        <div class="trial-steps">
+
+            <div class="trial-step">
+                <div class="trial-step-number">1</div>
+                <div>
+                    <h3 data-i18n="trial.register_title">
+                        Register
+                    </h3>
+                    <p data-i18n="trial.register_text">
+                        Create your Secretary AI account and register your business.
+                    </p>
+                </div>
+            </div>
+
+            <div class="trial-step">
+                <div class="trial-step-number">2</div>
+                <div>
+                    <h3 data-i18n="trial.activate_title">
+                        Activate your telephone number
+                    </h3>
+                    <p data-i18n="trial.activate_text">
+                        From your dashboard, activate your telephone number to start your full functional trial.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <a
+            class="trial-modal-register"
+            data-i18n="trial.register_button"
+            href="/register"
+        >
+            Register now
+        </a>
+
+        <p class="trial-modal-login">
+            <span data-i18n="trial.already_registered">
+                Already registered?
+            </span>
+            <a href="/login" data-i18n="nav.login">
+                Login
+            </a>
+        </p>
+
+    </div>
+</div>
+
 <!-- =========================
      FEATURES
 ========================= -->
@@ -529,9 +601,47 @@
             loadLanguage(this.value);
         });
     }
-
     loadLanguage(detectLanguage());
 })();
+
+function openTrialModal() {
+    const modal = document.getElementById("trial-modal");
+    const content = modal.querySelector(".trial-modal-content");
+
+    const oldConfetti = content.querySelector(".trial-confetti");
+
+    if (oldConfetti) {
+        oldConfetti.remove();
+    }
+
+    const confetti = document.createElement("div");
+    confetti.className = "trial-confetti";
+
+    for (let i = 0; i < 35; i++) {
+        const piece = document.createElement("span");
+
+        piece.className = "trial-confetti-piece";
+
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.animationDelay = Math.random() * 0.5 + "s";
+        piece.style.animationDuration =
+            2.5 + Math.random() * 1 + "s";
+
+        confetti.appendChild(piece);
+    }
+
+    content.appendChild(confetti);
+
+    modal.hidden = false;
+
+    setTimeout(() => {
+        confetti.remove();
+    }, 4000);
+}
+
+function closeTrialModal() {
+    document.getElementById("trial-modal").hidden = true;
+}
 </script>
 </body>
 </html>
