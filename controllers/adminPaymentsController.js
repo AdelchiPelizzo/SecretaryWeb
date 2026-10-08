@@ -127,6 +127,10 @@ try {
                     </td>
 
                     <td>
+                        ${paymentActions}
+                    </td>
+
+                    <td>
                         ${businessPayments
                             .map(
                                 payment =>
@@ -134,11 +138,6 @@ try {
                             )
                             .join("<br>")}
                     </td>
-
-                    <td>
-                        ${paymentActions}
-                    </td>
-
                 </tr>
             `;
         })
