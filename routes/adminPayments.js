@@ -8,7 +8,10 @@ const requireAdmin =
 const {
     showAdminPaymentsPage,
     showNewPaymentPage,
-    recordPayment
+    recordPayment,
+    updatePayment,
+    showEditPaymentPage,
+    updateBusinessPaymentStatus
 } = require("../controllers/adminPaymentsController");
 
 router.get(
@@ -28,5 +31,24 @@ router.post(
     requireAdmin,
     recordPayment
 );
+
+router.post(
+    "/admin/payments/:paymentId/edit",
+    requireAdmin,
+    updatePayment
+);
+
+router.get(
+    "/admin/payments/:paymentId/edit",
+    requireAdmin,
+    showEditPaymentPage
+);
+
+router.post(
+    "/admin/payments/business/:businessId/status",
+    requireAdmin,
+    updateBusinessPaymentStatus
+);
+
 
 module.exports = router;

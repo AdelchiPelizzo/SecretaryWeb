@@ -1,19 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>Record Payment</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>Record Payment</title>
+
+<link rel="stylesheet" href="/css/style.css">
+
 
 </head>
 
 <body>
+
+
+<div class="payment-card">
 
     <h1>Record Payment</h1>
 
@@ -21,80 +29,179 @@
         method="POST"
         action="/admin/payments/new">
 
-        <div>
+        <div class="payment-details">
 
-            <label>
-                Business
-            </label>
+            <div class="payment-detail">
 
-            <select name="businessId" required>
+                <label
+                    class="payment-label"
+                    for="businessId">
+                    Business
+                </label>
 
-                {{BUSINESS_OPTIONS}}
+                <select
+                    id="businessId"
+                    name="businessId"
+                    required>
 
-            </select>
+                    {{BUSINESS_OPTIONS}}
 
-        </div>
+                </select>
 
-        <div>
+            </div>
 
-            <label>
-                Amount
-            </label>
+            <div class="payment-detail">
 
-            <input
-                type="number"
-                name="amount"
-                step="0.01"
-                min="0"
-                required>
+                <label
+                    class="payment-label"
+                    for="amount">
+                    Amount
+                </label>
 
-        </div>
+                <input
+                    id="amount"
+                    type="number"
+                    name="amount"
+                    step="0.01"
+                    min="0"
+                    required>
 
-        <div>
+            </div>
 
-            <label>
-                Payment date
-            </label>
+            <div class="payment-detail">
 
-            <input
-                type="date"
-                name="paymentDate"
-                required>
+                <label
+                    class="payment-label"
+                    for="paymentDate">
+                    Payment date
+                </label>
 
-        </div>
+                <input
+                    id="paymentDate"
+                    type="date"
+                    name="paymentDate"
+                    required>
 
-        <div>
+            </div>
 
-            <label>
-                Payer name
-            </label>
+            <div class="payment-detail">
 
-            <input
-                type="text"
-                name="payerName">
+                <label
+                    class="payment-label"
+                    for="periodFrom">
+                    Period from
+                </label>
 
-        </div>
+                <input
+                    id="periodFrom"
+                    type="date"
+                    name="periodFrom">
 
-        <div>
+            </div>
 
-            <label>
-                Transaction reference
-            </label>
+            <div class="payment-detail">
 
-            <input
-                type="text"
-                name="transactionReference">
+                <label
+                    class="payment-label"
+                    for="periodTo">
+                    Period to
+                </label>
 
-        </div>
+                <input
+                    id="periodTo"
+                    type="date"
+                    name="periodTo">
 
-        <div>
+            </div>
 
-            <label>
-                Notes
-            </label>
+            <div class="payment-detail">
 
-            <textarea
-                name="notes"></textarea>
+                <label
+                    class="payment-label"
+                    for="payerName">
+                    Payer name
+                </label>
+
+                <input
+                    id="payerName"
+                    type="text"
+                    name="payerName">
+
+            </div>
+
+            <div class="payment-detail">
+
+                <label
+                    class="payment-label"
+                    for="payerIBAN">
+                    Payer IBAN
+                </label>
+
+                <input
+                    id="payerIBAN"
+                    type="text"
+                    name="payerIBAN">
+
+            </div>
+
+            <div class="payment-detail">
+
+                <label
+                    class="payment-label"
+                    for="transactionReference">
+                    Transaction reference
+                </label>
+
+                <input
+                    id="transactionReference"
+                    type="text"
+                    name="transactionReference">
+
+            </div>
+
+            <div class="payment-detail">
+
+                <label
+                    class="payment-label"
+                    for="status">
+                    Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status">
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option
+                        value="confirmed"
+                        selected>
+                        Confirmed
+                    </option>
+
+                    <option value="rejected">
+                        Rejected
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="payment-detail">
+
+                <label
+                    class="payment-label"
+                    for="notes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="notes"
+                    name="notes"></textarea>
+
+            </div>
 
         </div>
 
@@ -104,11 +211,16 @@
 
     </form>
 
-    <p>
+    <p class="payment-note">
+
         <a href="/admin/payments">
             Back to payments
         </a>
+
     </p>
+
+</div>
+
 
 </body>
 

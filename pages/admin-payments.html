@@ -1,46 +1,71 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>Admin Payments</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+<title>Admin Payments</title>
+
+<link
+    rel="stylesheet"
+    href="/css/style.css">
+
 
 </head>
 
 <body>
 
+
+<div class="payment-card admin-payment-card">
+
     <h1>Admin Payments</h1>
 
-    <a href="/admin/payments/new">
-        Record payment
-    </a>
+    <p>
+        <a
+            class="admin-payment-action"
+            href="/admin/payments/new">
+            Record payment
+        </a>
+    </p>
 
-    <table border="1" cellpadding="8">
+    <div class="admin-payment-table">
 
-        <thead>
+        <table>
 
-            <tr>
-                <th>Business</th>
-                <th>Payment Reference</th>
-                <th>Status</th>
-                <th>Trial Ends</th>
-                <th>Valid Until</th>
-                <th>Payment History</th>
-            </tr>
+            <thead>
 
-        </thead>
+                <tr>
+                    <th>Business</th>
+                    <th>Payment Reference</th>
+                    <th>Status</th>
+                    <th>Trial Ends</th>
+                    <th>Valid Until</th>
+                    <th>Payment History</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
 
-        <tbody>
-            {{PAYMENT_ROWS}}
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+
+                {{PAYMENT_ROWS}}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 
 </body>
 
