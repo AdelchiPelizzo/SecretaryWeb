@@ -35,6 +35,7 @@ app.use(express.static(path.join(__dirname), {
     index: false,
     dotfiles: "deny"
 }));
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(sessionMiddleware);
