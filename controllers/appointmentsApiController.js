@@ -486,6 +486,14 @@ async function getSecretaryConfig(req, res) {
 
         return res.json({
             success: true,
+
+            // Business access and expiry information
+            paymentStatus: business.paymentStatus,
+            trialStartedAt: business.trialStartedAt,
+            trialEndsAt: business.trialEndsAt,
+            paymentValidUntil: business.paymentValidUntil,
+
+            // Existing Secretary configuration
             language: config.language,
             secretaryName: config.secretaryName,
             secretaryType: config.secretaryType,
