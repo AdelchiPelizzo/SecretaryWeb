@@ -21,6 +21,7 @@ console.log("Contact route path:", require.resolve("./routes/contact"));
 const contactRoutes = require("./routes/contact");
 const paymentRoute = require("./routes/payment");
 const adminPaymentsRoute = require("./routes/adminPayments");
+const adminSipNumbersRoute = require("./routes/adminSipNumbers");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -56,6 +57,7 @@ app.use("/", termsRoutes);
 app.use(contactRoutes);
 app.use(paymentRoute);
 app.use(adminPaymentsRoute);
+app.use(adminSipNumbersRoute);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));

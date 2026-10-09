@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - SIP Numbers</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .add-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        input {
+            min-width: 240px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        td form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        td select {
+            max-width: 220px;
+        }
+
+        .notice {
+            margin-top: 25px;
+            padding: 12px;
+            background: #fff8e1;
+            border: 1px solid #ead28b;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="back-link" href="/admin/payments">
+        Back to payment administration
+    </a>
+
+    <h1>SIP Destination Numbers</h1>
+
+    <p class="description">
+        Manage the pool of SIP destination numbers available for businesses.
+    </p>
+
+    <h2>Add a SIP number</h2>
+
+    <form
+        class="add-form"
+        method="POST"
+        action="/admin/sip-numbers/new"
+    >
+        <input
+            type="text"
+            name="number"
+            placeholder="e.g. 0873210201"
+            required
+            minlength="5"
+            maxlength="25"
+        >
+
+        <button type="submit">Add number</button>
+    </form>
+
+    <h2>Existing numbers</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Status</th>
+                <th>Assigned business</th>
+                <th>Assigned date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{SIP_NUMBER_ROWS}}
+        </tbody>
+    </table>
+
+    <p class="notice">
+        Adding a number here only records it in the database. The telephone
+        provider must actually provision the number and the SIP configuration
+        must support it before it can receive calls.
+    </p>
+</body>
+</html>

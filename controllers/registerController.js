@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 
 const User = require("../models/User");
 const Business = require("../models/Business");
+const SipNumber = require("../models/SipNumber");
+const {
+    assignAvailableSipNumber
+} = require("../utils/sipNumberAllocator");
 
 const {
     generatePaymentReference
@@ -38,6 +42,17 @@ async function handleRegistration(req, res) {
             return res.status(400).send("An account with this email already exists.");
         }
 
+        const availableSipNumber = await SipNumber.findOne({
+            status: "available",
+            businessId: null
+        }).select("_id");
+
+        if (!availableSipNumber) {
+            return res.status(503).send(
+                "No SIP destination number is currently available. Please try again later."
+            );
+        }
+
         const passwordHash = await bcrypt.hash(password, 12);
 
         const user = await User.create({
@@ -48,7 +63,7 @@ async function handleRegistration(req, res) {
         const paymentReference =
             await generatePaymentReference();
 
-        await Business.create({
+        const business = await Business.create({
             ownerUserId: user._id,
             name: businessName.trim(),
             language: selectedLanguage,
@@ -63,6 +78,19 @@ async function handleRegistration(req, res) {
 
             paymentStatus: "trial"
         });
+
+        const assignedNumber = await assignAvailableSipNumber(
+            business._id
+        );
+
+        if (!assignedNumber) {
+            await Business.deleteOne({ _id: business._id });
+            await User.deleteOne({ _id: user._id });
+
+            return res.status(503).send(
+                "No SIP destination number is currently available. Please try again later."
+            );
+        }
 
         req.session.userId = user._id;
         req.session.registrationSuccess = true;
