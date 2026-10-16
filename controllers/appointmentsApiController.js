@@ -452,17 +452,6 @@ async function createAppointment(req, res) {
 }
 
 async function getSecretaryConfig(req, res) {
-
-    const business = await Business.findOne({
-        forwardingNumber: forwardingNumber
-    });
-
-    console.log(
-        "[API] Business lookup:",
-        forwardingNumber,
-        business ? business._id : "NOT FOUND"
-    );
-
     try {
         const { forwardingNumber } = req.query;
 
@@ -476,6 +465,12 @@ async function getSecretaryConfig(req, res) {
         const business = await Business.findOne({
             forwardingNumber: forwardingNumber
         });
+
+        console.log(
+            "[API] Business lookup:",
+            forwardingNumber,
+            business ? business._id : "NOT FOUND"
+        );
 
         if (!business) {
             return res.status(404).json({
@@ -516,7 +511,7 @@ async function getSecretaryConfig(req, res) {
             personality: config.personality,
             greeting: config.greeting,
             instructions: config.instructions,
-            supportedLanguages: config.supportedLanguages || [],
+            supportedLanguages: config.supportedLanguages || []
         });
 
     } catch (error) {
