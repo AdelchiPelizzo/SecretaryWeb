@@ -452,6 +452,17 @@ async function createAppointment(req, res) {
 }
 
 async function getSecretaryConfig(req, res) {
+
+    const business = await Business.findOne({
+        forwardingNumber: forwardingNumber
+    });
+
+    console.log(
+        "[API] Business lookup:",
+        forwardingNumber,
+        business ? business._id : "NOT FOUND"
+    );
+
     try {
         const { forwardingNumber } = req.query;
 
@@ -476,6 +487,11 @@ async function getSecretaryConfig(req, res) {
         const config = await SecretaryConfig.findOne({
             businessId: business._id
         });
+
+        console.log(
+            "[API] SecretaryConfig lookup:",
+            config ? "FOUND" : "NOT FOUND"
+        );
 
         if (!config) {
             return res.status(404).json({
