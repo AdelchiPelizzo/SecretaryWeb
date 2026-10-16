@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const router = express.Router();
@@ -8,7 +9,8 @@ const {
     showAdminSipNumbersPage,
     addSipNumber,
     releaseSipNumber,
-    assignSipNumber
+    assignSipNumber,
+    toggleSipNumberActive
 } = require("../controllers/adminSipNumbersController");
 
 router.get(
@@ -33,6 +35,12 @@ router.post(
     "/admin/sip-numbers/:sipNumberId/assign",
     requireAdmin,
     assignSipNumber
+);
+
+router.post(
+    "/admin/sip-numbers/:sipNumberId/toggle-active",
+    requireAdmin,
+    toggleSipNumberActive
 );
 
 module.exports = router;

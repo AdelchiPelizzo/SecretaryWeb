@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,26 +24,39 @@
             margin-bottom: 30px;
         }
 
-        .add-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
         input,
         select,
         button {
             padding: 10px;
             font-size: 14px;
+            box-sizing: border-box;
         }
 
-        input {
-            min-width: 240px;
+        input,
+        select {
+            width: 100%;
         }
 
         button {
             cursor: pointer;
+        }
+
+        .primary-button {
+            background: #1769aa;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 18px;
+        }
+
+        .secondary-button {
+            background: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .page-actions {
+            margin-bottom: 30px;
         }
 
         table {
@@ -89,6 +103,126 @@
             display: inline-block;
             margin-bottom: 25px;
         }
+
+        /* Create-number modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.open {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-button {
+            border: none;
+            background: transparent;
+            font-size: 26px;
+            padding: 0 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .field small {
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .checkbox-field input {
+            width: auto;
+            min-width: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .security-note {
+            margin-top: 18px;
+            color: #7a4b00;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .modal-content {
+                padding: 18px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 
@@ -100,27 +234,18 @@
     <h1>SIP Destination Numbers</h1>
 
     <p class="description">
-        Manage the pool of SIP destination numbers available for businesses.
+        Manage SIP destination numbers and their connection settings.
     </p>
 
-    <h2>Add a SIP number</h2>
-
-    <form
-        class="add-form"
-        method="POST"
-        action="/admin/sip-numbers/new"
-    >
-        <input
-            type="text"
-            name="number"
-            placeholder="e.g. 0873210201"
-            required
-            minlength="5"
-            maxlength="25"
+    <div class="page-actions">
+        <button
+            type="button"
+            class="primary-button"
+            id="openCreateModal"
         >
-
-        <button type="submit">Add number</button>
-    </form>
+            Create New Number
+        </button>
+    </div>
 
     <h2>Existing numbers</h2>
 
@@ -141,9 +266,210 @@
     </table>
 
     <p class="notice">
-        Adding a number here only records it in the database. The telephone
-        provider must actually provision the number and the SIP configuration
-        must support it before it can receive calls.
+        Adding a number records it in the database. The telephone provider
+        must provision the number and the SIP configuration must support it
+        before it can receive calls. SIP accounts remain inactive by default.
     </p>
+
+    <!-- Create SIP number modal -->
+    <div
+        class="modal"
+        id="createNumberModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Create New SIP Number</h2>
+
+                <button
+                    type="button"
+                    class="close-button"
+                    id="closeCreateModal"
+                    aria-label="Close dialog"
+                >&times;</button>
+            </div>
+
+            <form
+                method="POST"
+                action="/admin/sip-numbers/new"
+                id="createSipNumberForm"
+            >
+                <div class="form-grid">
+                    <div class="field full-width">
+                        <label for="number">Destination telephone number</label>
+                        <input
+                            type="text"
+                            id="number"
+                            name="number"
+                            placeholder="e.g. 0873210201"
+                            required
+                            minlength="5"
+                            maxlength="25"
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="sipUsername">SIP username</label>
+                        <input
+                            type="text"
+                            id="sipUsername"
+                            name="sip[username]"
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="sipPassword">SIP password</label>
+                        <input
+                            type="password"
+                            id="sipPassword"
+                            name="sip[password]"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <small>
+                            Credentials must be protected and must never be
+                            displayed in the number list.
+                        </small>
+                    </div>
+
+                    <div class="field">
+                        <label for="sipHost">SIP host</label>
+                        <input
+                            type="text"
+                            id="sipHost"
+                            name="sip[host]"
+                            value="sip.vivavox.it"
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="sipPort">SIP port</label>
+                        <input
+                            type="number"
+                            id="sipPort"
+                            name="sip[port]"
+                            value="5060"
+                            min="1"
+                            max="65535"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="sipTransport">Transport</label>
+                        <select
+                            id="sipTransport"
+                            name="sip[transport]"
+                            required
+                        >
+                            <option value="UDP" selected>UDP</option>
+                            <option value="TCP">TCP</option>
+                            <option value="TLS">TLS</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="preferredCodec">Preferred codec</label>
+                        <select
+                            id="preferredCodec"
+                            name="sip[preferredCodec]"
+                            required
+                        >
+                            <option value="G.729.A" selected>G.729.A</option>
+                            <option value="PCMA">PCMA (G.711 A-law)</option>
+                            <option value="PCMU">PCMU (G.711 μ-law)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="checkbox-field">
+                    <input
+                        type="checkbox"
+                        id="sipActive"
+                        name="sip[active]"
+                        value="true"
+                    >
+                    <label for="sipActive">
+                        Activate this SIP account
+                    </label>
+                </div>
+
+                <p class="security-note">
+                    Only activate an account after verifying its provider
+                    settings. Activation should control whether the Python
+                    SIP server registers this account.
+                </p>
+
+                <div class="modal-actions">
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelCreateModal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="primary-button">
+                        Create Number
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const sipModal =
+                document.getElementById("createNumberModal");
+
+            const sipOpenButton =
+                document.getElementById("openCreateModal");
+
+            const sipCloseButton =
+                document.getElementById("closeCreateModal");
+
+            const sipCancelButton =
+                document.getElementById("cancelCreateModal");
+
+            const sipNumberInput =
+                document.getElementById("number");
+
+            function openSipModal() {
+                sipModal.classList.add("open");
+                sipNumberInput.focus();
+            }
+
+            function closeSipModal() {
+                sipModal.classList.remove("open");
+                sipOpenButton.focus();
+            }
+
+            sipOpenButton.addEventListener("click", openSipModal);
+            sipCloseButton.addEventListener("click", closeSipModal);
+            sipCancelButton.addEventListener("click", closeSipModal);
+
+            sipModal.addEventListener("click", function (event) {
+                if (event.target === sipModal) {
+                    closeSipModal();
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (
+                    event.key === "Escape" &&
+                    sipModal.classList.contains("open")
+                ) {
+                    closeSipModal();
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
-
 const mongoose = require("mongoose");
 
 const sipNumberSchema = new mongoose.Schema(
     {
+        // Existing fields — keep unchanged
         number: {
             type: String,
             required: true,
@@ -30,6 +30,24 @@ const sipNumberSchema = new mongoose.Schema(
         reservedUntil: {
             type: Date,
             default: null
+        },
+
+        // New SIP registration settings
+        sip: {
+            username: { type: String, trim: true },
+            password: { type: String },
+            host: { type: String, trim: true, default: "sip.vivavox.it" },
+            port: { type: Number, default: 5060 },
+            transport: {
+                type: String,
+                enum: ["UDP", "TCP", "TLS"],
+                default: "UDP"
+            },
+            preferredCodec: {
+                type: String,
+                default: "G.729.A"
+            },
+            active: { type: Boolean, default: false }
         }
     },
     {
