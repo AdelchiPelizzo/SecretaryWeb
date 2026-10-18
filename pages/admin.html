@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Overview - SecretaryWeb</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <main class="admin-overview">
+
+        <header class="admin-header">
+            <div>
+                <p class="admin-eyebrow">
+                    SECRETARYWEB ADMINISTRATION
+                </p>
+
+                <h1>Business overview</h1>
+
+                <p class="admin-subtitle">
+                    Overview of registered businesses and account status.
+                </p>
+            </div>
+
+            <nav class="admin-links">
+                <a href="/admin/payments">Payment administration</a>
+                <a href="/admin/sip-numbers">SIP numbers</a>
+            </nav>
+        </header>
+
+        <section class="admin-stats">
+            <article class="admin-stat">
+                <span>Total businesses</span>
+                <strong>{{BUSINESS_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Trial</span>
+                <strong>{{TRIAL_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Valid</span>
+                <strong>{{VALID_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Expired</span>
+                <strong>{{EXPIRED_COUNT}}</strong>
+            </article>
+        </section>
+
+        <section class="admin-panel">
+            <div class="admin-panel-heading">
+                <h2>Registered businesses</h2>
+                <p>Newest registrations appear first.</p>
+            </div>
+
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Business</th>
+                            <th>Owner / user</th>
+                            <th>Country</th>
+                            <th>Language</th>
+                            <th>Timezone</th>
+                            <th>Forwarding number</th>
+                            <th>Payment status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{BUSINESS_ROWS}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
