@@ -2351,7 +2351,7 @@ footer {
 
     padding: 10px 18px;
 
-    background: #1f2937;
+    background: #c42baf;
 
     color: #ffffff;
 
@@ -2843,5 +2843,66 @@ footer {
 
     .admin-stat {
         padding: 16px;
+    }
+}
+
+.admin-links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-links a {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+
+    border: 1px solid #5b55e8;
+    border-radius: 8px;
+
+    background: #5b55e8;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.admin-links a:hover {
+    background: #4640c7;
+    border-color: #4640c7;
+    color: #ffffff;
+}
+
+.admin-links a.active {
+    background: #3832a8;
+    border-color: #3832a8;
+    color: #ffffff;
+    cursor: default;
+}
+
+.admin-links a.active:hover {
+    background: #3832a8;
+    border-color: #3832a8;
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .admin-links {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .admin-links a {
+        flex: 1 1 auto;
+        text-align: center;
     }
 }

@@ -12,7 +12,21 @@ async function requireAdmin(req, res, next) {
             req.session.userId
         );
 
-        if (!user || !user.isAdmin) {
+        if (!user) {
+            return req.session.destroy((sessionError) => {
+                if (sessionError) {
+                    console.error(
+                        "Invalid session cleanup failed:",
+                        sessionError
+                    );
+                }
+
+                res.clearCookie("connect.sid");
+                return res.redirect("/login");
+            });
+        }
+
+        if (!user.isAdmin) {
             return res.status(403).send(
                 "Access denied."
             );

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - SIP Numbers</title>
+    <link rel="stylesheet" href="/css/style.css">
 
     <style>
         body {
@@ -227,9 +228,22 @@
 </head>
 
 <body>
-    <a class="back-link" href="/admin/payments">
-        Back to payment administration
-    </a>
+    <nav class="admin-links" aria-label="Admin navigation">
+        <a href="/admin">
+            Overview
+        </a>
+
+        <a href="/admin/payments">
+            Payment administration
+        </a>
+
+        <a
+            href="/admin/sip-numbers"
+            class="active"
+            aria-current="page">
+            SIP numbers
+        </a>
+    </nav>
 
     <h1>SIP Destination Numbers</h1>
 

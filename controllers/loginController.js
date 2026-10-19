@@ -33,6 +33,15 @@ async function handleLogin(req, res) {
             return res.status(401).send("Invalid email or password.");
         }
 
+        if (user.isAdmin) {
+            req.session.userId = user._id.toString();
+
+            user.lastLoginAt = new Date();
+            await user.save();
+
+            return res.redirect("/admin");
+        }
+
         const business = await Business.findOne({
             ownerUserId: user._id
         });
