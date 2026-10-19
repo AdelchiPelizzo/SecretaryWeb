@@ -166,6 +166,8 @@
   "dashboard.activity_type": "Type",
   "dashboard.activity_note": "Note",
   "dashboard.activity_appointment": "Appointment",
+  "dashboard.assigned_number_title": "Your assigned telephone number",
+  "dashboard.assigned_number_instruction": "Use this number as the forwarding destination on your mobile or landline.",
   "secretary.title": "AI Secretary",
   "secretary.intro": "Configure how your AI secretary communicates with your customers.",
   "secretary.personality": "Secretary personality",
@@ -259,7 +261,9 @@
   "notes.empty": "No notes yet.",
 
   "registration.success_title": "Registration successful",
-  "registration.success_message": "Your account has been created successfully.",
+  "registration.success_message": "Your account has been created successfully. Your 15-day trial has started.",
+  "registration.assigned_number_label": "Your assigned telephone number:",
+  "registration.forwarding_instruction": "Use this number as the forwarding destination on your mobile or landline.",
   "registration.ok": "OK",
 
   "_meta": {

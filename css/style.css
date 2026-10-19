@@ -2906,3 +2906,40 @@ footer {
         text-align: center;
     }
 }
+/* Assigned telephone number section */
+.assigned-number-card {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 24px;
+}
+
+.assigned-number-card .cards {
+    display: block;
+    width: 100%;
+}
+
+.assigned-number-card .card {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px;
+}
+
+.assigned-number-card h2 {
+    margin: 0 0 8px;
+}
+
+.assigned-number-card .assigned-number {
+    margin: 0 0 8px;
+    line-height: 1.2;
+}
+
+.assigned-number-card p {
+    margin-top: 0;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.assigned-number-card p:last-child {
+    margin-bottom: 0;
+}

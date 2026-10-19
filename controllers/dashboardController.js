@@ -23,6 +23,9 @@ async function showDashboardPage(req, res) {
         ownerUserId: req.session.userId
     });
 
+    console.log("Business fields:", Object.keys(business?.toObject?.() || {}));
+    console.log("Forwarding number:", business?.forwardingNumber);
+
     if (!user || !business) {
         return res.status(404).send("Business not found.");
     }
@@ -155,6 +158,41 @@ async function showDashboardPage(req, res) {
     html = html.replace(
         "{{BUSINESS_NAME}}",
         business.name
+    );
+
+    const assignedNumber = String(
+        business.forwardingNumber || ""
+    );
+
+    const escapedAssignedNumber = assignedNumber.replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]
+    );
+
+    console.log(
+        "ASSIGNED_NUMBER occurrences before replacement:",
+        html.split("{{ASSIGNED_NUMBER}}").length - 1
+    );
+
+    html = html.replaceAll(
+        "{{ASSIGNED_NUMBER}}",
+        () => escapedAssignedNumber
+    );
+
+    console.log(
+        "HTML contains assigned number:",
+        html.includes("0873210202")
+    );
+
+    console.log(
+        "ASSIGNED_NUMBER placeholder remains:",
+        html.includes("{{ASSIGNED_NUMBER}}")
     );
 
     html = html.replace(

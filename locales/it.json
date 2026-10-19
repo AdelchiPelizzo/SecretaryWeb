@@ -169,6 +169,8 @@
   "dashboard.activity_type": "Tipo",
   "dashboard.activity_note": "Nota",
   "dashboard.activity_appointment": "Appuntamento",
+  "dashboard.assigned_number_title": "Il tuo numero di telefono assegnato",
+  "dashboard.assigned_number_instruction": "Utilizza questo numero come destinazione del trasferimento di chiamata sul tuo cellulare o telefono fisso.",
   "secretary.title": "Assistente AI",
   "secretary.intro": "Configura come il tuo Assistente AI comunica con i clienti.",
   "secretary.personality": "Personalità dell'assistente",
@@ -261,7 +263,9 @@
   "notes.empty": "Nessuna nota ancora.",
 
   "registration.success_title": "Registrazione completata",
-  "registration.success_message": "Il tuo account è stato creato con successo.",
+  "registration.success_message": "Il tuo account è stato creato correttamente. Il periodo di prova di 15 giorni è iniziato.",
+  "registration.assigned_number_label": "Il tuo numero di telefono assegnato:",
+  "registration.forwarding_instruction": "Utilizza questo numero come destinazione del trasferimento di chiamata sul tuo cellulare o telefono fisso.",
   "registration.ok": "OK",
 
   "_meta": {

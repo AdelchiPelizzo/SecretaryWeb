@@ -18,9 +18,31 @@
     </script>
     <div id="registration-success-modal" class="modal-overlay">
         <div class="modal">
-            <h2 data-i18n="registration.success_title">Registration successful</h2>
-            <p data-i18n="registration.success_message">Your account has been created successfully.</p>
-            <button type="button" id="registration-success-close" data-i18n="registration.ok">OK</button>
+            <h2 data-i18n="registration.success_title">
+                Registration successful
+            </h2>
+
+            <p data-i18n="registration.success_message">
+                Your account has been created successfully. Your 15-day trial has started.
+            </p>
+
+            <p>
+                <strong data-i18n="registration.assigned_number_label">
+                    Your assigned telephone number:
+                </strong>
+                <span id="assigned-trial-number">{{ASSIGNED_NUMBER}}</span>
+            </p>
+
+            <p data-i18n="registration.forwarding_instruction">
+                Use this number as the forwarding destination on your mobile or landline.
+            </p>
+
+            <button
+                type="button"
+                id="registration-success-close"
+                data-i18n="registration.ok">
+                OK
+            </button>
         </div>
     </div>
     <script>
@@ -53,6 +75,27 @@
 <div class="dashboard-header">
     <h1 data-i18n="dashboard.title">Dashboard</h1>
     <p data-i18n="dashboard.intro">Manage your AI Secretary and business settings.</p>
+</div>
+
+    <!-- Your assigned telephone number section -->
+<div class="dashboard-card assigned-number-card">
+    <div class="cards">
+        <div class="card">
+            <h2 data-i18n="dashboard.assigned_number_title">
+                Your assigned telephone number
+            </h2>
+
+            <p
+                id="assigned-number"
+                class="assigned-number">
+                {{ASSIGNED_NUMBER}}
+            </p>
+
+            <p data-i18n="dashboard.assigned_number_instruction">
+                Use this number as the forwarding destination on your mobile or landline.
+            </p>
+        </div>
+    </div>
 </div>
 
 <div class="status-card">
