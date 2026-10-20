@@ -1,6 +1,7 @@
 const Business = require("../models/Business");
 const SecretaryConfig = require("../models/SecretaryConfig");
 const CalendarConnection = require("../models/CalendarConnection");
+const SipNumber = require("../models/SipNumber");
 const Note = require("../models/Note");
 const { google } = require("googleapis");
 const oauth2Client = require("../config/google");
@@ -451,6 +452,7 @@ async function createAppointment(req, res) {
     }
 }
 
+
 async function getSecretaryConfig(req, res) {
     try {
         const { forwardingNumber } = req.query;
@@ -462,31 +464,64 @@ async function getSecretaryConfig(req, res) {
             });
         }
 
-        const business = await Business.findOne({
-            forwardingNumber: forwardingNumber
+        // 1. Find the SIP number called by the caller.
+        const sipNumber = await SipNumber.findOne({
+            number: forwardingNumber
         });
 
-        console.log(
-            "[API] Business lookup:",
-            forwardingNumber,
-            business ? business._id : "NOT FOUND"
-        );
-
-        if (!business) {
-            return res.status(404).json({
+        if (!sipNumber) {
+            return res.status(403).json({
                 success: false,
-                error: "Business not found."
+                error: "SIP number is not authorized."
             });
         }
 
+        // 2. Reject inactive SIP numbers.
+        if (sipNumber.sip?.active !== true) {
+            return res.status(403).json({
+                success: false,
+                error: "SIP number is deactivated."
+            });
+        }
+
+        // 3. Reject numbers that are not currently assigned.
+        if (
+            sipNumber.status !== "assigned" ||
+            !sipNumber.businessId
+        ) {
+            return res.status(403).json({
+                success: false,
+                error: "SIP number is not assigned to a business."
+            });
+        }
+
+        // 4. Find the business currently assigned to this number.
+        // Both fields must match the current SIP-number record.
+        const business = await Business.findOne({
+            _id: sipNumber.businessId,
+            forwardingNumber: sipNumber.number
+        });
+
+        if (!business) {
+            return res.status(403).json({
+                success: false,
+                error: "Current SIP-number assignment is invalid."
+            });
+        }
+
+        console.log(
+            "[API] Authorized SIP number:",
+            forwardingNumber,
+            "Business:",
+            business.name,
+            "Business ID:",
+            business._id
+        );
+
+        // 5. Retrieve the current business's Secretary configuration.
         const config = await SecretaryConfig.findOne({
             businessId: business._id
         });
-
-        console.log(
-            "[API] SecretaryConfig lookup:",
-            config ? "FOUND" : "NOT FOUND"
-        );
 
         if (!config) {
             return res.status(404).json({
@@ -495,16 +530,17 @@ async function getSecretaryConfig(req, res) {
             });
         }
 
+        // 6. Return configuration only after authorization.
         return res.json({
             success: true,
 
-            // Business access and expiry information
+            businessName: business.name,
+
             paymentStatus: business.paymentStatus,
             trialStartedAt: business.trialStartedAt,
             trialEndsAt: business.trialEndsAt,
             paymentValidUntil: business.paymentValidUntil,
 
-            // Existing Secretary configuration
             language: config.language,
             secretaryName: config.secretaryName,
             secretaryType: config.secretaryType,
@@ -515,7 +551,10 @@ async function getSecretaryConfig(req, res) {
         });
 
     } catch (error) {
-        console.error("[API] Secretary config error:", error);
+        console.error(
+            "[API] Secretary config error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -523,6 +562,7 @@ async function getSecretaryConfig(req, res) {
         });
     }
 }
+
 
 async function createNote(req, res) {
     try {
