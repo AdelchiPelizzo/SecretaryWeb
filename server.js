@@ -30,8 +30,25 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Record homepage visits in MongoDB.
+
+ // Mark this browser to exclude its homepage visits.
 app.use((req, res, next) => {
-    if (req.method === "GET" && req.path === "/") {
+    if (req.path === "/exclude-my-visits") {
+        res.setHeader(
+            "Set-Cookie",
+            "excludeHomepageVisit=true; Path=/; Max-Age=31536000; SameSite=Lax; Secure"
+        );
+        return res.redirect("/");
+    }
+
+    // Record homepage visits, except from the excluded browser.
+    if (
+        req.method === "GET" &&
+        req.path === "/" &&
+        !req.headers.cookie?.split(";").some(
+            cookie => cookie.trim() === "excludeHomepageVisit=true"
+        )
+    ) {
         PageVisit.create({
             page: "/"
         }).catch((error) => {
