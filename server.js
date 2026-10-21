@@ -24,9 +24,26 @@ const adminPaymentsRoute = require("./routes/adminPayments");
 const adminSipNumbersRoute = require("./routes/adminSipNumbers");
 const sipRegistrationsApiRoutes = require("./routes/sipRegistrationsApiRoutes");
 const adminRoute = require("./routes/admin");
+const PageVisit = require("./models/PageVisit");
 
 const app = express();
 app.set("trust proxy", 1);
+
+// Record homepage visits in MongoDB.
+app.use((req, res, next) => {
+    if (req.method === "GET" && req.path === "/") {
+        PageVisit.create({
+            page: "/"
+        }).catch((error) => {
+            console.error(
+                "Failed to record homepage visit:",
+                error.message
+            );
+        });
+    }
+
+    next();
+});
 
 const PORT = process.env.PORT || 3000;
 

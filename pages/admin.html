@@ -7,6 +7,16 @@
     <title>Admin Overview - SecretaryWeb</title>
 
     <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .admin-overview > section {
+            margin-bottom: 32px;
+        }
+
+        .admin-overview > section:last-child {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -31,28 +41,7 @@
             </nav>
         </header>
 
-        <section class="admin-stats">
-            <article class="admin-stat">
-                <span>Total businesses</span>
-                <strong>{{BUSINESS_COUNT}}</strong>
-            </article>
-
-            <article class="admin-stat">
-                <span>Trial</span>
-                <strong>{{TRIAL_COUNT}}</strong>
-            </article>
-
-            <article class="admin-stat">
-                <span>Valid</span>
-                <strong>{{VALID_COUNT}}</strong>
-            </article>
-
-            <article class="admin-stat">
-                <span>Expired</span>
-                <strong>{{EXPIRED_COUNT}}</strong>
-            </article>
-        </section>
-
+        <!-- 1. Registered businesses -->
         <section class="admin-panel">
             <div class="admin-panel-heading">
                 <h2>Registered businesses</h2>
@@ -79,6 +68,70 @@
                     </tbody>
                 </table>
             </div>
+        </section>
+
+        <!-- 2. Business statistics -->
+        <section class="admin-stats">
+            <article class="admin-stat">
+                <span>Total businesses</span>
+                <strong>{{BUSINESS_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Trial</span>
+                <strong>{{TRIAL_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Valid</span>
+                <strong>{{VALID_COUNT}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Expired</span>
+                <strong>{{EXPIRED_COUNT}}</strong>
+            </article>
+        </section>
+
+        <!-- 3. Recent homepage visits -->
+        <section class="admin-panel">
+            <div class="admin-panel-heading">
+                <h2>Recent homepage visits</h2>
+                <p>Showing the 20 most recent visits.</p>
+            </div>
+
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Page</th>
+                            <th>Visit time (UTC)</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {{RECENT_VISITS}}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. Homepage visit statistics -->
+        <section class="admin-stats">
+            <article class="admin-stat">
+                <span>Homepage visits today (UTC)</span>
+                <strong>{{VISITS_TODAY}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Homepage visits - last 7 days</span>
+                <strong>{{VISITS_7_DAYS}}</strong>
+            </article>
+
+            <article class="admin-stat">
+                <span>Homepage visits - last 30 days</span>
+                <strong>{{VISITS_30_DAYS}}</strong>
+            </article>
         </section>
 
     </main>
