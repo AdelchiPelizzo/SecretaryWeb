@@ -228,6 +228,50 @@ app.use((req, res, next) => {
         }
     }
 
+    
+    // Classify the request using its User-Agent and Referer.
+    const userAgent = req.get("user-agent") || "";
+    const referer = req.get("referer") || "";
+    const userAgentLower = userAgent.toLowerCase();
+    const refererLower = referer.toLowerCase();
+
+    const knownBotPattern =
+        /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction/i;
+
+    let visitorType = "unknown";
+
+    if (knownBotPattern.test(userAgent)) {
+        visitorType = "bot";
+    } else if (userAgent.trim()) {
+        visitorType = "browser";
+    }
+
+    let trafficSource = "unknown";
+
+    if (
+        /linkedin\.com|lnkd\.in/.test(refererLower) ||
+        /linkedinbot/i.test(userAgent)
+    ) {
+        trafficSource = "linkedin";
+    } else if (
+        /facebook\.com|fb\.com|fb\.watch|m\.facebook/.test(refererLower) ||
+        /facebookexternalhit|facebot/i.test(userAgent)
+    ) {
+        trafficSource = "facebook";
+    } else if (
+        /t\.co|twitter\.com|x\.com/.test(refererLower) ||
+        /twitterbot/i.test(userAgent)
+    ) {
+        trafficSource = "twitter";
+    } else if (referer.trim()) {
+        trafficSource = "referral";
+    } else if (userAgent.trim()) {
+        trafficSource = "direct";
+    }
+
+    console.log("[VISITOR] Type:", visitorType);
+    console.log("[VISITOR] Traffic source:", trafficSource);
+
     // Check whether this browser has visited before.
 
     (async () => {
@@ -263,12 +307,18 @@ app.use((req, res, next) => {
             location = await getVisitorLocation(clientIp);
         }
 
+        
         await PageVisit.create({
             page: "/",
             visitorId,
             isReturning: Boolean(previousVisit),
+            visitorType,
+            trafficSource,
+            userAgent: userAgent || null,
+            referer: referer || null,
             ...location
         });
+
     })().catch((error) => {
         console.error(
             "Failed to record homepage visit:",

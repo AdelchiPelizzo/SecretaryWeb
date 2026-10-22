@@ -21,6 +21,38 @@ const pageVisitSchema = new mongoose.Schema({
         default: false
     },
 
+    // Classification of the request.
+    visitorType: {
+        type: String,
+        enum: ["browser", "bot", "unknown"],
+        default: "unknown"
+    },
+
+    // Detected traffic origin.
+    trafficSource: {
+        type: String,
+        enum: [
+            "linkedin",
+            "facebook",
+            "twitter",
+            "referral",
+            "direct",
+            "other"
+        ],
+        default: "unknown"
+    },
+
+    // Original request details for later analysis.
+    userAgent: {
+        type: String,
+        default: null
+    },
+
+    referer: {
+        type: String,
+        default: null
+    },
+
     // Approximate location obtained from the visitor's IP.
     country: {
         type: String,
