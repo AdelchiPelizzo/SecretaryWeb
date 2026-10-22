@@ -168,6 +168,7 @@ app.use((req, res, next) => {
 
     console.log("[VISITOR] IP:", req.ip);
     console.log("[VISITOR] Forwarded IP:", req.headers["x-forwarded-for"]);
+    console.log("[VISITOR] CF-Connecting-IP:", req.headers["cf-connecting-ip"]);
     
     async function getVisitorLocation(ip) {
         if (!ip) {
