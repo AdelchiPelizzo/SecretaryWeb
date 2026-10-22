@@ -32,35 +32,240 @@ app.set("trust proxy", 1);
 // Record homepage visits in MongoDB.
 
  // Mark this browser to exclude its homepage visits.
+
+const crypto = require("crypto");
+
+// Read a cookie by name without requiring cookie-parser.
+function getCookie(req, name) {
+    const cookies = (req.headers.cookie || "").split(";");
+
+    for (const cookie of cookies) {
+        const separator = cookie.indexOf("=");
+
+        if (separator === -1) {
+            continue;
+        }
+
+        const key = cookie.slice(0, separator).trim();
+
+        if (key === name) {
+            return cookie.slice(separator + 1).trim();
+        }
+    }
+
+    return null;
+}
+
+
+async function getVisitorLocation(ip) {
+    if (!ip) {
+        return {};
+    }
+
+    // Do not send local or invalid IP addresses to the provider.
+    const net = require("net");
+
+    if (net.isIP(ip) === 0) {
+        return {};
+    }
+
+    if (
+        ip === "127.0.0.1" ||
+        ip === "::1" ||
+        ip.startsWith("10.") ||
+        ip.startsWith("192.168.") ||
+        ip.startsWith("169.254.") ||
+        /^172\.(1[6-9]|2\d|3[01])\./.test(ip) ||
+        ip.startsWith("fc") ||
+        ip.startsWith("fd")
+    ) {
+        return {};
+    }
+
+    try {
+        const response = await fetch(
+            `https://ipwho.is/${encodeURIComponent(ip)}`
+        );
+
+        if (!response.ok) {
+            return {};
+        }
+
+        const data = await response.json();
+
+        if (!data.success) {
+            return {};
+        }
+
+        return {
+            country: data.country || null,
+            region: data.region || null,
+            city: data.city || null
+        };
+    } catch (error) {
+        console.error(
+            "Visitor location lookup failed:",
+            error.message
+        );
+
+        return {};
+    }
+}
+
+// Record homepage visits in MongoDB.
 app.use((req, res, next) => {
+    // Exclude this browser from homepage visit tracking.
     if (req.path === "/exclude-my-visits") {
-        res.setHeader(
+        res.append(
             "Set-Cookie",
             "excludeHomepageVisit=true; Path=/; Max-Age=31536000; SameSite=Lax; Secure"
         );
+
         return res.redirect("/");
     }
 
-    // Record homepage visits, except from the excluded browser.
-    if (
-        req.method === "GET" &&
-        req.path === "/" &&
-        !req.headers.cookie?.split(";").some(
-            cookie => cookie.trim() === "excludeHomepageVisit=true"
-        )
-    ) {
+    // Only record homepage visits.
+    if (req.method !== "GET" || req.path !== "/") {
+        return next();
+    }
+
+    // Preserve the existing exclusion feature.
+    if (getCookie(req, "excludeHomepageVisit") === "true") {
+        return next();
+    }
+
+    // Do not create a persistent visitor cookie until analytics
+    // consent has been implemented and granted.
+    if (getCookie(req, "secretaryAnalyticsConsent") !== "true") {
         PageVisit.create({
-            page: "/"
+            page: "/",
+            visitorId: null,
+            isReturning: false
         }).catch((error) => {
             console.error(
                 "Failed to record homepage visit:",
                 error.message
             );
         });
+
+        return next();
     }
+
+    // Read the anonymous ID or create a new one.
+    let visitorId = getCookie(req, "secretaryVisitorId");
+
+    if (
+        !visitorId ||
+        !/^[0-9a-f-]{36}$/i.test(visitorId)
+    ) {
+        visitorId = crypto.randomUUID();
+
+        res.append(
+            "Set-Cookie",
+            `secretaryVisitorId=${visitorId}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`
+        );
+    }
+    
+    async function getVisitorLocation(ip) {
+        if (!ip) {
+            return {};
+        }
+
+        // Do not send local or invalid IP addresses to the provider.
+        const net = require("net");
+
+        if (net.isIP(ip) === 0) {
+            return {};
+        }
+
+        if (
+            ip === "127.0.0.1" ||
+            ip === "::1" ||
+            ip.startsWith("10.") ||
+            ip.startsWith("192.168.") ||
+            ip.startsWith("169.254.") ||
+            /^172\.(1[6-9]|2\d|3[01])\./.test(ip) ||
+            ip.startsWith("fc") ||
+            ip.startsWith("fd")
+        ) {
+            return {};
+        }
+
+        try {
+            const response = await fetch(
+                `https://ipwho.is/${encodeURIComponent(ip)}`
+            );
+
+            if (!response.ok) {
+                return {};
+            }
+
+            const data = await response.json();
+
+            if (!data.success) {
+                return {};
+            }
+
+            return {
+                country: data.country || null,
+                region: data.region || null,
+                city: data.city || null
+            };
+        } catch (error) {
+            console.error(
+                "Visitor location lookup failed:",
+                error.message
+            );
+
+            return {};
+        }
+    }
+
+    // Check whether this browser has visited before.
+
+    (async () => {
+        const previousVisit = await PageVisit.findOne({
+            visitorId
+        })
+            .sort({ visitedAt: -1 })
+            .lean();
+
+        // Reuse the last known location to avoid a lookup on every visit.
+        let location = {};
+
+        if (
+            previousVisit &&
+            (
+                previousVisit.country ||
+                previousVisit.region ||
+                previousVisit.city
+            )
+        ) {
+            location = {
+                country: previousVisit.country,
+                region: previousVisit.region,
+                city: previousVisit.city
+            };
+        } else {
+            location = await getVisitorLocation(req.ip);
+        }
+
+        await PageVisit.create({
+            page: "/",
+            visitorId,
+            isReturning: Boolean(previousVisit),
+            ...location
+        });
+    })().catch((error) => {
+        console.error(
+            "Failed to record homepage visit:",
+            error.message
+        );
+    });
 
     next();
 });
+
 
 const PORT = process.env.PORT || 3000;
 

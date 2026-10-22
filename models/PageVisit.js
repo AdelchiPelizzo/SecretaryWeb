@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const pageVisitSchema = new mongoose.Schema({
@@ -5,6 +6,35 @@ const pageVisitSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: "/"
+    },
+
+    // Anonymous browser identifier.
+    visitorId: {
+        type: String,
+        default: null,
+        index: true
+    },
+
+    // True when this browser has visited before.
+    isReturning: {
+        type: Boolean,
+        default: false
+    },
+
+    // Approximate location obtained from the visitor's IP.
+    country: {
+        type: String,
+        default: null
+    },
+
+    region: {
+        type: String,
+        default: null
+    },
+
+    city: {
+        type: String,
+        default: null
     },
 
     visitedAt: {
