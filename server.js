@@ -169,6 +169,9 @@ app.use((req, res, next) => {
     console.log("[VISITOR] IP:", req.ip);
     console.log("[VISITOR] Forwarded IP:", req.headers["x-forwarded-for"]);
     console.log("[VISITOR] CF-Connecting-IP:", req.headers["cf-connecting-ip"]);
+    console.log("[VISITOR] User-Agent:", req.headers["user-agent"] || "(none)");
+    console.log("[VISITOR] Referer:", req.headers["referer"] || "(none)");
+    console.log("[VISITOR] Has visitor cookie:", Boolean(getCookie(req, "secretaryVisitorId")));
     
     async function getVisitorLocation(ip) {
         if (!ip) {
