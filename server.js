@@ -165,6 +165,9 @@ app.use((req, res, next) => {
             `secretaryVisitorId=${visitorId}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`
         );
     }
+
+    console.log("[VISITOR] IP:", req.ip);
+    console.log("[VISITOR] Forwarded IP:", req.headers["x-forwarded-for"]);
     
     async function getVisitorLocation(ip) {
         if (!ip) {
