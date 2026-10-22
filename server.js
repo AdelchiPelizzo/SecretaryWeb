@@ -250,7 +250,13 @@ app.use((req, res, next) => {
                 city: previousVisit.city
             };
         } else {
-            location = await getVisitorLocation(req.ip);
+            const forwardedIps = (
+                req.headers["x-forwarded-for"] || ""
+            ).split(",").map(ip => ip.trim());
+
+            const clientIp = forwardedIps[0] || req.ip;
+
+            location = await getVisitorLocation(clientIp);
         }
 
         await PageVisit.create({
