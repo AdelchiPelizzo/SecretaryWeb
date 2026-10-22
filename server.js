@@ -136,7 +136,7 @@ app.use((req, res, next) => {
 
     // Do not create a persistent visitor cookie until analytics
     // consent has been implemented and granted.
-    if (getCookie(req, "secretaryAnalyticsConsent") !== "true") {
+/*     if (getCookie(req, "secretaryAnalyticsConsent") !== "true") {
         PageVisit.create({
             page: "/",
             visitorId: null,
@@ -149,7 +149,7 @@ app.use((req, res, next) => {
         });
 
         return next();
-    }
+    } */
 
     // Read the anonymous ID or create a new one.
     let visitorId = getCookie(req, "secretaryVisitorId");
