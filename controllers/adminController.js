@@ -176,13 +176,27 @@ async function showAdminOverviewPage(req, res) {
                 .lean()
         ]);
 
+
         // Build the recent homepage visits table.
-        const visitRows = recentVisits.map((visit) => `
-            <tr>
-                <td>${escapeHtml(visit.page)}</td>
-                <td>${escapeHtml(formatDateTime(visit.visitedAt))}</td>
-            </tr>
-        `).join("");
+        const visitRows = recentVisits.map((visit) => {
+            const visitorType = !visit.visitorId
+                ? "Unknown"
+                : visit.isReturning
+                    ? "Returning"
+                    : "New";
+
+            return `
+                <tr>
+                    <td>${escapeHtml(visit.page || "/")}</td>
+                    <td>${escapeHtml(visit.country || "—")}</td>
+                    <td>${escapeHtml(visit.region || "—")}</td>
+                    <td>${escapeHtml(visit.city || "—")}</td>
+                    <td>${escapeHtml(visitorType)}</td>
+                    <td>${escapeHtml(formatDateTime(visit.visitedAt))}</td>
+                </tr>
+            `;
+        }).join("");
+
 
         // Load the admin HTML template.
         const pagePath = path.join(
@@ -236,7 +250,7 @@ async function showAdminOverviewPage(req, res) {
                 "{{RECENT_VISITS}}",
                 visitRows || `
                     <tr>
-                        <td colspan="2" class="empty-state">
+                        <td colspan="6" class="empty-state">
                             No homepage visits recorded yet.
                         </td>
                     </tr>
