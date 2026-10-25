@@ -26,7 +26,7 @@
   "features.title": "More than an answering machine",
   "features.intro": "Secretary AI can interact with your customers, understand what they need and take action for your business.",
   "features.answers_calls": "Answers your calls",
-  "features.answers_calls_text": "Your AI secretary can answer incoming calls and communicate naturally with your customers.",
+  "features.answers_calls_text": "Your AI assistant can answer incoming calls, communicate naturally with your customers, and take notes of important information during conversations.",
   "features.natural": "Natural conversations",
   "features.natural_text": "Customers can speak normally instead of navigating complicated menus or pressing numbers.",
   "features.appointments": "Appointments",
@@ -62,7 +62,7 @@
   "payment.reference_note": "Please include your payment reference with your bank transfer.",
 
   "contact.title": "Contact us",
-  "contact.intro": "Have a question or would you like to book a demo of Secretary AI? Contact us to request 2 week test drive.",
+  "contact.intro": "Have a question or would you like to book a demo of Secretary AI? Contact us to learn more about the service. Do you have specific needs or wish to discuss payment terms or a customized contractual agreement? We're here to find the solution that best suits your business.",
   "contact.name": "Name",
   "contact.name_placeholder": "Your name",
   "contact.email": "Email",
@@ -71,15 +71,17 @@
   "contact.message_placeholder": "Write your message...",
   "contact.send": "Send message",
 
-  
   "setup.title": "Getting started is simple",
-  "setup.intro": "Set up your AI secretary and let it become part of your business.",
+  "setup.intro": "Set up your AI secretary, customize it for your business, and let it handle your calls.",
   "setup.account": "Create your account",
-  "setup.account_text": "Register your business and enter the information your secretary needs.",
+  "setup.account_text": "Register your business to access your dashboard and receive your assigned telephone number. Your 15-day free trial will be activated by an administrator within 24 hours of registration.",
   "setup.configure": "Configure your secretary",
-  "setup.configure_text": "Choose a personality and configure how your secretary should work.",
-  "setup.phone": "Set up call forwarding",
-  "setup.phone_text": "After payment, you will be assigned a dedicated telephone number. Use this number as the forwarding destination on your mobile or landline.",
+  "setup.configure_text": "Add your business information, customize your secretary's greeting and personality, and define how it should assist your customers.",
+  "setup.phone": "Activate your service and forward your calls",
+  "setup.phone_text": "Once your service is activated, configure call forwarding on your mobile or landline to your assigned telephone number.",
+  "setup.extend": "Extend your service",
+  "setup.extend_text": "When your free trial ends, you can continue using your AI secretary by making a payment for the period you wish to extend. Alternatively, contact us to discuss a special arrangement.",
+  
   "cta.title": "Give your business an AI secretary.",
   "cta.text": "Let your customers talk to an intelligent assistant that is available when you need it.",
   "business.title": "Business Profile",
@@ -263,7 +265,7 @@
   "registration.success_title": "Registration successful",
   "registration.success_message": "Your account has been created successfully. Your 15-day trial has started.",
   "registration.assigned_number_label": "Your assigned telephone number:",
-  "registration.forwarding_instruction": "Use this number as the forwarding destination on your mobile or landline.",
+  "registration.forwarding_instruction": "To let your AI Secretary answer your calls, configure call forwarding on your mobile or landline to the assigned telephone number shown above.\n\nWhen call forwarding is enabled, incoming calls to your usual business number will be redirected to your AI Secretary.\n\nYour assigned number requires administrator activation, which will be completed within 24 hours of registration.\n\nYou will be notified when your service is ready to use.",
   "registration.ok": "OK",
 
   "_meta": {
