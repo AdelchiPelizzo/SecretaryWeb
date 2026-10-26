@@ -12,6 +12,10 @@ const {
     generatePaymentReference
 } = require("../utils/paymentReference");
 
+const {
+    sendBusinessRegistrationEmail
+} = require("../utils/mailer");
+
 function showRegisterPage(req, res) {
     res.sendFile(path.join(__dirname, "../pages/register.html"));
 }
@@ -94,6 +98,21 @@ async function handleRegistration(req, res) {
 
         req.session.userId = user._id;
         req.session.registrationSuccess = true;
+
+        try {
+            await sendBusinessRegistrationEmail({
+                businessName: business.name,
+                email: user.email,
+                assignedNumber: assignedNumber.number,
+                trialEndsAt: business.trialEndsAt
+            });
+        } catch (emailError) {
+            console.error(
+                "Business registration notification failed:",
+                emailError.message
+            );
+        }
+
         res.redirect("/dashboard");
     } catch (error) {
         console.error("Registration failed:", error);

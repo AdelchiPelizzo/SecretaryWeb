@@ -73,8 +73,8 @@
 
   "setup.title": "Getting started is simple",
   "setup.intro": "Set up your AI secretary, customize it for your business, and let it handle your calls.",
-  "setup.account": "Create your account",
-  "setup.account_text": "Register your business to access your dashboard and receive your assigned telephone number. Your 15-day free trial will be activated by an administrator within 24 hours of registration.",
+  "setup.account": "Create your account",  
+  "setup.account_text": "Register your business to access your dashboard and receive your assigned telephone number. Your 15-day free trial starts when you register.",
   "setup.configure": "Configure your secretary",
   "setup.configure_text": "Add your business information, customize your secretary's greeting and personality, and define how it should assist your customers.",
   "setup.phone": "Activate your service and forward your calls",
@@ -265,7 +265,7 @@
   "registration.success_title": "Registration successful",
   "registration.success_message": "Your account has been created successfully. Your 15-day trial has started.",
   "registration.assigned_number_label": "Your assigned telephone number:",
-  "registration.forwarding_instruction": "To let your AI Secretary answer your calls, configure call forwarding on your mobile or landline to the assigned telephone number shown above.\n\nWhen call forwarding is enabled, incoming calls to your usual business number will be redirected to your AI Secretary.\n\nYour assigned number requires administrator activation, which will be completed within 24 hours of registration.\n\nYou will be notified when your service is ready to use.",
+  "registration.forwarding_instruction": "To let your AI Secretary answer your calls, configure call forwarding on your mobile or landline to the assigned telephone number shown above.\n\nWhen call forwarding is enabled, incoming calls to your usual business number will be redirected to your AI Secretary.",
   "registration.ok": "OK",
 
   "_meta": {

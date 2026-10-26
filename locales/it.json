@@ -74,7 +74,7 @@
   "setup.title": "Iniziare è semplice",
   "setup.intro": "Configura la tua segretaria AI, personalizzala per la tua attività e lascia che gestisca le tue chiamate.",
   "setup.account": "Crea il tuo account",
-  "setup.account_text": "Registra la tua attività per accedere alla dashboard e ricevere il numero di telefono assegnato. La tua prova gratuita di 15 giorni sarà attivata da un amministratore entro 24 ore dalla registrazione.",
+  "setup.account_text": "Registra la tua attività per accedere alla dashboard e ricevere il numero di telefono assegnato. La tua prova gratuita di 15 giorni inizia al momento della registrazione.",
   "setup.configure": "Configura la tua segretaria",
   "setup.configure_text": "Aggiungi le informazioni sulla tua attività, personalizza il saluto e la personalità della tua segretaria e definisci come dovrà assistere i tuoi clienti.",
   "setup.phone": "Attiva il servizio e configura il trasferimento di chiamata",
@@ -270,6 +270,7 @@
   "registration.assigned_number_label": "Il tuo numero di telefono assegnato:",
   "registration.forwarding_instruction": "Per consentire alla tua Segretaria AI di rispondere alle chiamate, configura il trasferimento di chiamata sul tuo cellulare o telefono fisso verso il numero assegnato mostrato sopra.\n\nQuando il trasferimento è attivo, le chiamate in arrivo al tuo consueto numero aziendale verranno inoltrate alla tua Segretaria AI.\n\nIl numero assegnato richiede l'attivazione da parte dell'amministratore, che verrà completata entro 24 ore dalla registrazione.\n\nRiceverai una notifica quando il servizio sarà pronto all'uso.",
   "registration.ok": "OK",
+  "registration.forwarding_instruction": "Per consentire alla tua Segretaria AI di rispondere alle chiamate, configura il trasferimento di chiamata sul tuo cellulare o telefono fisso verso il numero assegnato mostrato sopra.\n\nQuando il trasferimento è attivo, le chiamate in arrivo al tuo consueto numero aziendale verranno inoltrate alla tua Segretaria AI.",
 
   "_meta": {
     "language": "it",

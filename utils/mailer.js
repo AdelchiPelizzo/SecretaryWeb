@@ -162,8 +162,29 @@ If you did not request a password reset, you can safely ignore this email.`
 
 }
 
+async function sendBusinessRegistrationEmail({
+    businessName,
+    email,
+    assignedNumber,
+    trialEndsAt
+}) {
+    await sendEmail({
+        to: process.env.CONTACT_EMAIL,
+        subject: `New Secretary AI trial registration: ${businessName}`,
+        replyTo: email,
+        text: `A new business has registered for a Secretary AI trial.
+
+Business: ${businessName}
+UserName: ${email}
+Assigned telephone number: ${assignedNumber}
+Trial ends: ${trialEndsAt.toISOString()}
+
+Log in to the SecretaryWeb admin panel to review the business.`
+    });
+}
 
 module.exports = {
     sendContactEmail,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    sendBusinessRegistrationEmail
 };
