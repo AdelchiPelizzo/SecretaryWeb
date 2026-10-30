@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+
+    <script>
+        localStorage.setItem("secretaryLanguage", "it");
+    </script>
+
+    <meta property="og:title" content="Secretary AI | Virtual Secretary for Your Business">
+    <meta name="description" content="Secretary AI è la segretaria virtuale AI per aziende e professionisti: risponde alle chiamate, gestisce gli appuntamenti e assiste i clienti 24 ore su 24.">
+    <meta property="og:url" content="https://secretary.adelforce.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://secretary.adelforce.com/images/web_logo.png">
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Segretaria Virtuale AI per Aziende | Secretary AI</title>
+
+    <meta
+        name="description"
+        content="Secretary AI è la segretaria virtuale AI per aziende e professionisti: risponde alle chiamate, gestisce gli appuntamenti e assiste i clienti 24 ore su 24."
+    >
+
+    <meta property="og:title" content="Segretaria Virtuale AI per Aziende | Secretary AI">
+    <meta property="og:description" content="Secretary AI è la segretaria virtuale AI per aziende e professionisti: risponde alle chiamate, gestisce gli appuntamenti e assiste i clienti 24 ore su 24.">
+    <meta property="og:url" content="https://secretary.adelforce.com/it/">
+    <meta property="og:type" content="website">
+
+    <link rel="canonical" href="https://secretary.adelforce.com/it/">
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Secretary AI",
+        "url": "https://secretary.adelforce.com/"
+        }
+    </script>
+</head>
+<body>
+<!-- =========================
+     NAVIGATION
+========================= -->
+<nav>
+<div class="logo">SECRETARY AI</div>
+<div class="nav-links">
+<a data-i18n="nav.features" href="#features">Features</a>
+<a data-i18n="nav.personalities" href="#personalities">Personalities</a>
+<a data-i18n="nav.how_it_works" href="#how-it-works">How it works</a>
+<a class="login-button" data-i18n="nav.login" href="/login">Login</a>
+<a class="register-button" data-i18n="nav.register" href="/register">Register</a>
+</div>
+<div class="language-selector-wrap">
+<select class="language-selector" data-i18n-aria-label="secretary.language" id="languageSelector">
+<option value="ar">العربية</option>
+<option value="bg">Български</option>
+<option value="cs">Čeština</option>
+<option value="da">Dansk</option>
+<option value="de">Deutsch</option>
+<option value="el">Ελληνικά</option>
+<option value="en">English</option>
+<option value="es">Español</option>
+<option value="fi">Suomi</option>
+<option value="fr">Français</option>
+<option value="ga">Gaeilge</option>
+<option value="hr">Hrvatski</option>
+<option value="hu">Magyar</option>
+<option value="it">Italiano</option>
+<option value="ja">日本語</option>
+<option value="nl">Nederlands</option>
+<option value="pl">Polski</option>
+<option value="pt">Português</option>
+<option value="ro">Română</option>
+<option value="ru">Русский</option>
+<option value="sk">Slovenčina</option>
+<option value="sl">Slovenščina</option>
+<option value="sv">Svenska</option>
+<option value="zh">中文</option>
+</select>
+</div></nav>
+<!-- =========================
+     HERO
+========================= -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 data-i18n="hero.title">Your AI Secretary for Business Calls and Appointments</h1>
+        <p data-i18n="hero.description">
+                    An intelligent AI secretary that answers your calls,
+                    speaks naturally with your customers, manages appointments
+                    and helps your business stay available around the clock.
+                </p>
+        <div class="hero-buttons">
+        <a class="hero-register" data-i18n="hero.start_trial" href="#" onclick="openTrialModal(); return false;">Start your free trial</a>
+        <a class="hero-login" data-i18n="hero.already_registered" href="/login"> Already registered? </a>
+        </div>
+    </div>
+</section>
+
+<div id="trial-modal" class="trial-modal" hidden>
+    <div class="trial-modal-content">
+
+        <button
+            type="button"
+            class="trial-modal-close"
+            aria-label="Close"
+            onclick="closeTrialModal()"
+        >
+            ×
+        </button>
+
+        <h2 data-i18n="trial.title">
+            Start your free trial
+        </h2>
+
+        <p data-i18n="trial.intro">
+            Getting started is simple.
+        </p>
+
+        <div class="trial-steps">
+
+            <div class="trial-step">
+                <div class="trial-step-number">1</div>
+                <div>
+                    <h3 data-i18n="trial.register_title">
+                        Register
+                    </h3>
+                    <p data-i18n="trial.register_text">
+                        Create your Secretary AI account and register your business.
+                    </p>
+                </div>
+            </div>
+
+            <div class="trial-step">
+                <div class="trial-step-number">2</div>
+                <div>
+                    <h3 data-i18n="trial.activate_title">
+                        Activate your telephone number
+                    </h3>
+                    <p data-i18n="trial.activate_text">
+                        From your dashboard, activate your telephone number to start your full functional trial.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <a
+            class="trial-modal-register"
+            data-i18n="trial.register_button"
+            href="/register"
+        >
+            Register now
+        </a>
+
+        <p class="trial-modal-login">
+            <span data-i18n="trial.already_registered">
+                Already registered?
+            </span>
+            <a href="/login" data-i18n="nav.login">
+                Login
+            </a>
+        </p>
+
+    </div>
+</div>
+
+<!-- =========================
+     FEATURES
+========================= -->
+<section class="features" id="features">
+<div class="section-heading">
+<h2 data-i18n="features.title">More than an answering machine</h2>
+<p data-i18n="features.intro">
+            Secretary AI can interact with your customers,
+            understand what they need and take action for your business.
+        </p>
+</div>
+<div class="feature-grid">
+<div class="feature-card">
+<div class="feature-icon">☎</div>
+<h3 data-i18n="features.answers_calls">Answers your calls</h3>
+<p data-i18n="features.answers_calls_text">
+                Your AI secretary can answer incoming calls
+                and communicate naturally with your customers.
+            </p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">◉</div>
+<h3 data-i18n="features.natural">Natural conversations</h3>
+<p data-i18n="features.natural_text">
+                Customers can speak normally instead of navigating
+                complicated menus or pressing numbers.
+            </p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">▣</div>
+<h3 data-i18n="features.appointments">Appointments</h3>
+<p data-i18n="features.appointments_text">
+                Help customers arrange appointments while
+                keeping your business calendar organized.
+            </p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">24</div>
+<h3 data-i18n="features.available">Always available</h3>
+<p data-i18n="features.available_text">
+                Your business can have an intelligent first point
+                of contact even outside normal opening hours.
+            </p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">AI</div>
+<h3 data-i18n="features.intelligence">Business intelligence</h3>
+<p data-i18n="features.intelligence_text">
+                Configure how your secretary communicates and
+                how it should handle different customer requests.
+            </p>
+</div>
+<div class="feature-card">
+<div class="feature-icon">⚙</div>
+<h3 data-i18n="features.custom">Made for your business</h3>
+<p data-i18n="features.custom_text">
+                Customize your secretary's personality,
+                behaviour and business information.
+            </p>
+</div>
+</div>
+</section>
+<!-- =========================
+     PERSONALITIES / CUSTOMIZATION
+========================= -->
+
+<section class="personalities" id="personalities">
+
+    <div class="section-heading">
+
+        <h2 data-i18n="personality.title">
+            Customize your AI Secretary
+        </h2>
+
+        <p data-i18n="personality.intro">
+            Make your Secretary AI fit the way your business communicates
+            with its customers.
+        </p>
+
+    </div>
+
+    <div class="personality-grid">
+
+        <!-- PROFESSIONAL -->
+        <div class="personality-card">
+
+            <img
+                class="secretary-image"
+                src="/images/secretary-professional.png"
+                alt="Professional Secretary"
+            >
+
+            <h3 data-i18n="personality.professional">
+                Professional
+            </h3>
+
+            <p data-i18n="personality.professional_text">
+                Clear, confident and efficient for businesses
+                where professionalism and precision matter.
+            </p>
+
+        </div>
+
+        <!-- FRIENDLY -->
+        <div class="personality-card">
+
+            <img
+                class="secretary-image"
+                src="/images/secretary-friendly.png"
+                alt="Friendly Secretary"
+            >
+
+            <h3 data-i18n="personality.friendly">
+                Friendly
+            </h3>
+
+            <p data-i18n="personality.friendly_text">
+                Warm, welcoming and conversational for businesses
+                that want customers to feel comfortable.
+            </p>
+
+        </div>
+
+        <!-- ENERGETIC -->
+        <div class="personality-card">
+
+            <img
+                class="secretary-image"
+                src="/images/secretary-energetic.png"
+                alt="Energetic Secretary"
+            >
+
+            <h3 data-i18n="personality.energetic">
+                Energetic
+            </h3>
+
+            <p data-i18n="personality.energetic_text">
+                Lively, enthusiastic and engaging for businesses
+                that want a more energetic customer experience.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CUSTOMIZATION OPTIONS
+    ========================= -->
+
+    <div class="customization-highlights">
+
+        <div class="customization-item">
+
+            <h3 data-i18n="personality.language_title">
+                Choose your language
+            </h3>
+
+            <p data-i18n="personality.language_text">
+                Choose a primary language for your Secretary and
+                add additional languages for your customers.
+            </p>
+
+        </div>
+
+
+        <div class="customization-item">
+
+            <h3 data-i18n="personality.instructions_title">
+                Set your instructions
+            </h3>
+
+            <p data-i18n="personality.instructions_text">
+                Tell your Secretary about your business and how
+                you want it to handle different customer requests.
+            </p>
+
+        </div>
+
+
+        <div class="customization-item">
+
+            <h3 data-i18n="personality.business_title">
+                Make it yours
+            </h3>
+
+            <p data-i18n="personality.business_text">
+                Configure greetings, business information and
+                other settings to make your Secretary fit your business.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- =========================
+     HOW IT WORKS
+========================= -->
+<section class="how-it-works" id="how-it-works">
+
+    <div class="section-heading">
+
+        <h2 data-i18n="setup.title">
+            Getting started is simple
+        </h2>
+
+        <p data-i18n="setup.intro">
+            Everything you need to get your AI Secretary ready for your business.
+        </p>
+
+    </div>
+
+<div class="steps">
+    <div class="step">
+        <div class="step-number">1</div>
+        <h3 data-i18n="setup.account">Create your account</h3>
+        <p data-i18n="setup.account_text">
+            Register your business to access your dashboard and receive your assigned telephone number.
+            Your 15-day free trial will be activated by an administrator within 24 hours of registration.
+        </p>
+    </div>
+
+    <div class="step">
+        <div class="step-number">2</div>
+        <h3 data-i18n="setup.configure">Configure your secretary</h3>
+        <p data-i18n="setup.configure_text">
+            Add your business information, customize your secretary's greeting and personality,
+            and define how it should assist your customers.
+        </p>
+    </div>
+
+    <div class="step">
+        <div class="step-number">3</div>
+        <h3 data-i18n="setup.phone">Activate your service and forward your calls</h3>
+        <p data-i18n="setup.phone_text">
+            Once your service is activated, configure call forwarding on your mobile or landline
+            to your assigned telephone number.
+        </p>
+    </div>
+
+    <div class="step">
+        <div class="step-number">4</div>
+        <h3 data-i18n="setup.extend">Extend your service</h3>
+        <p data-i18n="setup.extend_text">
+            When your free trial ends, you can continue using your AI secretary by making a payment
+            for the period you wish to extend. Alternatively, contact us to discuss a special arrangement.
+        </p>
+    </div>
+</div>
+
+</section>
+<!-- =========================
+     FINAL CTA
+========================= -->
+<section class="cta">
+<h2 data-i18n="cta.title">Give your business an AI secretary.</h2>
+<p data-i18n="cta.text">
+        Let your customers talk to an intelligent assistant
+        that is available when you need it.
+    </p>
+<a class="cta-button" data-i18n="hero.create_account" href="/register">
+        Create your account
+    </a>
+</section>
+
+<section class="contact" id="contact">
+
+    <div class="section-heading">
+
+        <h2 data-i18n="contact.title">
+            Contact us
+        </h2>
+
+        <p data-i18n="contact.intro">
+            Have a question or would you like to book a demo of Secretary AI?
+            Contact us to learn more about the service. Do you have specific needs
+            or wish to discuss payment terms or a customized contractual agreement?
+            We're here to find the solution that best suits your business.
+        </p>
+
+    </div>
+
+    <form class="contact-form" action="/contact" method="POST">
+
+        <div class="contact-field">
+
+            <label for="contact-name" data-i18n="contact.name">
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="contact-name"
+                name="name"
+                data-i18n-placeholder="contact.name_placeholder"
+                placeholder="Your name"
+                required
+            >
+
+        </div>
+
+
+        <div class="contact-field">
+
+            <label for="contact-email" data-i18n="contact.email">
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="contact-email"
+                name="email"
+                data-i18n-placeholder="contact.email_placeholder"
+                placeholder="your@email.com"
+                required
+            >
+
+        </div>
+
+
+        <div class="contact-field">
+
+            <label for="contact-message" data-i18n="contact.message">
+                Message
+            </label>
+
+            <textarea
+                id="contact-message"
+                name="message"
+                rows="6"
+                data-i18n-placeholder="contact.message_placeholder"
+                placeholder="Write your message..."
+                required
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="contact-submit"
+            data-i18n="contact.send"
+        >
+            Send message
+        </button>
+
+    </form>
+
+</section>
+
+<!-- =========================
+     FOOTER
+========================= -->
+<footer>
+    <div class="footer-brand">
+        <strong>Secretary AI</strong>
+        <span>© 2026 adelForce</span>
+    </div>
+
+    <div class="footer-contact">
+        <a href="mailto:contact@adelforce.com">
+            contact@adelforce.com
+        </a>
+    </div>
+
+    <div class="footer-admin">
+        <a href="/admin">Admin</a>
+    </div>
+</footer>
+<script>
+(function () {
+    const languages = [{"code": "ar", "name": "العربية"}, {"code": "bg", "name": "Български"}, {"code": "cs", "name": "Čeština"}, {"code": "da", "name": "Dansk"}, {"code": "de", "name": "Deutsch"}, {"code": "el", "name": "Ελληνικά"}, {"code": "en", "name": "English"}, {"code": "es", "name": "Español"}, {"code": "fi", "name": "Suomi"}, {"code": "fr", "name": "Français"}, {"code": "ga", "name": "Gaeilge"}, {"code": "hr", "name": "Hrvatski"}, {"code": "hu", "name": "Magyar"}, {"code": "it", "name": "Italiano"}, {"code": "ja", "name": "日本語"}, {"code": "nl", "name": "Nederlands"}, {"code": "pl", "name": "Polski"}, {"code": "pt", "name": "Português"}, {"code": "ro", "name": "Română"}, {"code": "ru", "name": "Русский"}, {"code": "sk", "name": "Slovenčina"}, {"code": "sl", "name": "Slovenščina"}, {"code": "sv", "name": "Svenska"}, {"code": "zh", "name": "中文"}];
+    const selector = document.getElementById("languageSelector");
+
+    function detectLanguage() {
+        const saved = localStorage.getItem("secretaryLanguage");
+        if (saved && languages.some(l => l.code === saved)) return saved;
+        const browser = (navigator.language || "en").toLowerCase().split("-")[0];
+        return languages.some(l => l.code === browser) ? browser : "en";
+    }
+
+    async function loadLanguage(lang) {
+        try {
+            const response = await fetch("/locales/" + lang + ".json", { cache: "no-store" });
+            if (!response.ok) throw new Error("Locale not found");
+            const translations = await response.json();
+
+            document.documentElement.lang = lang;
+            document.documentElement.dir = translations._meta && translations._meta.direction ? translations._meta.direction : "ltr";
+
+            document.querySelectorAll("[data-i18n]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.innerHTML = translations[key];
+                }
+            });
+
+            document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n-placeholder");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.placeholder = translations[key];
+                }
+            });
+
+            document.querySelectorAll("[data-i18n-aria-label]").forEach(function (element) {
+                const key = element.getAttribute("data-i18n-aria-label");
+                if (Object.prototype.hasOwnProperty.call(translations, key)) {
+                    element.setAttribute("aria-label", translations[key]);
+                }
+            });
+
+            if (selector) selector.value = lang;
+            localStorage.setItem("secretaryLanguage", lang);
+        } catch (error) {
+            console.error("Could not load language:", lang, error);
+            if (lang !== "en") loadLanguage("en");
+        }
+    }
+
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadLanguage(this.value);
+        });
+    }
+    loadLanguage(detectLanguage());
+})();
+
+function openTrialModal() {
+    const modal = document.getElementById("trial-modal");
+    const content = modal.querySelector(".trial-modal-content");
+
+    const oldConfetti = content.querySelector(".trial-confetti");
+
+    if (oldConfetti) {
+        oldConfetti.remove();
+    }
+
+    const confetti = document.createElement("div");
+    confetti.className = "trial-confetti";
+
+    for (let i = 0; i < 35; i++) {
+        const piece = document.createElement("span");
+
+        piece.className = "trial-confetti-piece";
+
+        piece.style.left = Math.random() * 100 + "%";
+        piece.style.animationDelay = Math.random() * 0.5 + "s";
+        piece.style.animationDuration =
+            2.5 + Math.random() * 1 + "s";
+
+        confetti.appendChild(piece);
+    }
+
+    content.appendChild(confetti);
+
+    modal.hidden = false;
+
+    setTimeout(() => {
+        confetti.remove();
+    }, 4000);
+}
+
+function closeTrialModal() {
+    document.getElementById("trial-modal").hidden = true;
+}
+</script>
+</body>
+</html>

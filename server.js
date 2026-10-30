@@ -373,6 +373,10 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/it/", (req, res) => {
+    res.sendFile(path.join(__dirname, "it", "index.html"));
+});
+
 console.log("Register route loaded");
 
 connectDatabase().then(() => {
