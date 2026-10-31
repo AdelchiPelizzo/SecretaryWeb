@@ -268,6 +268,21 @@
   "registration.forwarding_instruction": "To let your AI Secretary answer your calls, configure call forwarding on your mobile or landline to the assigned telephone number shown above.\n\nWhen call forwarding is enabled, incoming calls to your usual business number will be redirected to your AI Secretary.",
   "registration.ok": "OK",
 
+  "unlimitedCallsTitle": "Unlimited incoming calls – no monthly call limit",
+  "unlimitedCallsDescription": "SecretaryWeb answers your business calls 24 hours a day, 7 days a week, with no fixed limit on the number of calls you can receive each month.",
+  "fairUseDescription": "Our fair-use policy is designed to ensure reliable service for everyone and applies only to abnormal, abusive, or non-business-related usage. Normal business calls are included in your subscription, with no additional charges based on the number or duration of calls.",
+
+  "pricing.title": "One price.\nSimple.\nNo surprises.",
+  "pricing.plan_name": "SecretaryWeb",
+  "pricing.period": "/ month",
+  "pricing.feature2": "Unlimited incoming calls",
+  "pricing.feature7": "Keep your existing business telephone number",
+  "pricing.fair_use_title": "No limits on normal business calls",
+  "pricing.fair_use_text": "Your monthly subscription includes normal business calls, with no fixed limit on their number or duration. Fair-use conditions apply only to abnormal, abusive or non-business-related usage.",
+  "pricing.button": "Get started",
+
+  "seo.title": "SecretaryAI | AI virtual receptionist for small businesses",
+
   "_meta": {
     "language": "en",
     "direction": "ltr"

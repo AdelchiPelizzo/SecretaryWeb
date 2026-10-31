@@ -1,5 +1,32 @@
 const express = require("express");
+
+function getHomepageHtml(htmlPath, language) {
+    const html = fs.readFileSync(htmlPath, "utf8");
+
+    const localePath = path.join(
+        __dirname,
+        "locales",
+        `${language}.json`
+    );
+
+    const translations = JSON.parse(
+        fs.readFileSync(localePath, "utf8")
+    );
+
+    const title = translations["seo.title"];
+
+    if (!title) {
+        throw new Error(`Missing seo.title in ${language}.json`);
+    }
+
+    return html.replace(
+        /<title>[\s\S]*?<\/title>/i,
+        `<title>${title}</title>`
+    );
+}
+
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const connectDatabase = require("./config/database");
@@ -370,11 +397,31 @@ app.get("/health", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    try {
+        const html = getHomepageHtml(
+            path.join(__dirname, "index.html"),
+            "en"
+        );
+
+        res.type("html").send(html);
+    } catch (error) {
+        console.error("Failed to serve English homepage:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get("/it/", (req, res) => {
-    res.sendFile(path.join(__dirname, "it", "index.html"));
+    try {
+        const html = getHomepageHtml(
+            path.join(__dirname, "it", "index.html"),
+            "it"
+        );
+
+        res.type("html").send(html);
+    } catch (error) {
+        console.error("Failed to serve Italian homepage:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 console.log("Register route loaded");

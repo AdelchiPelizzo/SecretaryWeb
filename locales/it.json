@@ -268,9 +268,23 @@
   "registration.success_title": "Registrazione completata",
   "registration.success_message": "Il tuo account è stato creato correttamente. Il periodo di prova di 15 giorni è iniziato.",
   "registration.assigned_number_label": "Il tuo numero di telefono assegnato:",
-  "registration.forwarding_instruction": "Per consentire alla tua Segretaria AI di rispondere alle chiamate, configura il trasferimento di chiamata sul tuo cellulare o telefono fisso verso il numero assegnato mostrato sopra.\n\nQuando il trasferimento è attivo, le chiamate in arrivo al tuo consueto numero aziendale verranno inoltrate alla tua Segretaria AI.\n\nIl numero assegnato richiede l'attivazione da parte dell'amministratore, che verrà completata entro 24 ore dalla registrazione.\n\nRiceverai una notifica quando il servizio sarà pronto all'uso.",
   "registration.ok": "OK",
   "registration.forwarding_instruction": "Per consentire alla tua Segretaria AI di rispondere alle chiamate, configura il trasferimento di chiamata sul tuo cellulare o telefono fisso verso il numero assegnato mostrato sopra.\n\nQuando il trasferimento è attivo, le chiamate in arrivo al tuo consueto numero aziendale verranno inoltrate alla tua Segretaria AI.",
+
+  "unlimitedCallsTitle": "Chiamate in entrata illimitate – nessun limite mensile",
+  "unlimitedCallsDescription": "SecretaryWeb risponde alle tue chiamate aziendali 24 ore su 24, 7 giorni su 7, senza un limite fisso al numero di chiamate che puoi ricevere ogni mese.",
+  "fairUseDescription": "La nostra politica di utilizzo corretto è pensata per garantire un servizio affidabile a tutti e si applica esclusivamente a utilizzi anomali, abusivi o non legati all'attività aziendale. Le normali chiamate di lavoro sono incluse nell'abbonamento, senza costi aggiuntivi in base al numero o alla durata delle chiamate.",
+    
+  "pricing.title": "Tariffa unica.\nSemplice.\nSenza sorprese.",
+  "pricing.plan_name": "SecretaryWeb",
+  "pricing.period": "/ mese",
+  "pricing.feature2": "Chiamate in entrata illimitate",
+  "pricing.feature7": "Mantieni il tuo attuale numero di telefono aziendale",
+  "pricing.fair_use_title": "Nessun limite alle normali chiamate di lavoro",
+  "pricing.fair_use_text": "L'abbonamento mensile include le normali chiamate di lavoro, senza limiti fissi al loro numero o alla loro durata. Le condizioni di utilizzo corretto si applicano esclusivamente a un uso anomalo, abusivo o non legato all'attività aziendale.",
+  "pricing.button": "Inizia ora",
+
+  "seo.title": "SecretaryAI | Segretaria virtuale AI per piccole aziende, tariffa unica",
 
   "_meta": {
     "language": "it",

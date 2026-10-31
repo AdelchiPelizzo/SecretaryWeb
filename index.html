@@ -2,6 +2,12 @@
 
 <html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secretary AI | Virtual Secretary for Your Business</title>
+
+    <meta name="description" content="Secretary AI answers business calls, speaks naturally with customers, manages appointments and keeps your business available around the clock.">
 
     <meta property="og:title" content="Secretary AI | Virtual Secretary for Your Business">
     <meta property="og:description" content="Secretary AI answers business calls, speaks naturally with customers, manages appointments and keeps your business available around the clock.">
@@ -9,52 +15,22 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://secretary.adelforce.com/images/web_logo.png">
 
-    <meta charset="utf-8">
+    <link rel="canonical" href="https://secretary.adelforce.com/">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <link rel="stylesheet" href="/css/style.css">
 
-    <title>Secretary AI | Virtual Secretary for Your Business</title>
-
-    <meta
-        name="description"
-        content="Secretary AI answers business calls, speaks naturally with customers, manages appointments and keeps your business available around the clock."
-    >
-
-    <meta property="og:title" content="Secretary AI | Virtual Secretary for Your Business">
-    <meta property="og:description" content="Secretary AI answers business calls, speaks naturally with customers, manages appointments and keeps your business available around the clock.">
-    <meta property="og:url" content="https://secretary.adelforce.com/">
-    <meta property="og:type" content="website">
-
-    <link
-        rel="canonical"
-        href="https://secretary.adelforce.com/"
-    >
-
-    <link
-        rel="stylesheet"
-        href="/css/style.css"
-    >
     <script type="application/ld+json">
         {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Secretary AI",
-        "url": "https://secretary.adelforce.com/"
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Secretary AI",
+            "url": "https://secretary.adelforce.com/"
         }
     </script>
 
-    <link rel="alternate" hreflang="en"
-        href="https://secretary.adelforce.com/">
-
-    <link rel="alternate" hreflang="it"
-        href="https://secretary.adelforce.com/it/">
-
-    <link rel="alternate" hreflang="x-default"
-        href="https://secretary.adelforce.com/">
-
+    <link rel="alternate" hreflang="en" href="https://secretary.adelforce.com/">
+    <link rel="alternate" hreflang="it" href="https://secretary.adelforce.com/it/">
+    <link rel="alternate" hreflang="x-default" href="https://secretary.adelforce.com/">
 </head>
 <body>
 <!-- =========================
@@ -243,11 +219,83 @@
                 behaviour and business information.
             </p>
 </div>
+
 </div>
 </section>
+
+<!-- =========================
+     PRICING
+========================= -->
+
+<section class="pricing-section" id="pricing">
+
+    <div class="pricing-card">
+
+        <div class="pricing-heading">
+            <h2 data-i18n="pricing.title">
+                One price.
+                Simple.
+                No surprises.
+            </h2>
+        </div>
+
+        <div class="pricing-details">
+            <div class="pricing-details-inner">
+
+                <h3 data-i18n="pricing.plan_name">
+                    SecretaryWeb
+                </h3>
+
+                <div class="pricing-price">
+                    <span class="price-amount">€39</span>
+                    <span class="price-period" data-i18n="pricing.period">
+                        / month
+                    </span>
+                </div>
+
+                <ul class="pricing-features">
+                    <li data-i18n="pricing.feature2">
+                        Unlimited incoming calls
+                    </li>
+                    <li data-i18n="pricing.feature7">
+                        Keep your existing business telephone number
+                    </li>
+                </ul>
+
+                <div class="pricing-fair-use">
+
+                    <h4 data-i18n="pricing.fair_use_title">
+                        No limits on normal business calls
+                    </h4>
+
+                    <p data-i18n="pricing.fair_use_text">
+                        Your monthly subscription includes normal business calls,
+                        with no fixed limit on their number or duration.
+                        Fair-use conditions apply only to abnormal, abusive
+                        or non-business-related usage.
+                    </p>
+
+                </div>
+
+                <a
+                    class="pricing-button"
+                    data-i18n="pricing.button"
+                    href="/register"
+                >
+                    Get started
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
 <!-- =========================
      PERSONALITIES / CUSTOMIZATION
 ========================= -->
+
 
 <section class="personalities" id="personalities">
 
@@ -581,6 +629,11 @@
                 }
             });
 
+            // Update the page title for the selected language.
+            if (translations["seo.title"]) {
+                document.title = translations["seo.title"];
+            }
+
             document.querySelectorAll("[data-i18n-placeholder]").forEach(function (element) {
                 const key = element.getAttribute("data-i18n-placeholder");
                 if (Object.prototype.hasOwnProperty.call(translations, key)) {
@@ -650,5 +703,56 @@ function closeTrialModal() {
     document.getElementById("trial-modal").hidden = true;
 }
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const pricingSection = document.querySelector(".pricing-section");
+
+    if (!pricingSection) {
+        return;
+    }
+
+    // Make the pricing section collapsible.
+    pricingSection.classList.add("pricing-collapsible");
+
+    // Respect reduced-motion preferences.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        pricingSection.classList.add("is-expanded");
+        return;
+    }
+
+    if ("IntersectionObserver" in window) {
+
+        const observer = new IntersectionObserver(function (entries) {
+
+            entries.forEach(function (entry) {
+
+                if (entry.isIntersecting) {
+
+                    // Brief pause before expanding.
+                    setTimeout(function () {
+                        pricingSection.classList.add("is-expanded");
+                    }, 700);
+
+                    // Expand only once.
+                    observer.unobserve(pricingSection);
+                }
+
+            });
+
+        }, {
+            threshold: 0.25
+        });
+
+        observer.observe(pricingSection);
+
+    } else {
+        pricingSection.classList.add("is-expanded");
+    }
+
+});
+</script>
+
 </body>
 </html>
