@@ -161,23 +161,6 @@ app.use((req, res, next) => {
         return next();
     }
 
-    // Do not create a persistent visitor cookie until analytics
-    // consent has been implemented and granted.
-/*     if (getCookie(req, "secretaryAnalyticsConsent") !== "true") {
-        PageVisit.create({
-            page: "/",
-            visitorId: null,
-            isReturning: false
-        }).catch((error) => {
-            console.error(
-                "Failed to record homepage visit:",
-                error.message
-            );
-        });
-
-        return next();
-    } */
-
     // Read the anonymous ID or create a new one.
     let visitorId = getCookie(req, "secretaryVisitorId");
 
@@ -259,18 +242,22 @@ app.use((req, res, next) => {
     // Classify the request using its User-Agent and Referer.
     const userAgent = req.get("user-agent") || "";
     const referer = req.get("referer") || "";
-    const userAgentLower = userAgent.toLowerCase();
     const refererLower = referer.toLowerCase();
 
-    const knownBotPattern =
-        /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction/i;
+    const automatedRequestPattern =
+    /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
 
     let visitorType = "unknown";
 
-    if (knownBotPattern.test(userAgent)) {
+    if (automatedRequestPattern.test(userAgent)) {
         visitorType = "bot";
     } else if (userAgent.trim()) {
         visitorType = "browser";
+    }
+
+    // Do not save automated requests as visitor records.
+    if (visitorType === "bot") {
+        return next();
     }
 
     let trafficSource = "unknown";
