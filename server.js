@@ -161,6 +161,23 @@ app.use((req, res, next) => {
         return next();
     }
 
+    // Exclude identified automated or suspicious visitor IPs.
+    const excludedVisitorIps = new Set([
+        "72.152.84.13",
+        "72.152.84.15"
+    ]);
+
+    const clientIp = (
+        req.get("cf-connecting-ip") ||
+        req.ip ||
+        ""
+    ).trim();
+
+    if (excludedVisitorIps.has(clientIp)) {
+        console.log("[VISITOR] Excluded IP:", clientIp);
+        return next();
+    }
+
     // Read the anonymous ID or create a new one.
     let visitorId = getCookie(req, "secretaryVisitorId");
 
