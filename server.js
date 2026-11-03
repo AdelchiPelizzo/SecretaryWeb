@@ -56,8 +56,6 @@ const PageVisit = require("./models/PageVisit");
 const app = express();
 app.set("trust proxy", 1);
 
-// Record homepage visits in MongoDB.
-
  // Mark this browser to exclude its homepage visits.
 
 const crypto = require("crypto");
@@ -139,8 +137,10 @@ async function getVisitorLocation(ip) {
     }
 }
 
+
 // Record homepage visits in MongoDB.
 app.use((req, res, next) => {
+
     // Exclude this browser from homepage visit tracking.
     if (req.path === "/exclude-my-visits") {
         res.append(
@@ -161,25 +161,53 @@ app.use((req, res, next) => {
         return next();
     }
 
-    // Exclude identified automated or suspicious visitor IPs.
-    const excludedVisitorIps = new Set([
-        "72.152.84.13",
-        "72.152.84.15"
-    ]);
-
+    // Identify the client IP.
     const clientIp = (
         req.get("cf-connecting-ip") ||
         req.ip ||
         ""
     ).trim();
 
+    // Exclude previously identified IP addresses.
+    const excludedVisitorIps = new Set([
+        "72.152.84.13",
+        "72.152.84.15"
+    ]);
+
     if (excludedVisitorIps.has(clientIp)) {
         console.log("[VISITOR] Excluded IP:", clientIp);
         return next();
     }
 
-    // Read the anonymous ID or create a new one.
-    let visitorId = getCookie(req, "secretaryVisitorId");
+    // Classify requests before creating visitor cookies.
+    const userAgent = req.get("user-agent") || "";
+    const referer = req.get("referer") || "";
+    const refererLower = referer.toLowerCase();
+
+    const automatedRequestPattern =
+        /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
+
+    let visitorType = "unknown";
+
+    if (automatedRequestPattern.test(userAgent)) {
+        visitorType = "bot";
+    } else if (userAgent.trim()) {
+        visitorType = "browser";
+    }
+
+    // Do not save automated requests.
+    if (visitorType === "bot") {
+        console.log("[VISITOR] Ignored automated request:", userAgent);
+        return next();
+    }
+
+    // Check whether the browser already has a visitor cookie.
+    const existingVisitorCookie = getCookie(
+        req,
+        "secretaryVisitorId"
+    );
+
+    let visitorId = existingVisitorCookie;
 
     if (
         !visitorId ||
@@ -193,109 +221,35 @@ app.use((req, res, next) => {
         );
     }
 
+    // Log request information.
     console.log("[VISITOR] IP:", req.ip);
     console.log("[VISITOR] Forwarded IP:", req.headers["x-forwarded-for"]);
-    console.log("[VISITOR] CF-Connecting-IP:", req.headers["cf-connecting-ip"]);
-    console.log("[VISITOR] User-Agent:", req.headers["user-agent"] || "(none)");
-    console.log("[VISITOR] Referer:", req.headers["referer"] || "(none)");
-    console.log("[VISITOR] Has visitor cookie:", Boolean(getCookie(req, "secretaryVisitorId")));
-    
-    async function getVisitorLocation(ip) {
-        if (!ip) {
-            return {};
-        }
+    console.log("[VISITOR] CF-Connecting-IP:", clientIp);
+    console.log("[VISITOR] User-Agent:", userAgent || "(none)");
+    console.log("[VISITOR] Referer:", referer || "(none)");
+    console.log("[VISITOR] Has visitor cookie:", Boolean(existingVisitorCookie));
 
-        // Do not send local or invalid IP addresses to the provider.
-        const net = require("net");
-
-        if (net.isIP(ip) === 0) {
-            return {};
-        }
-
-        if (
-            ip === "127.0.0.1" ||
-            ip === "::1" ||
-            ip.startsWith("10.") ||
-            ip.startsWith("192.168.") ||
-            ip.startsWith("169.254.") ||
-            /^172\.(1[6-9]|2\d|3[01])\./.test(ip) ||
-            ip.startsWith("fc") ||
-            ip.startsWith("fd")
-        ) {
-            return {};
-        }
-
-        try {
-            const response = await fetch(
-                `https://ipwho.is/${encodeURIComponent(ip)}`
-            );
-
-            if (!response.ok) {
-                return {};
-            }
-
-            const data = await response.json();
-
-            if (!data.success) {
-                return {};
-            }
-
-            return {
-                country: data.country || null,
-                region: data.region || null,
-                city: data.city || null
-            };
-        } catch (error) {
-            console.error(
-                "Visitor location lookup failed:",
-                error.message
-            );
-
-            return {};
-        }
-    }
-
-    
-    // Classify the request using its User-Agent and Referer.
-    const userAgent = req.get("user-agent") || "";
-    const referer = req.get("referer") || "";
-    const refererLower = referer.toLowerCase();
-
-    const automatedRequestPattern =
-    /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
-
-    let visitorType = "unknown";
-
-    if (automatedRequestPattern.test(userAgent)) {
-        visitorType = "bot";
-    } else if (userAgent.trim()) {
-        visitorType = "browser";
-    }
-
-    // Do not save automated requests as visitor records.
-    if (visitorType === "bot") {
-        return next();
-    }
-
+    // Identify traffic source.
     let trafficSource = "unknown";
 
     if (
-        /linkedin\.com|lnkd\.in/.test(refererLower) ||
-        /linkedinbot/i.test(userAgent)
+        /linkedin\.com|lnkd\.in/.test(refererLower)
     ) {
         trafficSource = "linkedin";
+
     } else if (
-        /facebook\.com|fb\.com|fb\.watch|m\.facebook/.test(refererLower) ||
-        /facebookexternalhit|facebot/i.test(userAgent)
+        /facebook\.com|fb\.com|fb\.watch|m\.facebook/.test(refererLower)
     ) {
         trafficSource = "facebook";
+
     } else if (
-        /t\.co|twitter\.com|x\.com/.test(refererLower) ||
-        /twitterbot/i.test(userAgent)
+        /t\.co|twitter\.com|x\.com/.test(refererLower)
     ) {
         trafficSource = "twitter";
+
     } else if (referer.trim()) {
         trafficSource = "referral";
+
     } else if (userAgent.trim()) {
         trafficSource = "direct";
     }
@@ -303,16 +257,16 @@ app.use((req, res, next) => {
     console.log("[VISITOR] Type:", visitorType);
     console.log("[VISITOR] Traffic source:", trafficSource);
 
-    // Check whether this browser has visited before.
-
+    // Record the visit asynchronously.
     (async () => {
+
         const previousVisit = await PageVisit.findOne({
             visitorId
         })
             .sort({ visitedAt: -1 })
             .lean();
 
-        // Reuse the last known location to avoid a lookup on every visit.
+        // Reuse the last known location.
         let location = {};
 
         if (
@@ -328,17 +282,17 @@ app.use((req, res, next) => {
                 region: previousVisit.region,
                 city: previousVisit.city
             };
+
         } else {
             const forwardedIps = (
                 req.headers["x-forwarded-for"] || ""
             ).split(",").map(ip => ip.trim());
 
-            const clientIp = forwardedIps[0] || req.ip;
+            const locationIp = forwardedIps[0] || clientIp;
 
-            location = await getVisitorLocation(clientIp);
+            location = await getVisitorLocation(locationIp);
         }
 
-        
         await PageVisit.create({
             page: "/",
             visitorId,
@@ -350,7 +304,7 @@ app.use((req, res, next) => {
             ...location
         });
 
-    })().catch((error) => {
+    })().catch(error => {
         console.error(
             "Failed to record homepage visit:",
             error.message
@@ -359,6 +313,7 @@ app.use((req, res, next) => {
 
     next();
 });
+
 
 
 const PORT = process.env.PORT || 3000;
