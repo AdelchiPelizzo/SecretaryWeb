@@ -54,11 +54,15 @@
 
   "payment.title": "Payment required",
   "payment.trial_ended": "Your free trial has ended.",
-  "payment.instructions": "To continue using Secretary AI, please make your monthly payment by bank transfer.",
+  "payment.instructions": "To continue using Secretary AI, please pay monthly by bank transfer. For alternative arrangements, email us at contact@adelforce.com.",
   "payment.amount": "Monthly subscription",
   "payment.reference": "Payment reference",
   "payment.bank_details": "Bank transfer details",
   "payment.bank_details_placeholder": "Bank payment details will be provided here.",
+  "payment.account_holder": "Account holder",
+  "payment.iban": "IBAN",
+  "payment.bic": "BIC / SWIFT",
+  "payment.bank_details_unavailable": "Bank transfer details are temporarily unavailable. Please contact us.",
   "payment.reference_note": "Please include your payment reference with your bank transfer.",
 
   "contact.title": "Contact us",
