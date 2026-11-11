@@ -9,55 +9,6 @@
     <title>Business Profile - Secretary AI</title>
 </head>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        const timeOptions = [];
-
-        for (let hour = 0; hour < 24; hour++) {
-            for (let minute = 0; minute < 60; minute += 30) {
-                const hh = String(hour).padStart(2, "0");
-                const mm = String(minute).padStart(2, "0");
-
-                timeOptions.push(`${hh}:${mm}`);
-            }
-        }
-
-        const days = [
-            "monday",
-            "tuesday",
-            "wednesday",
-            "thursday",
-            "friday",
-            "saturday",
-            "sunday"
-        ];
-
-        days.forEach(day => {
-            const openSelect = document.getElementById(`${day}Open`);
-            const closeSelect = document.getElementById(`${day}Close`);
-
-            if (!openSelect || !closeSelect) {
-                console.error(`Missing select for ${day}`);
-                return;
-            }
-
-            timeOptions.forEach(time => {
-                const openOption = document.createElement("option");
-                openOption.value = time;
-                openOption.textContent = time;
-                openSelect.appendChild(openOption);
-
-                const closeOption = document.createElement("option");
-                closeOption.value = time;
-                closeOption.textContent = time;
-                closeSelect.appendChild(closeOption);
-            });
-        });
-
-    });
-</script>
-
 <body>
 
     <script>
@@ -463,6 +414,12 @@
                 closeSelect.appendChild(closeOption);
             });
 
+            // 24:00 is available as a closing time only.
+            const midnightOption = document.createElement("option");
+            midnightOption.value = "24:00";
+            midnightOption.textContent = "24:00";
+            closeSelect.appendChild(midnightOption);
+
             const saved = savedHours[day];
 
             if (saved.open) {
@@ -478,6 +435,9 @@
             function updateClosedState() {
                 openSelect.disabled = closedCheckbox.checked;
                 closeSelect.disabled = closedCheckbox.checked;
+
+                openSelect.required = !closedCheckbox.checked;
+                closeSelect.required = !closedCheckbox.checked;
             }
 
             closedCheckbox.addEventListener("change", updateClosedState);

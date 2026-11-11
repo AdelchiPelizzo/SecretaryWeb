@@ -13,7 +13,8 @@ router.get("/calendar/connect", requireAuth, (req, res) => {
         prompt: "consent",
         redirect_uri: process.env.GOOGLE_REDIRECT_URI,
         scope: [
-            "https://www.googleapis.com/auth/calendar",
+            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+            "https://www.googleapis.com/auth/calendar.events.owned",
             "https://www.googleapis.com/auth/userinfo.email"
         ]
     });

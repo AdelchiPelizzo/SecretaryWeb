@@ -530,11 +530,19 @@ async function getSecretaryConfig(req, res) {
             });
         }
 
+        // Check whether the business has a connected calendar.
+        const calendarConnection = await CalendarConnection.findOne({
+            businessId: business._id
+        });
+
+        const calendarConnected = calendarConnection?.connected === true;
+
         // 6. Return configuration only after authorization.
         return res.json({
             success: true,
 
             businessName: business.name,
+            calendarConnected,
 
             paymentStatus: business.paymentStatus,
             trialStartedAt: business.trialStartedAt,
