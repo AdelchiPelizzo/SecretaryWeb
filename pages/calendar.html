@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+<html lang="{{LANGUAGE}}">
+<head>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#ffffff">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Secretary AI</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .calendar-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 35px 20px 60px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .calendar-header h1 {
+            font-size: 28px;
+        }
+
+        .calendar-back {
+            color: #5b55e8;
+            font-weight: 600;
+        }
+
+        .calendar-panel {
+            background: white;
+            border: 1px solid #e5e7ee;
+            border-radius: 16px;
+            padding: 22px;
+        }
+
+        .calendar-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .calendar-toolbar h2 {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-nav button {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #dfe1e8;
+            border-radius: 9px;
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .calendar-today {
+            border: none;
+            background: #eeedff;
+            color: #5b55e8;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 5px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            color: #667085;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 0;
+        }
+
+        .calendar-day {
+            min-height: 110px;
+            border: 1px solid #eef0f4;
+            border-radius: 9px;
+            background: white;
+            padding: 8px;
+            text-align: left;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .calendar-day:hover {
+            border-color: #5b55e8;
+        }
+
+        .calendar-day.other-month {
+            color: #b5bac5;
+            background: #fafafa;
+        }
+
+        .calendar-day.today {
+            border: 2px solid #5b55e8;
+        }
+
+        .calendar-day.selected {
+            background: #eeedff;
+            border: 2px solid #5b55e8;
+        }
+
+        .calendar-day-number {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .calendar-day-appointments {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 7px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .calendar-day-appointment {
+            display: block;
+            width: 100%;
+            font-size: 11px;
+            line-height: 1.3;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #4b45c6;
+        }
+
+        .calendar-day-more {
+            font-size: 10px;
+            font-weight: 700;
+            color: #667085;
+        }
+
+        .calendar-event-dot {
+            display: block;
+            width: 7px;
+            height: 7px;
+            margin-top: 7px;
+            border-radius: 50%;
+            background: #5b55e8;
+        }
+
+        .calendar-events {
+            margin-top: 25px;
+            border-top: 1px solid #eef0f4;
+            padding-top: 20px;
+        }
+
+        .calendar-events h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .calendar-event {
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e7ee;
+            border-radius: 10px;
+        }
+
+        .calendar-event strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .calendar-event-time {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .calendar-message {
+            color: #667085;
+            padding: 12px 0;
+        }
+
+        @media (max-width: 600px) {
+            .calendar-page {
+                padding: 22px 12px 40px;
+            }
+
+            .calendar-panel {
+                padding: 12px 8px;
+            }
+
+            .calendar-header h1 {
+                font-size: 23px;
+            }
+
+            .calendar-toolbar h2 {
+                font-size: 17px;
+            }
+
+            .calendar-day {
+                min-height: 82px;
+                padding: 5px;
+            }
+
+            .calendar-weekday {
+                font-size: 11px;
+            }
+        }
+
+        .calendar-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .calendar-modal.open {
+            display: flex;
+        }
+
+        .calendar-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+        }
+
+        .calendar-modal-dialog {
+            position: relative;
+            z-index: 1;
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .calendar-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-modal-header h2 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .calendar-modal-close {
+            border: none;
+            background: #f1f2f6;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .calendar-event-description {
+            margin-top: 10px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #475467;
+        }
+
+        .calendar-event-location {
+            margin-top: 8px;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .calendar-modal {
+                padding: 12px;
+            }
+
+            .calendar-modal-dialog {
+                padding: 18px;
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="/" class="logo">Secretary AI</a>
+    <div class="nav-right">
+        <a href="/dashboard" class="calendar-back" data-i18n="calendar.dashboard">Dashboard</a>
+    </div>
+</nav>
+
+<main class="calendar-page">
+
+    <div class="calendar-header">
+        <div>
+            <h1 data-i18n="calendar.title">Calendar</h1>
+            <p data-i18n="calendar.intro">View your business appointments.</p>
+        </div>
+    </div>
+
+    <section class="calendar-panel">
+
+        <div class="calendar-toolbar">
+            <div class="calendar-nav">
+                <button type="button" id="previous-month" aria-label="Previous month">‹</button>
+                <button type="button" id="next-month" aria-label="Next month">›</button>
+            </div>
+
+            <h2 id="calendar-month"></h2>
+
+            <button type="button" class="calendar-today" id="today-button" data-i18n="calendar.today">
+                Today
+            </button>
+        </div>
+
+        <div class="calendar-grid" id="calendar-grid"></div>
+
+        <div id="appointment-modal" class="calendar-modal" aria-hidden="true">
+
+            <div
+                class="calendar-modal-backdrop"
+                id="appointment-modal-backdrop">
+            </div>
+
+            <section
+                class="calendar-modal-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="selected-date-title">
+
+                <div class="calendar-modal-header">
+
+                    <h2 id="selected-date-title">
+                        Appointments
+                    </h2>
+
+                    <button
+                        type="button"
+                        class="calendar-modal-close"
+                        id="appointment-modal-close"
+                        aria-label="Close">
+                        &times;
+                    </button>
+
+                </div>
+
+                <div id="calendar-event-list">
+                    <p class="calendar-message">
+                        Loading appointments...
+                    </p>
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+    
+    const language = document.documentElement.lang === "it" ? "it" : "en";
+    const locale = language === "it" ? "it-IT" : "en-GB";
+
+    let translations = {};
+
+    function t(key, fallback) {
+        return translations[key] || fallback;
+    }
+
+    const calendarGrid = document.getElementById("calendar-grid");
+    const monthTitle = document.getElementById("calendar-month");
+    const eventList = document.getElementById("calendar-event-list");
+    const selectedDateTitle = document.getElementById("selected-date-title");
+    const appointmentModal = document.getElementById("appointment-modal");
+    const appointmentModalClose = document.getElementById("appointment-modal-close");
+    const appointmentModalBackdrop = document.getElementById("appointment-modal-backdrop");
+
+    const today = new Date();
+    let displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    let selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    let calendarEvents = [];
+
+    function dateKey(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+
+    function openAppointmentModal() {
+        appointmentModal.classList.add("open");
+        appointmentModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        appointmentModalClose.focus();
+    }
+
+    function closeAppointmentModal() {
+        appointmentModal.classList.remove("open");
+        appointmentModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+    }
+
+    function getWeekdays() {
+        const monday = new Date(2024, 0, 1);
+
+        return Array.from({ length: 7 }, (_, i) => {
+            const date = new Date(monday);
+            date.setDate(monday.getDate() + i);
+            return date.toLocaleDateString(locale, { weekday: "short" });
+        });
+    }
+
+    function applyTranslations() {
+        document.querySelectorAll("[data-i18n]").forEach(element => {
+            const key = element.getAttribute("data-i18n");
+
+            if (translations[key]) {
+                element.textContent = translations[key];
+            }
+        });
+
+        document.title = t("calendar.page_title", "Calendar - Secretary AI");
+
+        document.getElementById("appointment-modal-close").setAttribute(
+            "aria-label",
+            t("calendar.close", "Close")
+        );
+
+        document.getElementById("previous-month").setAttribute(
+            "aria-label",
+            t("calendar.previous_month", "Previous month")
+        );
+
+        document.getElementById("next-month").setAttribute(
+            "aria-label",
+            t("calendar.next_month", "Next month")
+        );
+    }
+
+    function renderCalendar() {
+        calendarGrid.innerHTML = "";
+
+        monthTitle.textContent = displayedMonth.toLocaleDateString(
+            locale,
+            { month: "long", year: "numeric" }
+        );
+
+        getWeekdays().forEach(day => {
+            const heading = document.createElement("div");
+            heading.className = "calendar-weekday";
+            heading.textContent = day;
+            calendarGrid.appendChild(heading);
+        });
+
+        const firstDay = new Date(
+            displayedMonth.getFullYear(),
+            displayedMonth.getMonth(),
+            1
+        );
+
+        const startOffset = (firstDay.getDay() + 6) % 7;
+
+        const gridStart = new Date(
+            firstDay.getFullYear(),
+            firstDay.getMonth(),
+            1 - startOffset
+        );
+
+        for (let i = 0; i < 42; i++) {
+            const date = new Date(gridStart);
+            date.setDate(gridStart.getDate() + i);
+
+            const key = dateKey(date);
+
+            const dayEvents = calendarEvents.filter(event => {
+                const eventStart = event.start?.dateTime || event.start?.date;
+                return eventStart && dateKey(new Date(eventStart)) === key;
+            });
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "calendar-day";
+
+            if (date.getMonth() !== displayedMonth.getMonth()) {
+                button.classList.add("other-month");
+            }
+
+            if (key === dateKey(today)) {
+                button.classList.add("today");
+            }
+
+            if (key === dateKey(selectedDate)) {
+                button.classList.add("selected");
+            }
+
+            const number = document.createElement("span");
+            number.className = "calendar-day-number";
+            number.textContent = date.getDate();
+            button.appendChild(number);
+
+            if (dayEvents.length > 0) {
+                const appointmentsContainer = document.createElement("div");
+                appointmentsContainer.className = "calendar-day-appointments";
+
+                const visibleEvents = dayEvents.slice(0, 2);
+
+                visibleEvents.forEach(event => {
+                    const appointment = document.createElement("span");
+                    appointment.className = "calendar-day-appointment";
+                    appointment.textContent = event.summary || t(
+                        "calendar.appointment",
+                        "Appointment"
+                    );
+
+                    appointment.title = appointment.textContent;
+
+                    appointmentsContainer.appendChild(appointment);
+                });
+
+                if (dayEvents.length > 2) {
+                    const more = document.createElement("span");
+                    more.className = "calendar-day-more";
+                    more.textContent = t(
+                        "calendar.more_appointments",
+                        "+{count} more"
+                    ).replace("{count}", dayEvents.length - 2);
+
+                    appointmentsContainer.appendChild(more);
+                }
+
+                button.appendChild(appointmentsContainer);
+            }
+
+            button.addEventListener("click", () => {
+                selectedDate = new Date(date);
+
+                if (date.getMonth() !== displayedMonth.getMonth()) {
+                    displayedMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+                    loadEvents();
+                } else {
+                    renderCalendar();
+                }
+
+                openAppointmentModal();
+            });
+
+            calendarGrid.appendChild(button);
+        }
+
+        renderSelectedDay();
+    }
+
+    function renderSelectedDay() {
+        const key = dateKey(selectedDate);
+
+        selectedDateTitle.textContent = selectedDate.toLocaleDateString(
+            locale,
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+        const events = calendarEvents.filter(event => {
+            const eventStart = event.start?.dateTime || event.start?.date;
+            return eventStart && dateKey(new Date(eventStart)) === key;
+        });
+
+        eventList.innerHTML = "";
+
+        if (events.length === 0) {
+            const message = document.createElement("p");
+            message.className = "calendar-message";
+            message.textContent = t(
+                "calendar.no_appointments",
+                "No appointments for this day."
+            );
+            eventList.appendChild(message);
+            return;
+        }
+
+        events.forEach(event => {
+            const item = document.createElement("div");
+            item.className = "calendar-event";
+
+            const title = document.createElement("strong");
+            title.textContent = event.summary || t(
+                "calendar.appointment",
+                "Appointment"
+            );
+
+            const time = document.createElement("div");
+            time.className = "calendar-event-time";
+
+            if (event.start?.dateTime) {
+                const startTime = new Date(event.start.dateTime)
+                    .toLocaleTimeString(locale, {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+
+                const endTime = event.end?.dateTime
+                    ? new Date(event.end.dateTime).toLocaleTimeString(locale, {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })
+                    : "";
+
+                time.textContent = endTime
+                    ? `${startTime} – ${endTime}`
+                    : startTime;
+            } else {
+                time.textContent = t("calendar.all_day", "All day");
+            }
+
+            item.appendChild(title);
+            item.appendChild(time);
+
+            if (event.location) {
+                const location = document.createElement("div");
+                location.className = "calendar-event-location";
+                location.textContent =
+                    `${t("calendar.location", "Location")}: ${event.location}`;
+                item.appendChild(location);
+            }
+
+            if (event.description) {
+                const description = document.createElement("div");
+                description.className = "calendar-event-description";
+                description.textContent =
+                    `${t("calendar.notes", "Notes")}: ${event.description}`;
+                item.appendChild(description);
+            }
+
+            eventList.appendChild(item);
+        });
+    }
+
+    async function loadEvents() {
+        eventList.innerHTML = "";
+
+        const loading = document.createElement("p");
+        loading.className = "calendar-message";
+        loading.textContent = t("calendar.loading", "Loading appointments...");
+        eventList.appendChild(loading);
+
+        const start = new Date(
+            displayedMonth.getFullYear(),
+            displayedMonth.getMonth(),
+            1
+        );
+
+        const end = new Date(
+            displayedMonth.getFullYear(),
+            displayedMonth.getMonth() + 1,
+            1
+        );
+
+        try {
+            const response = await fetch(
+                `/calendar/events?start=${encodeURIComponent(start.toISOString())}&end=${encodeURIComponent(end.toISOString())}`
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Calendar request failed");
+            }
+
+            calendarEvents = data.events || [];
+            renderCalendar();
+
+        } catch (error) {
+            console.error("Could not load calendar:", error);
+
+            eventList.innerHTML = "";
+
+            const message = document.createElement("p");
+            message.className = "calendar-message";
+            message.textContent = t(
+                "calendar.load_error",
+                "Could not load calendar."
+            );
+
+            eventList.appendChild(message);
+        }
+    }
+
+    document.getElementById("previous-month").addEventListener("click", () => {
+        displayedMonth.setMonth(displayedMonth.getMonth() - 1);
+        selectedDate = new Date(
+            displayedMonth.getFullYear(),
+            displayedMonth.getMonth(),
+            1
+        );
+        loadEvents();
+    });
+
+    document.getElementById("next-month").addEventListener("click", () => {
+        displayedMonth.setMonth(displayedMonth.getMonth() + 1);
+        selectedDate = new Date(
+            displayedMonth.getFullYear(),
+            displayedMonth.getMonth(),
+            1
+        );
+        loadEvents();
+    });
+
+    document.getElementById("today-button").addEventListener("click", () => {
+        displayedMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        loadEvents();
+    });
+
+    async function initializeCalendar() {
+        try {
+            const response = await fetch(`/locales/${language}.json`, {
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("Locale file not found");
+            }
+
+            translations = await response.json();
+
+        } catch (error) {
+            console.error("Could not load calendar translations:", error);
+        }
+
+        applyTranslations();
+        await loadEvents();
+    }
+
+    appointmentModalClose.addEventListener("click", closeAppointmentModal);
+
+    appointmentModalBackdrop.addEventListener("click", closeAppointmentModal);
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && appointmentModal.classList.contains("open")) {
+            closeAppointmentModal();
+        }
+    });
+
+    initializeCalendar();
+
+</script>
+
+</body>
+</html>

@@ -4,8 +4,10 @@ const { google } = require("googleapis");
 const Business = require("../models/Business");
 const CalendarConnection = require("../models/CalendarConnection");
 const requireAuth = require("../middleware/auth");
+const { showCalendarPage } = require("../controllers/calendarController");
 
 const router = express.Router();
+router.get("/calendar", requireAuth, showCalendarPage);
 
 router.get("/calendar/connect", requireAuth, (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
@@ -229,9 +231,31 @@ router.get("/calendar/events", requireAuth, async (req, res) => {
             auth: oauth2Client
         });
 
+        const { start, end } = req.query;
+
+        if (!start || !end) {
+            return res.status(400).json({
+                error: "Start and end dates are required."
+            });
+        }
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        if (
+            Number.isNaN(startDate.getTime()) ||
+            Number.isNaN(endDate.getTime()) ||
+            endDate <= startDate
+        ) {
+            return res.status(400).json({
+                error: "Invalid date range."
+            });
+        }
+
         const events = await calendar.events.list({
             calendarId: connection.calendarId,
-            timeMin: new Date().toISOString(),
+            timeMin: startDate.toISOString(),
+            timeMax: endDate.toISOString(),
             singleEvents: true,
             orderBy: "startTime"
         });
@@ -241,6 +265,8 @@ router.get("/calendar/events", requireAuth, async (req, res) => {
             events: events.data.items.map(event => ({
                 id: event.id,
                 summary: event.summary || "",
+                description: event.description || "",
+                location: event.location || "",
                 start: event.start,
                 end: event.end
             }))
