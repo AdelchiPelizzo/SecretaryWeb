@@ -352,6 +352,55 @@ router.get("/calendar/availability", requireAuth, async (req, res) => {
     }
 });
 
+router.delete("/calendar/event/:id", requireAuth, async (req, res) => {
+    try {
+        const business = await Business.findOne({
+            ownerUserId: req.session.userId
+        });
+
+        if (!business) {
+            return res.status(404).json({
+                error: "Business not found."
+            });
+        }
+
+        const connection = await CalendarConnection.findOne({
+            businessId: business._id,
+            connected: true
+        });
+
+        if (!connection || !connection.calendarId) {
+            return res.status(404).json({
+                error: "Google Calendar connection not found."
+            });
+        }
+
+        oauth2Client.setCredentials({
+            access_token: connection.accessToken,
+            refresh_token: connection.refreshToken
+        });
+
+        const calendar = google.calendar({
+            version: "v3",
+            auth: oauth2Client
+        });
+
+        await calendar.events.delete({
+            calendarId: connection.calendarId,
+            eventId: req.params.id
+        });
+
+        res.json({ success: true });
+
+    } catch (error) {
+        console.error("Deleting calendar event failed:", error);
+
+        res.status(500).json({
+            error: "Failed to delete calendar event."
+        });
+    }
+});
+
 router.post("/calendar/event", requireAuth, async (req, res) => {
     try {
         const business = await Business.findOne({
