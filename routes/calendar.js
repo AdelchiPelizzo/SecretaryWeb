@@ -3,6 +3,7 @@ const oauth2Client = require("../config/google");
 const { google } = require("googleapis");
 const Business = require("../models/Business");
 const CalendarConnection = require("../models/CalendarConnection");
+const Appointment = require("../models/Appointment");
 const requireAuth = require("../middleware/auth");
 const { showCalendarPage } = require("../controllers/calendarController");
 
@@ -210,27 +211,6 @@ router.get("/calendar/events", requireAuth, async (req, res) => {
             });
         }
 
-        const connection = await CalendarConnection.findOne({
-            businessId: business._id,
-            connected: true
-        });
-
-        if (!connection || !connection.calendarId) {
-            return res.status(404).json({
-                error: "Google Calendar or calendar selection not found."
-            });
-        }
-
-        oauth2Client.setCredentials({
-            access_token: connection.accessToken,
-            refresh_token: connection.refreshToken
-        });
-
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
-
         const { start, end } = req.query;
 
         if (!start || !end) {
@@ -252,31 +232,40 @@ router.get("/calendar/events", requireAuth, async (req, res) => {
             });
         }
 
-        const events = await calendar.events.list({
-            calendarId: connection.calendarId,
-            timeMin: startDate.toISOString(),
-            timeMax: endDate.toISOString(),
-            singleEvents: true,
-            orderBy: "startTime"
-        });
+        const appointments = await Appointment.find({
+            businessId: business._id,
+            status: { $ne: "cancelled" },
+            startAt: { $lt: endDate },
+            endAt: { $gt: startDate }
+        }).sort({ startAt: 1 });
 
         res.json({
-            calendarId: connection.calendarId,
-            events: events.data.items.map(event => ({
-                id: event.id,
-                summary: event.summary || "",
-                description: event.description || "",
-                location: event.location || "",
-                start: event.start,
-                end: event.end
+            calendarId: null,
+            events: appointments.map(appointment => ({
+                id: appointment._id.toString(),
+                summary: appointment.title || "",
+                description: appointment.description || "",
+                location: appointment.location || "",
+                start: {
+                    dateTime: appointment.startAt.toISOString()
+                },
+                end: {
+                    dateTime: appointment.endAt.toISOString()
+                },
+                customerName: appointment.customerName || "",
+                customerPhone: appointment.customerPhone || "",
+                service: appointment.service || "",
+                duration: appointment.duration,
+                status: appointment.status,
+                source: appointment.source
             }))
         });
 
     } catch (error) {
-        console.error("Loading calendar events failed:", error);
+        console.error("Loading calendar appointments failed:", error);
 
         res.status(500).json({
-            error: "Failed to load calendar events."
+            error: "Failed to load calendar appointments."
         });
     }
 });
@@ -293,17 +282,6 @@ router.get("/calendar/availability", requireAuth, async (req, res) => {
             });
         }
 
-        const connection = await CalendarConnection.findOne({
-            businessId: business._id,
-            connected: true
-        });
-
-        if (!connection || !connection.calendarId) {
-            return res.status(404).json({
-                error: "Google Calendar or calendar selection not found."
-            });
-        }
-
         const { start, end } = req.query;
 
         if (!start || !end) {
@@ -312,42 +290,88 @@ router.get("/calendar/availability", requireAuth, async (req, res) => {
             });
         }
 
-        oauth2Client.setCredentials({
-            access_token: connection.accessToken,
-            refresh_token: connection.refreshToken
+        const availabilityStart = new Date(start);
+        const availabilityEnd = new Date(end);
+
+        if (
+            Number.isNaN(availabilityStart.getTime()) ||
+            Number.isNaN(availabilityEnd.getTime()) ||
+            availabilityEnd <= availabilityStart
+        ) {
+            return res.status(400).json({
+                error: "Invalid date range."
+            });
+        }
+
+        const appointments = await Appointment.find({
+            businessId: business._id,
+            status: { $ne: "cancelled" },
+            startAt: { $lt: availabilityEnd },
+            endAt: { $gt: availabilityStart }
+        }).sort({ startAt: 1 });
+
+        let googleEvents = [];
+
+        const connection = await CalendarConnection.findOne({
+            businessId: business._id,
+            connected: true
         });
 
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
+        if (connection && connection.calendarId) {
+            oauth2Client.setCredentials({
+                access_token: connection.accessToken,
+                refresh_token: connection.refreshToken
+            });
 
-        const events = await calendar.events.list({
-            calendarId: connection.calendarId,
-            timeMin: new Date(start).toISOString(),
-            timeMax: new Date(end).toISOString(),
-            singleEvents: true,
-            orderBy: "startTime"
-        });
+            const calendar = google.calendar({
+                version: "v3",
+                auth: oauth2Client
+            });
+
+            const eventsResponse = await calendar.events.list({
+                calendarId: connection.calendarId,
+                timeMin: availabilityStart.toISOString(),
+                timeMax: availabilityEnd.toISOString(),
+                singleEvents: true,
+                showDeleted: false,
+                orderBy: "startTime"
+            });
+
+            googleEvents = eventsResponse.data.items || [];
+        }
 
         res.json({
-            available: events.data.items.length === 0,
-            events: events.data.items.map(event => ({
-                id: event.id,
-                summary: event.summary || "",
-                start: event.start,
-                end: event.end
-            }))
+            available: appointments.length === 0 && googleEvents.length === 0,
+
+            events: [
+                ...appointments.map(appointment => ({
+                    id: appointment._id.toString(),
+                    summary: appointment.title || "",
+                    start: {
+                        dateTime: appointment.startAt.toISOString()
+                    },
+                    end: {
+                        dateTime: appointment.endAt.toISOString()
+                    }
+                })),
+
+                ...googleEvents.map(event => ({
+                    id: event.id,
+                    summary: event.summary || "",
+                    start: event.start,
+                    end: event.end
+                }))
+            ]
         });
 
     } catch (error) {
         console.error(
-            "Checking calendar availability failed:",
+            "Checking appointment availability failed:",
             error
         );
 
         res.status(500).json({
-            error: "Failed to check calendar availability."
+            error: "Failed to check appointment availability."
         });
     }
 });
@@ -364,39 +388,37 @@ router.delete("/calendar/event/:id", requireAuth, async (req, res) => {
             });
         }
 
-        const connection = await CalendarConnection.findOne({
-            businessId: business._id,
-            connected: true
+        const appointment = await Appointment.findOne({
+            _id: req.params.id,
+            businessId: business._id
         });
 
-        if (!connection || !connection.calendarId) {
+        if (!appointment) {
             return res.status(404).json({
-                error: "Google Calendar connection not found."
+                error: "Appointment not found."
             });
         }
 
-        oauth2Client.setCredentials({
-            access_token: connection.accessToken,
-            refresh_token: connection.refreshToken
-        });
+        if (appointment.status === "cancelled") {
+            return res.status(400).json({
+                error: "Appointment is already cancelled."
+            });
+        }
 
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
+        appointment.status = "cancelled";
 
-        await calendar.events.delete({
-            calendarId: connection.calendarId,
-            eventId: req.params.id
-        });
+        await appointment.save();
 
-        res.json({ success: true });
+        res.json({
+            success: true,
+            message: "Appointment cancelled successfully."
+        });
 
     } catch (error) {
-        console.error("Deleting calendar event failed:", error);
+        console.error("Cancelling appointment failed:", error);
 
         res.status(500).json({
-            error: "Failed to delete calendar event."
+            error: "Failed to cancel appointment."
         });
     }
 });
@@ -413,18 +435,7 @@ router.post("/calendar/event", requireAuth, async (req, res) => {
             });
         }
 
-        const connection = await CalendarConnection.findOne({
-            businessId: business._id,
-            connected: true
-        });
-
-        if (!connection || !connection.calendarId) {
-            return res.status(404).json({
-                error: "Google Calendar or calendar selection not found."
-            });
-        }
-
-        const { summary, start, end } = req.body;
+        const { summary, start, end, description, location } = req.body;
 
         if (!summary || !start || !end) {
             return res.status(400).json({
@@ -432,47 +443,58 @@ router.post("/calendar/event", requireAuth, async (req, res) => {
             });
         }
 
-        oauth2Client.setCredentials({
-            access_token: connection.accessToken,
-            refresh_token: connection.refreshToken
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        if (
+            Number.isNaN(startDate.getTime()) ||
+            Number.isNaN(endDate.getTime()) ||
+            endDate <= startDate
+        ) {
+            return res.status(400).json({
+                error: "Invalid appointment date or time."
+            });
+        }
+
+        const duration = Math.round(
+            (endDate.getTime() - startDate.getTime()) / 60000
+        );
+
+        const appointment = await Appointment.create({
+            businessId: business._id,
+            title: summary.trim(),
+            description: description || "",
+            location: location || "",
+            startAt: startDate,
+            endAt: endDate,
+            duration,
+            timezone: business.timezone || "Europe/Rome",
+            status: "booked",
+            source: "manual",
+            syncStatus: "not_connected"
         });
 
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
-
-        const event = await calendar.events.insert({
-            calendarId: connection.calendarId,
-            requestBody: {
-                summary,
+        res.status(201).json({
+            success: true,
+            event: {
+                id: appointment._id.toString(),
+                summary: appointment.title,
+                description: appointment.description,
+                location: appointment.location,
                 start: {
-                    dateTime: new Date(start).toISOString()
+                    dateTime: appointment.startAt.toISOString()
                 },
                 end: {
-                    dateTime: new Date(end).toISOString()
+                    dateTime: appointment.endAt.toISOString()
                 }
             }
         });
 
-        res.json({
-            success: true,
-            event: {
-                id: event.data.id,
-                summary: event.data.summary,
-                start: event.data.start,
-                end: event.data.end
-            }
-        });
-
     } catch (error) {
-        console.error(
-            "Creating calendar event failed:",
-            error
-        );
+        console.error("Creating appointment failed:", error);
 
         res.status(500).json({
-            error: "Failed to create calendar event."
+            error: "Failed to create appointment."
         });
     }
 });

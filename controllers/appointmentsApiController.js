@@ -1,5 +1,6 @@
 const Business = require("../models/Business");
 const SecretaryConfig = require("../models/SecretaryConfig");
+const Appointment = require("../models/Appointment");
 const CalendarConnection = require("../models/CalendarConnection");
 const SipNumber = require("../models/SipNumber");
 const Note = require("../models/Note");
@@ -11,9 +12,12 @@ function isWithinOpeningHours(start, end, hours, timezone) {
     const formatter = new Intl.DateTimeFormat("en-US", {
         timeZone: timezone,
         weekday: "long",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: false
+        hourCycle: "h23"
     });
 
     const startParts = formatter.formatToParts(start);
@@ -22,9 +26,16 @@ function isWithinOpeningHours(start, end, hours, timezone) {
     const getPart = (parts, type) =>
         parts.find(part => part.type === type)?.value;
 
-    const dayName =
-        getPart(startParts, "weekday")?.toLowerCase();
+    // Appointments must start and end on the same local calendar day.
+    if (
+        getPart(startParts, "year") !== getPart(endParts, "year") ||
+        getPart(startParts, "month") !== getPart(endParts, "month") ||
+        getPart(startParts, "day") !== getPart(endParts, "day")
+    ) {
+        return false;
+    }
 
+    const dayName = getPart(startParts, "weekday")?.toLowerCase();
     const dayHours = hours?.[dayName];
 
     if (!dayHours || dayHours.closed) {
@@ -41,11 +52,8 @@ function isWithinOpeningHours(start, end, hours, timezone) {
     const endHour = Number(getPart(endParts, "hour"));
     const endMinute = Number(getPart(endParts, "minute"));
 
-    const startMinutes =
-        startHour * 60 + startMinute;
-
-    const endMinutes =
-        endHour * 60 + endMinute;
+    const startMinutes = startHour * 60 + startMinute;
+    const endMinutes = endHour * 60 + endMinute;
 
     const [openHour, openMinute] =
         dayHours.open.split(":").map(Number);
@@ -53,16 +61,129 @@ function isWithinOpeningHours(start, end, hours, timezone) {
     const [closeHour, closeMinute] =
         dayHours.close.split(":").map(Number);
 
-    const openingMinutes =
-        openHour * 60 + openMinute;
-
-    const closingMinutes =
-        closeHour * 60 + closeMinute;
+    const openingMinutes = openHour * 60 + openMinute;
+    const closingMinutes = closeHour * 60 + closeMinute;
 
     return (
         startMinutes >= openingMinutes &&
         endMinutes <= closingMinutes
     );
+}
+
+function localDateTimeToDate(date, time, timeZone) {
+    const [year, month, day] = date.split("-").map(Number);
+    const [hour, minute] = time.split(":").map(Number);
+
+    const targetUtc = Date.UTC(
+        year,
+        month - 1,
+        day,
+        hour,
+        minute
+    );
+
+    let utcGuess = targetUtc;
+
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23"
+    });
+
+    for (let i = 0; i < 4; i++) {
+        const parts = formatter.formatToParts(new Date(utcGuess));
+
+        const values = {};
+
+        for (const part of parts) {
+            values[part.type] = Number(part.value);
+        }
+
+        const representedUtc = Date.UTC(
+            values.year,
+            values.month - 1,
+            values.day,
+            values.hour,
+            values.minute,
+            values.second
+        );
+
+        const difference = targetUtc - representedUtc;
+
+        if (difference === 0) {
+            break;
+        }
+
+        utcGuess += difference;
+    }
+
+    const result = new Date(utcGuess);
+    const check = formatter.formatToParts(result);
+
+    const actual = {};
+
+    for (const part of check) {
+        actual[part.type] = Number(part.value);
+    }
+
+    if (
+        actual.year !== year ||
+        actual.month !== month ||
+        actual.day !== day ||
+        actual.hour !== hour ||
+        actual.minute !== minute
+    ) {
+        throw new Error("Invalid local date or time for the business timezone.");
+    }
+
+    return result;
+}
+
+function addDaysToLocalDate(dateString, days) {
+    const [year, month, day] = dateString.split("-").map(Number);
+
+    const result = new Date(Date.UTC(
+        year,
+        month - 1,
+        day + days
+    ));
+
+    return [
+        result.getUTCFullYear(),
+        String(result.getUTCMonth() + 1).padStart(2, "0"),
+        String(result.getUTCDate()).padStart(2, "0")
+    ].join("-");
+}
+
+function googleEventOverlaps(event, start, end, timeZone) {
+    let eventStart;
+    let eventEnd;
+
+    if (event.start?.dateTime && event.end?.dateTime) {
+        eventStart = new Date(event.start.dateTime);
+        eventEnd = new Date(event.end.dateTime);
+    } else if (event.start?.date && event.end?.date) {
+        eventStart = localDateTimeToDate(
+            event.start.date,
+            "00:00",
+            timeZone
+        );
+
+        eventEnd = localDateTimeToDate(
+            event.end.date,
+            "00:00",
+            timeZone
+        );
+    } else {
+        return false;
+    }
+
+    return start < eventEnd && end > eventStart;
 }
 
 async function createAppointment(req, res) {
@@ -78,6 +199,43 @@ async function createAppointment(req, res) {
             description,
             checkOnly
         } = req.body;
+
+        if (
+            typeof date !== "string" ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+            typeof time !== "string" ||
+            !/^([01]\d|2[0-3]):[0-5]\d$/.test(time) ||
+            !Number.isInteger(Number(duration)) ||
+            Number(duration) <= 0 ||
+            Number(duration) > 1440
+        ) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid appointment date, time or duration."
+            });
+        }
+
+        const [year, month, day] = date.split("-").map(Number);
+
+        const parsedDate = new Date(Date.UTC(year, month - 1, day));
+
+        if (
+            parsedDate.getUTCFullYear() !== year ||
+            parsedDate.getUTCMonth() !== month - 1 ||
+            parsedDate.getUTCDate() !== day
+        ) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid appointment date."
+            });
+        }
+
+        if (typeof title !== "string" || !title.trim()) {
+            return res.status(400).json({
+                success: false,
+                error: "Appointment title is required."
+            });
+        }
 
         if (!forwardingNumber) {
             return res.status(400).json({
@@ -106,37 +264,49 @@ async function createAppointment(req, res) {
             businessId: business._id
         });
 
-        if (!calendarConnection) {
-            return res.status(404).json({
-                success: false,
-                error: "Calendar connection not found."
+        let calendar = null;
+
+        if (
+            calendarConnection &&
+            calendarConnection.connected === true &&
+            calendarConnection.accessToken &&
+            calendarConnection.calendarId
+        ) {
+            console.log("[API] Connected Google Calendar found.");
+
+            oauth2Client.setCredentials({
+                access_token: calendarConnection.accessToken,
+                refresh_token: calendarConnection.refreshToken,
+                expiry_date: calendarConnection.tokenExpiry
             });
+
+            calendar = google.calendar({
+                version: "v3",
+                auth: oauth2Client
+            });
+
+            console.log("[API] Google Calendar client configured.");
+
+        } else {
+            console.log("[API] No connected Google Calendar. Using MongoDB only.");
         }
 
-        console.log("[API] Calendar connection found:");
-        console.log("Provider:", calendarConnection.provider);
-        console.log("Calendar ID:", calendarConnection.calendarId);
-        console.log("Connected:", calendarConnection.connected);
+        const timeZone = business.timezone || "Europe/Rome";
 
-        oauth2Client.setCredentials({
-            access_token: calendarConnection.accessToken,
-            refresh_token: calendarConnection.refreshToken,
-            expiry_date: calendarConnection.tokenExpiry
-        });
+                let startDateTime;
 
-        const calendar = google.calendar({
-            version: "v3",
-            auth: oauth2Client
-        });
-
-        const calendarInfo = await calendar.calendars.get({
-            calendarId: calendarConnection.calendarId
-        });
-
-        console.log("[API] Google Calendar accessed:");
-        console.log("Calendar:", calendarInfo.data.summary);
-
-        const startDateTime = new Date(`${date}T${time}:00+02:00`);
+        try {
+            startDateTime = localDateTimeToDate(
+                date,
+                time,
+                timeZone
+            );
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid appointment time or business timezone."
+            });
+        }
         const endDateTime = new Date(
             startDateTime.getTime() + duration * 60 * 1000
         );
@@ -144,13 +314,13 @@ async function createAppointment(req, res) {
         const now = new Date();
 
         const nowFormatter = new Intl.DateTimeFormat("en-CA", {
-            timeZone: business.timezone,
+            timeZone: timeZone,
             year: "numeric",
             month: "2-digit",
             day: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
-            hour12: false
+            hourCycle: "h23"
         });
 
         const nowParts = nowFormatter.formatToParts(now);
@@ -170,45 +340,40 @@ async function createAppointment(req, res) {
             startDateTime,
             endDateTime,
             business.hours,
-            business.timezone
+            timeZone
         );
 
-/*         if (!withinOpeningHours) {
-            return res.status(409).json({
-                success: false,
-                error: "Requested time is outside business opening hours."
+        const mongoAppointments = await Appointment.find({
+            businessId: business._id,
+            status: { $ne: "cancelled" },
+            startAt: { $lt: endDateTime },
+            endAt: { $gt: startDateTime }
+        });
+
+        let googleEvents = [];
+
+        if (calendar) {
+            const eventsResponse = await calendar.events.list({
+                calendarId: calendarConnection.calendarId,
+                timeMin: startDateTime.toISOString(),
+                timeMax: endDateTime.toISOString(),
+                showDeleted: false,
+                singleEvents: true
             });
-        } */
 
-        const eventsResponse = await calendar.events.list({
-            calendarId: calendarConnection.calendarId,
-            timeMin: startDateTime.toISOString(),
-            timeMax: endDateTime.toISOString(),
-            singleEvents: true
-        });
+            googleEvents = eventsResponse.data.items || [];
+        }
 
-        const events = eventsResponse.data.items || [];
-
-        console.log("[DEBUG] Events for requested appointment:", events.map(event => ({
-            id: event.id,
-            summary: event.summary,
-            start: event.start?.dateTime,
-            end: event.end?.dateTime
-        })));
-
-        const requestedConflict = events.some(event => {
-            const eventStart = event.start?.dateTime;
-            const eventEnd = event.end?.dateTime;
-
-            if (!eventStart || !eventEnd) {
-                return false;
-            }
-
-            return (
-                startDateTime < new Date(eventEnd) &&
-                endDateTime > new Date(eventStart)
-            );
-        });
+        const requestedConflict =
+            mongoAppointments.length > 0 ||
+            googleEvents.some(event => {
+                return googleEventOverlaps(
+                    event,
+                    startDateTime,
+                    endDateTime,
+                    timeZone
+                );
+            });
 
         console.log("[DEBUG] withinOpeningHours:", withinOpeningHours);
         console.log("[DEBUG] requestedConflict:", requestedConflict);
@@ -218,27 +383,56 @@ async function createAppointment(req, res) {
         if (!withinOpeningHours || requestedConflict || requestedTimeHasPassed) {
             const alternativeSlots = [];
 
-            const checkStart = new Date(startDateTime);
-            checkStart.setDate(checkStart.getDate() - 3);
-            checkStart.setHours(0, 0, 0, 0);
+            const requestedDateFormatter = new Intl.DateTimeFormat("en-CA", {
+                timeZone,
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit"
+            });
 
-            const checkEnd = new Date(startDateTime);
-            checkEnd.setDate(checkEnd.getDate() + 8);
-            checkEnd.setHours(23, 59, 59, 999);
+            const requestedDateParts = requestedDateFormatter.formatToParts(startDateTime);
+
+            const getRequestedDatePart = type =>
+                requestedDateParts.find(part => part.type === type)?.value;
+
+            const requestedLocalDate =
+                `${getRequestedDatePart("year")}-${getRequestedDatePart("month")}-${getRequestedDatePart("day")}`;
+
+            const checkStart = localDateTimeToDate(
+                addDaysToLocalDate(requestedLocalDate, -3),
+                "00:00",
+                timeZone
+            );
+
+            const checkEnd = localDateTimeToDate(
+                addDaysToLocalDate(requestedLocalDate, 9),
+                "00:00",
+                timeZone
+            );
 
             console.log("[API] Checking alternative availability...");
 
-            const alternativeResponse = await calendar.events.list({
-                calendarId: calendarConnection.calendarId,
-                timeMin: checkStart.toISOString(),
-                timeMax: checkEnd.toISOString(),
-                singleEvents: true,
-                orderBy: "startTime"
+            const occupiedAppointments = await Appointment.find({
+                businessId: business._id,
+                status: { $ne: "cancelled" },
+                startAt: { $lt: checkEnd },
+                endAt: { $gt: checkStart }
             });
 
-            console.log("[API] Alternative availability received.");
+            let occupiedEvents = [];
 
-            const occupiedEvents = alternativeResponse.data.items || [];
+            if (calendar) {
+                const alternativeResponse = await calendar.events.list({
+                    calendarId: calendarConnection.calendarId,
+                    timeMin: checkStart.toISOString(),
+                    timeMax: checkEnd.toISOString(),
+                    singleEvents: true,
+                    showDeleted: false,
+                    orderBy: "startTime"
+                });
+
+                occupiedEvents = alternativeResponse.data.items || [];
+            }
 
             console.log("[API] Occupied events found:", occupiedEvents.length);
 
@@ -246,98 +440,96 @@ async function createAppointment(req, res) {
 
             for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
 
-                const dayStart = new Date(startDateTime);
-                dayStart.setDate(dayStart.getDate() + dayOffset);
-                dayStart.setHours(0, 0, 0, 0);
+                const candidateDate = addDaysToLocalDate(
+                    requestedLocalDate,
+                    dayOffset
+                );
 
                 for (let minutes = 0; minutes < 24 * 60; minutes += 30) {
 
-                    const candidateStart = new Date(dayStart);
-                    candidateStart.setMinutes(minutes);
+                    const hour = String(Math.floor(minutes / 60)).padStart(2, "0");
+                    const minute = String(minutes % 60).padStart(2, "0");
+                    const candidateTime = `${hour}:${minute}`;
+
+                    let candidateStart;
+
+                    try {
+                        candidateStart = localDateTimeToDate(
+                            candidateDate,
+                            candidateTime,
+                            timeZone
+                        );
+                    } catch (error) {
+                        // Skip local times that do not exist during daylight-saving changes.
+                        continue;
+                    }
 
                     const candidateEnd = new Date(
-                        candidateStart.getTime() + duration * 60 * 1000
+                        candidateStart.getTime() + Number(duration) * 60 * 1000
                     );
 
                     if (!isWithinOpeningHours(
                         candidateStart,
                         candidateEnd,
                         business.hours,
-                        business.timezone
+                        timeZone
                     )) {
                         continue;
                     }
 
                     candidates.push(candidateStart);
 
-                    if (candidates.length >= 30) {
-                        break;
-                    }
-                }
-
-                if (candidates.length >= 30) {
-                    break;
                 }
             }
-
-/*             const candidates = [];
-
-            for (let i = 1; i <= 4; i++) {
-                candidates.push(
-                    new Date(startDateTime.getTime() - i * 30 * 60 * 1000)
-                );
-
-                candidates.push(
-                    new Date(startDateTime.getTime() + i * 30 * 60 * 1000)
-                );
-            } */
 
             for (const candidateStart of candidates) {
 
                 const candidateEnd = new Date(
-                    candidateStart.getTime() + duration * 60 * 1000
+                    candidateStart.getTime() + Number(duration) * 60 * 1000
                 );
-                
+
                 if (candidateStart < now) {
                     continue;
                 }
 
-                const conflict = occupiedEvents.some(event => {
-                    const eventStart = event.start?.dateTime;
-                    const eventEnd = event.end?.dateTime;
+                const mongoConflict = occupiedAppointments.some(appointment =>
+                    candidateStart < appointment.endAt &&
+                    candidateEnd > appointment.startAt
+                );
 
-                    if (!eventStart || !eventEnd) {
-                        return false;
-                    }
-
-                    return (
-                        candidateStart < new Date(eventEnd) &&
-                        candidateEnd > new Date(eventStart)
+                const googleConflict = occupiedEvents.some(event => {
+                    return googleEventOverlaps(
+                        event,
+                        candidateStart,
+                        candidateEnd,
+                        timeZone
                     );
                 });
+
+                const conflict = mongoConflict || googleConflict;
 
                 const withinOpeningHours = isWithinOpeningHours(
                     candidateStart,
                     candidateEnd,
                     business.hours,
-                    business.timezone
+                    timeZone
                 );
 
                 if (!conflict && withinOpeningHours) {
 
                     const localFormatter = new Intl.DateTimeFormat("en-CA", {
-                        timeZone: business.timezone,
+                        timeZone,
                         year: "numeric",
                         month: "2-digit",
                         day: "2-digit",
                         hour: "2-digit",
                         minute: "2-digit",
-                        hour12: false
+                        hourCycle: "h23"
                     });
 
                     const localParts = localFormatter.formatToParts(candidateStart);
 
-                    const getLocalPart = (type) =>
+                    const getLocalPart = type =>
                         localParts.find(part => part.type === type)?.value;
 
                     const candidateDate =
@@ -358,37 +550,27 @@ async function createAppointment(req, res) {
                         alternativeSlots.push(candidateSlot);
                     }
                 }
-
-                if (alternativeSlots.length >= 3) {
-                    break;
-                }
             }
 
             alternativeSlots.sort((a, b) => {
-                const aDateTime = new Date(`${a.date}T${a.time}:00+02:00`);
-                const bDateTime = new Date(`${b.date}T${b.time}:00+02:00`);
+
+                const aDateTime = localDateTimeToDate(
+                    a.date,
+                    a.time,
+                    timeZone
+                );
+
+                const bDateTime = localDateTimeToDate(
+                    b.date,
+                    b.time,
+                    timeZone
+                );
 
                 return (
-                    Math.abs(aDateTime - startDateTime) -
-                    Math.abs(bDateTime - startDateTime)
+                    Math.abs(aDateTime.getTime() - startDateTime.getTime()) -
+                    Math.abs(bDateTime.getTime() - startDateTime.getTime())
                 );
             });
-
-/*             alternativeSlots.sort((a, b) => {
-                const requestedMinutes =
-                    startDateTime.getHours() * 60 + startDateTime.getMinutes();
-
-                const [aHour, aMinute] = a.split(":").map(Number);
-                const [bHour, bMinute] = b.split(":").map(Number);
-
-                const aMinutes = aHour * 60 + aMinute;
-                const bMinutes = bHour * 60 + bMinute;
-
-                return (
-                    Math.abs(aMinutes - requestedMinutes) -
-                    Math.abs(bMinutes - requestedMinutes)
-                );
-            }); */
 
             console.log("[API] Alternative slots found:", alternativeSlots);
 
@@ -410,35 +592,75 @@ async function createAppointment(req, res) {
         console.log("Description received:", description);
         console.log("=====================================");
 
-        const createdEvent = await calendar.events.insert({
-            calendarId: calendarConnection.calendarId,
-            requestBody: {
-                summary: title,
-                description: description || "",
-                start: {
-                    dateTime: startDateTime.toISOString()
-                },
-                end: {
-                    dateTime: endDateTime.toISOString()
-                }
-            }
+        const appointment = await Appointment.create({
+            businessId: business._id,
+            title,
+            description: description || "",
+            startAt: startDateTime,
+            endAt: endDateTime,
+            duration: Number(duration),
+            timezone: timeZone,
+            status: "booked",
+            source: "telephone",
+            syncStatus: calendar ? "pending" : "not_connected"
         });
 
+        let googleEventId = null;
+
+        if (calendar) {
+            try {
+                const createdEvent = await calendar.events.insert({
+                    calendarId: calendarConnection.calendarId,
+                    requestBody: {
+                        summary: title,
+                        description: description || "",
+                        start: { dateTime: startDateTime.toISOString() },
+                        end: { dateTime: endDateTime.toISOString() }
+                    }
+                });
+
+                googleEventId = createdEvent.data.id;
+
+                appointment.calendarProvider = calendarConnection.provider;
+                appointment.externalEventId = googleEventId;
+                appointment.syncStatus = "synced";
+
+                await appointment.save();
+            } catch (googleError) {
+                console.error(
+                    "[API] Google Calendar sync failed:",
+                    googleError.message
+                );
+
+                appointment.syncStatus = "failed";
+                await appointment.save();
+            }
+        }
+
         console.log("[API] Appointment created:");
-        console.log("Event ID:", createdEvent.data.id);
-        console.log("Title:", createdEvent.data.summary);
+        console.log("Appointment ID:", appointment._id);
+        console.log("Title:", appointment.title);
+        console.log("Google Event ID:", googleEventId);
+        console.log("Sync Status:", appointment.syncStatus);
 
         return res.json({
             success: true,
             message: "Appointment created successfully.",
             businessId: business._id,
             businessName: business.name,
-            eventId: createdEvent.data.id,
+            eventId: appointment._id,
             appointment: {
-                title,
-                date,
-                time,
-                duration
+                title: appointment.title,
+                description: appointment.description,
+                startAt: appointment.startAt,
+                endAt: appointment.endAt,
+                duration: appointment.duration,
+                timezone: appointment.timezone,
+                status: appointment.status,
+                source: appointment.source,
+                syncStatus: appointment.syncStatus,
+                calendarProvider: appointment.calendarProvider || null,
+                externalEventId: appointment.externalEventId || null
             }
         });
 
@@ -451,7 +673,6 @@ async function createAppointment(req, res) {
         });
     }
 }
-
 
 async function getSecretaryConfig(req, res) {
     try {
