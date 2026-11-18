@@ -1,20 +1,16 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Appointments - Secretary AI</title>
-
-<link rel="stylesheet" href="/css/style.css">
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointments - Secretary AI</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
+
     <script>
         const language = "{{LANGUAGE}}";
 
@@ -30,6 +26,7 @@
 
     <nav>
         <a href="/" class="logo">Secretary AI</a>
+
         <div class="nav-links">
             <a href="/dashboard" class="nav-action-button" data-i18n="nav.dashboard">Dashboard</a>
             <a href="/business" class="nav-action-button" data-i18n="nav.business">Business</a>
@@ -46,66 +43,331 @@
 
     <div class="appointments-page container">
 
+        <div class="card">
 
-    <div class="card">
-        <h2 data-i18n="appointments.calendar">Calendar connection</h2>
-        <p class="card-description" data-i18n="appointments.calendar_text">
-            Connect your business calendar so your AI secretary can check availability
-            and schedule appointments for your customers.
-        </p>
-        <div class="calendar-status">
-            <div class="status-text">
-                <span
-                    id="calendarStatusDot"
-                    class="status-dot"
-                    style="background: #98a2b3;"
-                ></span>
+            <h2 data-i18n="appointments.calendar">Calendar connection</h2>
 
-                <div>
-                    <div
-                        id="calendarStatusLabel"
-                        class="status-label"
-                        data-i18n="appointments.calendar_not_connected"
-                    >
-                        Google Calendar not connected
+            <p class="card-description" data-i18n="appointments.calendar_text">
+                Connect your business calendar so your AI secretary can check availability
+                and schedule appointments for your customers.
+            </p>
+
+            <div class="calendar-status">
+
+                <div class="status-text">
+
+                    <span
+                        id="calendarStatusDot"
+                        class="status-dot"
+                        style="background: #98a2b3;"
+                    ></span>
+
+                    <div>
+                        <div
+                            id="calendarStatusLabel"
+                            class="status-label"
+                            data-i18n="appointments.calendar_not_connected"
+                        >
+                            Google Calendar not connected
+                        </div>
+
+                        <div
+                            id="calendarStatusDescription"
+                            style="color: #667085; font-size: 14px;"
+                            data-i18n="appointments.calendar_not_connected_description"
+                        >
+                            Connect your Google Calendar to enable appointments.
+                        </div>
                     </div>
-                    <div
-                        id="calendarStatusDescription"
-                        style="color: #667085; font-size: 14px;"
-                        data-i18n="appointments.calendar_not_connected_description"
-                    >
-                        Connect your Google Calendar to enable appointments.
-                    </div>
-
                 </div>
             </div>
+            <!-- Google Calendar privacy notice and authorization -->
+            <div
+                id="calendarPrivacySection"
+                style="
+                    margin-top: 16px;
+                    padding: 13px 15px;
+                    background: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-left: 3px solid #98a2b3;
+                    border-radius: 6px;
+                    color: #667085;
+                    font-size: 12px;
+                    line-height: 1.6;
+                    text-align: left !important;
+                "
+            >
 
-            <a href="/calendar/connect" class="connect-button" data-i18n="appointments.connect">
-                Connect Calendar
-            </a>
+                <div id="calendarPrivacyEnglish" style="display: none; text-align: left !important;">
+                    Google Calendar is used to manage appointments and check availability.
+                    Limited appointment and availability information may be processed by
+                    OpenAI to generate responses.
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                        Privacy Policy
+                    </a>.
+                </div>
+
+                <div id="calendarPrivacyItalian" style="display: none; text-align: left !important;">
+                    Google Calendar viene utilizzato per gestire gli appuntamenti e verificare la disponibilità.
+                    Alcune informazioni limitate sugli appuntamenti e sulla disponibilità possono essere elaborate da
+                    OpenAI per generare risposte.
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                        Informativa sulla privacy
+                    </a>.
+                </div>
+
+                <div
+                    id="calendarConsentRow"
+                    style="
+                        display: flex !important;
+                        flex-direction: row !important;
+                        align-items: center !important;
+                        justify-content: flex-start !important;
+                        width: 100% !important;
+                        margin: 10px 0 0 0 !important;
+                        padding: 0 !important;
+                        gap: 8px !important;
+                        text-align: left !important;
+                    "
+                >
+
+                    <input
+                        type="checkbox"
+                        id="calendarConsentCheckbox"
+                        name="calendarConsent"
+                        form="calendarConnectForm"
+                        required
+                        style="
+                            display: inline-block !important;
+                            width: 14px !important;
+                            min-width: 14px !important;
+                            max-width: 14px !important;
+                            height: 14px !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            flex: 0 0 14px !important;
+                            vertical-align: middle !important;
+                        "
+                    >
+
+                    <strong
+                        style="
+                            display: inline !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            font-weight: 700 !important;
+                            text-align: left !important;
+                            line-height: 1.5 !important;
+                        "
+                    >
+                        <span id="calendarConsentEnglishLabel" style="display: none;">
+                            I have read this notice and authorize this processing.
+                        </span>
+
+                        <span id="calendarConsentItalianLabel" style="display: none;">
+                            Ho letto questa informativa e autorizzo questo trattamento.
+                        </span>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div style="margin-top: 14px;">
+
+                <form
+                    id="calendarConnectForm"
+                    action="/calendar/connect"
+                    method="POST"
+                    style="margin: 0;"
+                >
+                    <button
+                        type="submit"
+                        id="connectCalendarButton"
+                        class="connect-button"
+                        data-i18n="appointments.connect"
+                        disabled
+                        style="
+                            opacity: 0.5;
+                            cursor: not-allowed;
+                        "
+                    >
+                        Connect Calendar
+                    </button>
+                </form>
+
+            </div>
+
+            <form
+                action="/calendar/select"
+                method="POST"
+                style="margin-top: 24px;"
+            >
+
+                <div class="form-group">
+
+                    <label for="calendarSelect" data-i18n="appointments.calendar_used">
+                        Calendar used for appointments
+                    </label>
+
+                    <select
+                        id="calendarSelect"
+                        name="calendarId"
+                    >
+                        <option value="" data-i18n="appointments.select_calendar">
+                            Select a calendar
+                        </option>
+                    </select>
+
+                </div>
+
+            </form>
 
         </div>
 
-        <form
-            action="/calendar/select"
-            method="POST"
-            style="margin-top: 24px;"
-        >
+        <form action="/appointments" method="POST">
 
-            <div class="form-group">
+            <div class="card">
 
-            <label for="calendarSelect" data-i18n="appointments.calendar_used">
-                Calendar used for appointments
-            </label>
+                <h2 data-i18n="appointments.settings">Appointment settings</h2>
 
-                <select
-                    id="calendarSelect"
-                    name="calendarId"
+                <p class="card-description" data-i18n="appointments.settings_text">
+                    Define the basic rules your AI secretary should follow when booking appointments.
+                </p>
+
+                <div class="form-group">
+
+                    <label for="appointmentDuration" data-i18n="appointments.duration">
+                        Default appointment duration
+                    </label>
+
+                    <select
+                        id="appointmentDuration"
+                        name="appointmentDuration"
+                    >
+                        <option value="15" data-i18n="appointments.15m">15 minutes</option>
+                        <option value="30" data-i18n="appointments.30m">30 minutes</option>
+                        <option value="45" data-i18n="appointments.45m">45 minutes</option>
+                        <option value="60" data-i18n="appointments.60m">60 minutes</option>
+                        <option value="90" data-i18n="appointments.90m">90 minutes</option>
+                        <option value="120" data-i18n="appointments.120m">120 minutes</option>
+                    </select>
+
+                    <script>
+                        document.getElementById("appointmentDuration").value =
+                            "{{APPOINTMENT_DURATION}}";
+                    </script>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="bookingWindow" data-i18n="appointments.advance">
+                        How far in advance can customers book?
+                    </label>
+
+                    <select
+                        id="bookingWindow"
+                        name="bookingWindow"
+                    >
+                        <option value="7" data-i18n="appointments.7">Up to 7 days</option>
+                        <option value="14" data-i18n="appointments.14">Up to 14 days</option>
+                        <option value="30" data-i18n="appointments.30">Up to 30 days</option>
+                        <option value="60" data-i18n="appointments.60">Up to 60 days</option>
+                        <option value="90" data-i18n="appointments.90">Up to 90 days</option>
+                    </select>
+
+                    <script>
+                        document.getElementById("bookingWindow").value =
+                            "{{BOOKING_WINDOW}}";
+                    </script>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="bookingInstructions" data-i18n="appointments.instructions">
+                        Booking instructions
+                    </label>
+
+                    <textarea
+                        id="bookingInstructions"
+                        name="bookingInstructions"
+                        placeholder="For example: Ask the customer for their name and phone number before confirming the appointment."
+                        data-i18n-placeholder="appointments.instructions_placeholder"
+                    >{{BOOKING_INSTRUCTIONS}}</textarea>
+
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h2 data-i18n="appointments.availability">Availability</h2>
+
+                <p class="card-description" data-i18n="appointments.availability_text">
+                    These settings describe when the AI secretary is allowed to offer appointments.
+                </p>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="startTime" data-i18n="appointments.start">Start time</label>
+
+                        <input
+                            type="time"
+                            id="startTime"
+                            name="startTime"
+                            value="{{START_TIME}}"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="endTime" data-i18n="appointments.end">End time</label>
+
+                        <input
+                            type="time"
+                            id="endTime"
+                            name="endTime"
+                            value="{{END_TIME}}"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="days" data-i18n="appointments.days">Available days</label>
+
+                    <select id="days" name="days">
+                        <option value="weekdays" data-i18n="appointments.week">Monday - Friday</option>
+                        <option value="monday-saturday" data-i18n="appointments.sat">Monday - Saturday</option>
+                        <option value="all" data-i18n="appointments.every">Every day</option>
+                    </select>
+
+                    <script>
+                        document.getElementById("days").value =
+                            "{{DAYS}}";
+                    </script>
+
+                </div>
+
+            </div>
+
+            <div class="save-section">
+
+                <button
+                    type="submit"
+                    class="save-button"
+                    data-i18n="appointments.save"
                 >
-                    <option value="" data-i18n="appointments.select_calendar">
-                        Select a calendar
-                    </option>
-                </select>
+                    Save Appointment Settings
+                </button>
 
             </div>
 
@@ -113,138 +375,50 @@
 
     </div>
 
+    <script>
+        // Calendar consent language and connection button
 
-    <form action="/appointments" method="POST">
+        const consentCheckbox =
+            document.getElementById("calendarConsentCheckbox");
 
-        <div class="card">
+        const connectCalendarButton =
+            document.getElementById("connectCalendarButton");
 
-            <h2 data-i18n="appointments.settings">Appointment settings</h2>
-            <p class="card-description" data-i18n="appointments.settings_text">
-                Define the basic rules your AI secretary should follow when booking appointments.
-            </p>
+        if (language === "it") {
 
-            <div class="form-group">
+            document.getElementById("calendarPrivacyItalian").style.display = "block";
+            document.getElementById("calendarConsentItalianLabel").style.display = "inline";
 
-                <label for="appointmentDuration" data-i18n="appointments.duration">
-                    Default appointment duration
-                </label>
+        } else {
 
-                <select
-                    id="appointmentDuration"
-                    name="appointmentDuration"
-                >
-                    <option value="15" data-i18n="appointments.15m">15 minutes</option>
-                    <option value="30" data-i18n="appointments.30m">30 minutes</option>
-                    <option value="45" data-i18n="appointments.45m">45 minutes</option>
-                    <option value="60" data-i18n="appointments.60m">60 minutes</option>
-                    <option value="90" data-i18n="appointments.90m">90 minutes</option>
-                    <option value="120" data-i18n="appointments.120m">120 minutes</option>
-                </select>
+            document.getElementById("calendarPrivacyEnglish").style.display = "block";
+            document.getElementById("calendarConsentEnglishLabel").style.display = "inline";
 
-                <script>
-                    document.getElementById("appointmentDuration").value =
-                        "{{APPOINTMENT_DURATION}}";
-                </script>
+        }
 
-            </div>
+        function updateCalendarConsentButton() {
 
-            <div class="form-group">
-                <label for="bookingWindow" data-i18n="appointments.advance">
-                    How far in advance can customers book?
-                </label>
+            const authorized = consentCheckbox.checked;
 
-                <select
-                    id="bookingWindow"
-                    name="bookingWindow"
-                >
-                    <option value="7" data-i18n="appointments.7">Up to 7 days</option>
-                    <option value="14" data-i18n="appointments.14">Up to 14 days</option>
-                    <option value="30" data-i18n="appointments.30">Up to 30 days</option>
-                    <option value="60" data-i18n="appointments.60">Up to 60 days</option>
-                    <option value="90" data-i18n="appointments.90">Up to 90 days</option>
-                </select>
+            connectCalendarButton.disabled = !authorized;
 
-                <script>
-                    document.getElementById("bookingWindow").value =
-                        "{{BOOKING_WINDOW}}";
-                </script>
-            </div>
+            connectCalendarButton.style.opacity =
+                authorized ? "1" : "0.5";
 
-            <div class="form-group">
+            connectCalendarButton.style.cursor =
+                authorized ? "pointer" : "not-allowed";
 
-                <label for="bookingInstructions" data-i18n="appointments.instructions">
-                Booking instructions
-            </label>
+        }
 
-            <textarea
-                id="bookingInstructions"
-                name="bookingInstructions"
-                placeholder="For example: Ask the customer for their name and phone number before confirming the appointment."
-                data-i18n-placeholder="appointments.instructions_placeholder"
-            >{{BOOKING_INSTRUCTIONS}}</textarea>
+        consentCheckbox.addEventListener(
+            "change",
+            updateCalendarConsentButton
+        );
 
-            </div>
+        updateCalendarConsentButton();
 
-        </div>
+    </script>
 
-        <div class="card">
-            <h2 data-i18n="appointments.availability">Availability</h2>
-            <p class="card-description" data-i18n="appointments.availability_text">
-                These settings describe when the AI secretary is allowed to offer appointments.
-            </p>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="startTime" data-i18n="appointments.start">Start time</label>
-                    <input
-                        type="time"
-                        id="startTime"
-                        name="startTime"
-                        value="{{START_TIME}}"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="endTime" data-i18n="appointments.end">End time</label>
-                    <input
-                        type="time"
-                        id="endTime"
-                        name="endTime"
-                        value="{{END_TIME}}"
-                    >
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="days" data-i18n="appointments.days">Available days</label>
-
-                <select id="days" name="days">
-                    <option value="weekdays" data-i18n="appointments.week">Monday - Friday</option>
-                    <option value="monday-saturday" data-i18n="appointments.sat">Monday - Saturday</option>
-                    <option value="all" data-i18n="appointments.every">Every day</option>
-                </select>
-
-                <script>
-                    document.getElementById("days").value =
-                        "{{DAYS}}";
-                </script>
-            </div>
-        </div>
-
-        <div class="save-section">
-
-            <button
-                type="submit"
-                class="save-button"
-                data-i18n="appointments.save"
-            >
-                Save Appointment Settings
-            </button>
-
-        </div>
-
-    </form>
-    </div>
     <script>
 
         fetch("/calendar/list")
@@ -264,7 +438,6 @@
                 const statusDescription =
                     document.getElementById("calendarStatusDescription");
 
-
                 if (data.calendars && data.calendars.length > 0) {
 
                     statusDot.style.background = "#12b76a";
@@ -283,7 +456,6 @@
 
                         select.appendChild(option);
 
-
                         if (calendar.id === data.selectedCalendarId) {
 
                             option.selected = true;
@@ -291,16 +463,25 @@
                         }
 
                     });
+
                     select.addEventListener("change", () => {
+
                         fetch("/calendar/select", {
+
                             method: "POST",
+
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
+
                             body: `calendarId=${encodeURIComponent(select.value)}`
+
                         });
+
                     });
+
                 }
+
             })
 
             .catch(error => {
@@ -313,68 +494,98 @@
             });
 
     </script>
+
     <script>
+
         fetch("/locales/" + language + ".json", { cache: "no-store" })
+
             .then(response => {
+
                 if (!response.ok) {
                     throw new Error("Locale not found");
                 }
 
                 return response.json();
+
             })
+
             .then(translations => {
+
                 window.translations = translations;
 
                 document.querySelectorAll("[data-i18n]").forEach(element => {
+
                     const key = element.getAttribute("data-i18n");
 
                     if (Object.prototype.hasOwnProperty.call(translations, key)) {
                         element.innerHTML = translations[key];
                     }
+
                 });
 
                 document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+
                     const key = element.getAttribute("data-i18n-placeholder");
 
                     if (Object.prototype.hasOwnProperty.call(translations, key)) {
                         element.placeholder = translations[key];
                     }
+
                 });
 
                 if (calendarConnected) {
                     document.getElementById("calendar-connected-modal").style.display = "flex";
                 }
+
             })
+
             .catch(error => {
+
                 console.error("Could not load appointments language:", error);
+
             });
 
-            function closeCalendarModal() {
-                document.getElementById("calendar-connected-modal").style.display = "none";
-            }
+        function closeCalendarModal() {
+            document.getElementById("calendar-connected-modal").style.display = "none";
+        }
+
     </script>
+
     <!-- Calendar connection success modal -->
-<div id="calendar-connected-modal" class="modal-overlay">
-    <div class="modal">
-        <h2>Google Calendar Connected</h2>
-        <p>Your Google Calendar has been connected successfully.</p>
-        <button type="button" onclick="closeCalendarModal()">
-            OK
-        </button>
-    </div>
-</div>
 
-<!-- Calendar connection failure modal -->
-<div id="calendarErrorModal" class="modal-overlay">
-    <div class="modal">
-        <h2>Calendar Connection Failed</h2>
-        <p>We could not connect your Google Calendar. Please try again.</p>
-        <button type="button" onclick="closeCalendarErrorModal()">
-            OK
-        </button>
-    </div>
-</div>
+    <div id="calendar-connected-modal" class="modal-overlay">
 
+        <div class="modal">
+
+            <h2>Google Calendar Connected</h2>
+
+            <p>Your Google Calendar has been connected successfully.</p>
+
+            <button type="button" onclick="closeCalendarModal()">
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Calendar connection failure modal -->
+
+    <div id="calendarErrorModal" class="modal-overlay">
+
+        <div class="modal">
+
+            <h2>Calendar Connection Failed</h2>
+
+            <p>We could not connect your Google Calendar. Please try again.</p>
+
+            <button type="button" onclick="closeCalendarErrorModal()">
+                OK
+            </button>
+
+        </div>
+
+    </div>
 
 </body>
 

@@ -10,22 +10,47 @@ const { showCalendarPage } = require("../controllers/calendarController");
 const router = express.Router();
 router.get("/calendar", requireAuth, showCalendarPage);
 
-router.get("/calendar/connect", requireAuth, (req, res) => {
-    const authUrl = oauth2Client.generateAuthUrl({
-        access_type: "offline",
-        prompt: "consent",
-        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
-        scope: [
-            "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
-            "https://www.googleapis.com/auth/calendar.events.owned",
-            "https://www.googleapis.com/auth/userinfo.email"
-        ]
-    });
+router.post("/calendar/connect", requireAuth, async (req, res) => {
+    try {
+        if (req.body.calendarConsent !== "on") {
+            return res.status(400).send(
+                "You must accept the Google Calendar privacy notice before connecting."
+            );
+        }
 
-    console.log("GOOGLE REDIRECT URI:", process.env.GOOGLE_REDIRECT_URI);
-    console.log("GOOGLE AUTH URL:", authUrl);
+        const business = await Business.findOne({
+            ownerUserId: req.session.userId
+        });
 
-    res.redirect(authUrl);
+        if (!business) {
+            return res.status(404).send("Business not found.");
+        }
+
+        business.googleCalendarConsent = {
+            granted: true,
+            grantedAt: new Date(),
+            policyVersion: "2026-11-18-v1"
+        };
+
+        await business.save();
+
+        const authUrl = oauth2Client.generateAuthUrl({
+            access_type: "offline",
+            prompt: "consent",
+            redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+            scope: [
+                "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
+                "https://www.googleapis.com/auth/calendar.events.owned",
+                "https://www.googleapis.com/auth/userinfo.email"
+            ]
+        });
+
+        res.redirect(authUrl);
+
+    } catch (error) {
+        console.error("Google Calendar connection error:", error);
+        res.status(500).send("Unable to start Google Calendar connection.");
+    }
 });
 
 router.get("/calendar/callback", requireAuth, async (req, res) => {
@@ -405,19 +430,79 @@ router.delete("/calendar/event/:id", requireAuth, async (req, res) => {
             });
         }
 
+        // Delete the corresponding Google Calendar event first.
+        if (
+            appointment.calendarProvider === "google" &&
+            appointment.externalEventId
+        ) {
+            const connection = await CalendarConnection.findOne({
+                businessId: business._id,
+                provider: "google"
+            });
+
+            if (
+                !connection ||
+                !connection.calendarId ||
+                !connection.refreshToken
+            ) {
+                return res.status(409).json({
+                    error: "Google Calendar connection is unavailable. Appointment was not cancelled."
+                });
+            }
+
+            oauth2Client.setCredentials({
+                access_token: connection.accessToken,
+                refresh_token: connection.refreshToken
+            });
+
+            const calendar = google.calendar({
+                version: "v3",
+                auth: oauth2Client
+            });
+
+            try {
+                await calendar.events.delete({
+                    calendarId: connection.calendarId,
+                    eventId: appointment.externalEventId
+                });
+
+                console.log(
+                    "Google Calendar event deleted:",
+                    appointment.externalEventId
+                );
+
+            } catch (googleError) {
+
+                const googleStatus =
+                    googleError.code ||
+                    googleError.response?.status;
+
+                // A 404 or 410 means the event is already absent.
+                if (googleStatus !== 404 && googleStatus !== 410) {
+                    throw googleError;
+                }
+
+                console.log(
+                    "Google Calendar event was already deleted:",
+                    appointment.externalEventId
+                );
+            }
+        }
+
+        // Only cancel the appointment after Google deletion succeeds.
         appointment.status = "cancelled";
 
         await appointment.save();
 
-        res.json({
+        return res.json({
             success: true,
-            message: "Appointment cancelled successfully."
+            message: "Appointment cancelled and Google Calendar synchronisation completed."
         });
 
     } catch (error) {
         console.error("Cancelling appointment failed:", error);
 
-        res.status(500).json({
+        return res.status(500).json({
             error: "Failed to cancel appointment."
         });
     }

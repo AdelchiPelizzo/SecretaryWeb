@@ -101,6 +101,19 @@ const businessSchema = new mongoose.Schema(
             trim: true
         },
 
+        googleCalendarConsent: {
+            granted: {
+                type: Boolean,
+                default: false
+            },
+            grantedAt: {
+                type: Date
+            },
+            policyVersion: {
+                type: String
+            }
+        },
+
         hours: {
             monday: {
                 open: String,
