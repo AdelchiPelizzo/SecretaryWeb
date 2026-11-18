@@ -67,16 +67,37 @@ async function showDashboardPage(req, res) {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - 30);
 
-        const eventsResponse = await calendar.events.list({
-            calendarId: calendarConnection.calendarId,
-            timeMin: startDate.toISOString(),
-            timeMax: new Date().toISOString(),
-            singleEvents: true,
-            orderBy: "startTime",
-            maxResults: 10
-        });
-        recentAppointments = eventsResponse.data.items || [];
-        
+        try {
+
+            const calendarInfo = await calendar.calendarList.get({
+                calendarId: calendarConnection.calendarId
+            });
+
+            console.log("Google Calendar access test:", {
+                id: calendarInfo.data.id,
+                summary: calendarInfo.data.summary,
+                accessRole: calendarInfo.data.accessRole
+            });
+
+            const eventsResponse = await calendar.events.list({
+                calendarId: calendarConnection.calendarId,
+                timeMin: startDate.toISOString(),
+                timeMax: new Date().toISOString(),
+                singleEvents: true,
+                orderBy: "startTime",
+                maxResults: 10
+            });
+
+            recentAppointments = eventsResponse.data.items || [];
+
+        } catch (error) {
+            console.error("Dashboard Google Calendar error:", {
+                status: error.response?.status,
+                message: error.message,
+                details: JSON.stringify(error.response?.data, null, 2)
+            });
+            recentAppointments = [];
+        }        
     }
 
     const activities = [

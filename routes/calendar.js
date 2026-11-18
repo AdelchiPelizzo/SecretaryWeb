@@ -40,7 +40,7 @@ router.post("/calendar/connect", requireAuth, async (req, res) => {
             redirect_uri: process.env.GOOGLE_REDIRECT_URI,
             scope: [
                 "https://www.googleapis.com/auth/calendar.calendarlist.readonly",
-                "https://www.googleapis.com/auth/calendar.events.owned",
+                "https://www.googleapis.com/auth/calendar.events",
                 "https://www.googleapis.com/auth/userinfo.email"
             ]
         });
