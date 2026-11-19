@@ -184,6 +184,17 @@ app.use((req, res, next) => {
     const referer = req.get("referer") || "";
     const refererLower = referer.toLowerCase();
 
+        // Read UTM campaign parameters safely.
+    const getUtmValue = (value) =>
+        typeof value === "string"
+            ? value.trim().slice(0, 100) || null
+            : null;
+
+    const utmSource = getUtmValue(req.query.utm_source);
+    const utmMedium = getUtmValue(req.query.utm_medium);
+    const utmCampaign = getUtmValue(req.query.utm_campaign);
+    const utmContent = getUtmValue(req.query.utm_content);
+
     const automatedRequestPattern =
         /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
 
@@ -254,6 +265,21 @@ app.use((req, res, next) => {
         trafficSource = "direct";
     }
 
+    // UTM source takes priority over the HTTP referrer.
+    if (utmSource) {
+        const source = utmSource.toLowerCase();
+
+        if (source === "linkedin") {
+            trafficSource = "linkedin";
+        } else if (source === "facebook") {
+            trafficSource = "facebook";
+        } else if (source === "twitter" || source === "x") {
+            trafficSource = "twitter";
+        } else {
+            trafficSource = "other";
+        }
+    }
+
     console.log("[VISITOR] Type:", visitorType);
     console.log("[VISITOR] Traffic source:", trafficSource);
 
@@ -299,6 +325,10 @@ app.use((req, res, next) => {
             isReturning: Boolean(previousVisit),
             visitorType,
             trafficSource,
+            utmSource,
+            utmMedium,
+            utmCampaign,
+            utmContent,
             userAgent: userAgent || null,
             referer: referer || null,
             ...location

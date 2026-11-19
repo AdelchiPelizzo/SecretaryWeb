@@ -42,6 +42,27 @@ const pageVisitSchema = new mongoose.Schema({
         default: "unknown"
     },
 
+    // UTM campaign tracking.
+    utmSource: {
+        type: String,
+        default: null
+    },
+
+    utmMedium: {
+        type: String,
+        default: null
+    },
+
+    utmCampaign: {
+        type: String,
+        default: null
+    },
+
+    utmContent: {
+        type: String,
+        default: null
+    },
+
     // Original request details for later analysis.
     userAgent: {
         type: String,
