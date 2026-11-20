@@ -176,7 +176,6 @@ async function showAdminOverviewPage(req, res) {
                 .lean()
         ]);
 
-
         // Build the recent homepage visits table.
         const visitRows = recentVisits.map((visit) => {
             const visitorType = !visit.visitorId
@@ -185,6 +184,30 @@ async function showAdminOverviewPage(req, res) {
                     ? "Returning"
                     : "New";
 
+            const javascriptStatus = visit.javascriptConfirmed === true
+                ? "Confirmed"
+                : visit.javascriptConfirmed === false
+                    ? "Not confirmed"
+                    : "—";
+
+            const preferredLanguages = Array.isArray(visit.preferredLanguages)
+                && visit.preferredLanguages.length > 0
+                    ? visit.preferredLanguages.join(", ")
+                    : "—";
+
+            const activeTime = Number.isFinite(visit.activeSeconds)
+                ? `${visit.activeSeconds}s`
+                : "—";
+
+            const scrollDepth = Number.isFinite(visit.maxScrollPercent)
+                ? `${visit.maxScrollPercent}%`
+                : "—";
+
+            const viewedSections = Array.isArray(visit.viewedSections)
+                && visit.viewedSections.length > 0
+                    ? visit.viewedSections.join(", ")
+                    : "—";
+
             return `
                 <tr>
                     <td>${escapeHtml(visit.page || "/")}</td>
@@ -192,6 +215,11 @@ async function showAdminOverviewPage(req, res) {
                     <td>${escapeHtml(visit.region || "—")}</td>
                     <td>${escapeHtml(visit.city || "—")}</td>
                     <td>${escapeHtml(visitorType)}</td>
+                    <td>${escapeHtml(javascriptStatus)}</td>
+                    <td>${escapeHtml(preferredLanguages)}</td>
+                    <td>${escapeHtml(activeTime)}</td>
+                    <td>${escapeHtml(scrollDepth)}</td>
+                    <td>${escapeHtml(viewedSections)}</td>
                     <td>${escapeHtml(formatDateTime(visit.visitedAt))}</td>
                 </tr>
             `;
@@ -250,9 +278,7 @@ async function showAdminOverviewPage(req, res) {
                 "{{RECENT_VISITS}}",
                 visitRows || `
                     <tr>
-                        <td colspan="6" class="empty-state">
-                            No homepage visits recorded yet.
-                        </td>
+                        <td colspan="11">No homepage visits recorded yet.</td>
                     </tr>
                 `
             );

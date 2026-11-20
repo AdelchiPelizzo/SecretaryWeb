@@ -15,6 +15,42 @@ const pageVisitSchema = new mongoose.Schema({
         index: true
     },
 
+    //* Unique identifier for this individual page visit. */
+    visitId: {
+        type: String,
+        default: null,
+        index: true
+    },
+
+    //* Browser-side tracking confirmation and engagement data. */
+    javascriptConfirmed: {
+        type: Boolean,
+        default: null
+    },
+
+    preferredLanguages: {
+        type: [String],
+        default: []
+    },
+
+    activeSeconds: {
+        type: Number,
+        default: null,
+        min: 0
+    },
+
+    maxScrollPercent: {
+        type: Number,
+        default: null,
+        min: 0,
+        max: 100
+    },
+
+    viewedSections: {
+        type: [String],
+        default: []
+    },
+
     // True when this browser has visited before.
     isReturning: {
         type: Boolean,

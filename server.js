@@ -137,7 +137,6 @@ async function getVisitorLocation(ip) {
     }
 }
 
-
 // Record homepage visits in MongoDB.
 app.use((req, res, next) => {
 
@@ -152,7 +151,10 @@ app.use((req, res, next) => {
     }
 
     // Only record homepage visits.
-    if (req.method !== "GET" || req.path !== "/") {
+    if (
+        req.method !== "GET" ||
+        !["/", "/it/"].includes(req.path)
+    ) {
         return next();
     }
 
@@ -196,7 +198,7 @@ app.use((req, res, next) => {
     const utmContent = getUtmValue(req.query.utm_content);
 
     const automatedRequestPattern =
-        /bot|crawler|spider|crawling|slurp|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
+    /bot|crawler|spider|crawling|slurp|scrapy|preview|facebookexternalhit|facebot|linkedinbot|twitterbot|trendiction|go-http-client|python-requests|curl|wget|headlesschrome|puppeteer|playwright|selenium/i;
 
     let visitorType = "unknown";
 
@@ -284,6 +286,13 @@ app.use((req, res, next) => {
     console.log("[VISITOR] Traffic source:", trafficSource);
 
     // Record the visit asynchronously.
+    //* Generate a unique ID for this homepage visit.*
+    const visitId = crypto.randomUUID();
+
+    // Make the ID available to the homepage route.
+    req.visitId = visitId;
+
+    //* Record the visit asynchronously.*
     (async () => {
 
         const previousVisit = await PageVisit.findOne({
@@ -308,20 +317,13 @@ app.use((req, res, next) => {
                 region: previousVisit.region,
                 city: previousVisit.city
             };
-
-        } else {
-            const forwardedIps = (
-                req.headers["x-forwarded-for"] || ""
-            ).split(",").map(ip => ip.trim());
-
-            const locationIp = forwardedIps[0] || clientIp;
-
-            location = await getVisitorLocation(locationIp);
         }
 
+        // Create the visit record before looking up its location.
         await PageVisit.create({
-            page: "/",
+            page: req.path,
             visitorId,
+            visitId,
             isReturning: Boolean(previousVisit),
             visitorType,
             trafficSource,
@@ -334,17 +336,45 @@ app.use((req, res, next) => {
             ...location
         });
 
+        // Allow the homepage to load.
+        next();
+
+        // Look up the location afterwards, if necessary.
+        if (!location.country && !location.region && !location.city) {
+            try {
+                const forwardedIps = (
+                    req.headers["x-forwarded-for"] || ""
+                ).split(",").map(ip => ip.trim());
+
+                const locationIp = forwardedIps[0] || clientIp;
+
+                const newLocation = await getVisitorLocation(locationIp);
+
+                if (Object.keys(newLocation).length > 0) {
+                    await PageVisit.updateOne(
+                        { visitId },
+                        { $set: newLocation }
+                    );
+                }
+
+            } catch (locationError) {
+                console.error(
+                    "Visitor location update failed:",
+                    locationError.message
+                );
+            }
+        }
+
     })().catch(error => {
         console.error(
             "Failed to record homepage visit:",
             error.message
         );
+
+        next();
     });
 
-    next();
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 
@@ -359,6 +389,86 @@ app.use(express.static(path.join(__dirname), {
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Receive browser-generated visitor engagement data.
+app.post("/api/visitor-tracking", async (req, res) => {
+    try {
+        const {
+            visitId,
+            javascriptConfirmed,
+            preferredLanguages,
+            activeSeconds,
+            maxScrollPercent,
+            viewedSections
+        } = req.body || {};
+
+        // Require a valid server-generated visit ID.
+        if (
+            typeof visitId !== "string" ||
+            !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(visitId)
+        ) {
+            return res.sendStatus(400);
+        }
+
+        // Accept only the known homepage sections.
+        const allowedSections = [
+            "features",
+            "pricing",
+            "personalities",
+            "how-it-works",
+            "contact"
+        ];
+
+        const safeLanguages = Array.isArray(preferredLanguages)
+            ? preferredLanguages
+                .filter(language => typeof language === "string")
+                .slice(0, 10)
+                .map(language => language.slice(0, 20))
+            : [];
+
+        const safeSections = Array.isArray(viewedSections)
+            ? [...new Set(viewedSections.filter(section =>
+                allowedSections.includes(section)
+            ))]
+            : [];
+
+        const safeActiveSeconds =
+            Number.isFinite(activeSeconds) && activeSeconds >= 0
+                ? Math.min(Math.floor(activeSeconds), 86400)
+                : null;
+
+        const safeScrollPercent =
+            Number.isFinite(maxScrollPercent) &&
+            maxScrollPercent >= 0 &&
+            maxScrollPercent <= 100
+                ? Math.round(maxScrollPercent)
+                : null;
+
+        await PageVisit.findOneAndUpdate(
+            { visitId },
+            {
+                $set: {
+                    javascriptConfirmed: javascriptConfirmed === true,
+                    preferredLanguages: safeLanguages,
+                    activeSeconds: safeActiveSeconds,
+                    maxScrollPercent: safeScrollPercent,
+                    viewedSections: safeSections
+                }
+            },
+            { runValidators: true }
+        );
+
+        return res.sendStatus(204);
+
+    } catch (error) {
+        console.error(
+            "Failed to update visitor tracking:",
+            error.message
+        );
+        return res.sendStatus(500);
+    }
+});
+
 app.use(sessionMiddleware);
 app.use(appointmentsRoute);
 app.use(notesRoute);
@@ -385,14 +495,25 @@ app.get("/health", (req, res) => {
     res.status(200).send("OK");
 });
 
+
 app.get("/", (req, res) => {
     try {
-        const html = getHomepageHtml(
+        let html = getHomepageHtml(
             path.join(__dirname, "index.html"),
             "en"
         );
 
+        // Expose this page visit's ID to the browser.
+        const visitIdScript = `
+            <script>
+                window.secretaryVisitId = ${JSON.stringify(req.visitId || null)};
+            </script>
+        `;
+
+        html = html.replace("</head>", `${visitIdScript}</head>`);
+
         res.type("html").send(html);
+
     } catch (error) {
         console.error("Failed to serve English homepage:", error);
         res.status(500).send("Internal Server Error");
@@ -401,20 +522,29 @@ app.get("/", (req, res) => {
 
 app.get("/it/", (req, res) => {
     try {
-        const html = getHomepageHtml(
+        let html = getHomepageHtml(
             path.join(__dirname, "it", "index.html"),
             "it"
         );
 
+        // Expose this page visit's ID to the browser.
+        const visitIdScript = `
+            <script>
+                window.secretaryVisitId = ${JSON.stringify(req.visitId || null)};
+            </script>
+        `;
+
+        html = html.replace("</head>", `${visitIdScript}</head>`);
+
         res.type("html").send(html);
+
     } catch (error) {
         console.error("Failed to serve Italian homepage:", error);
         res.status(500).send("Internal Server Error");
     }
 });
 
-console.log("Register route loaded");
-
+// Connect to MongoDB before starting the server.
 connectDatabase().then(() => {
     console.log("Database connection completed. Starting HTTP server...");
 
