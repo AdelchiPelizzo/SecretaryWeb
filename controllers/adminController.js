@@ -170,7 +170,10 @@ async function showAdminOverviewPage(req, res) {
                 visitedAt: { $gte: thirtyDaysAgo }
             }),
 
-            PageVisit.find({ page: "/" })
+            PageVisit.find({
+                page: "/",
+                maxScrollPercent: { $gt: 0 }
+            })
                 .sort({ visitedAt: -1 })
                 .limit(20)
                 .lean()

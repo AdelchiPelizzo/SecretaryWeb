@@ -83,7 +83,6 @@
         const scrollableHeight = documentHeight - viewportHeight;
 
         if (scrollableHeight <= 0) {
-            trackingData.maxScrollPercent = 100;
             return;
         }
 
