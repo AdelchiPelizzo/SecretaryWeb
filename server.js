@@ -210,7 +210,16 @@ app.use((req, res, next) => {
 
     // Do not save automated requests.
     if (visitorType === "bot") {
-        console.log("[VISITOR] Ignored automated request:", userAgent);
+        console.log("[VISITOR] Ignored automated request:", {
+            userAgent,
+            ip: clientIp,
+            forwardedIp: req.headers["x-forwarded-for"] || null,
+            path: req.originalUrl,
+            method: req.method,
+            referer: referer || null,
+            host: req.get("host") || null
+        });
+
         return next();
     }
 
