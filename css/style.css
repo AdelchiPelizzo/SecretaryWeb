@@ -261,15 +261,28 @@ nav {
    HERO
 ========================= */
 
+
 .hero {
     min-height: 650px;
     display: flex;
     align-items: center;
     padding: 80px 7%;
-    background:
-        radial-gradient(circle at 80% 20%, #e8e7ff 0, transparent 35%),
-        linear-gradient(135deg, #f8f9ff, #ffffff);
+
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(248, 249, 255, 0.97) 0%,
+            rgba(248, 249, 255, 0.90) 38%,
+            rgba(248, 249, 255, 0.45) 58%,
+            rgba(248, 249, 255, 0.05) 100%
+        ),
+        url("/images/wide_clean_modern_soft_focus_tech_business_hero.png");
+
+    background-position: center, center right;
+    background-size: cover, cover;
+    background-repeat: no-repeat;
 }
+
 
 .hero-content {
     width: 55%;
@@ -3115,5 +3128,27 @@ footer {
 @media (prefers-reduced-motion: reduce) {
     .pricing-details {
         transition: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .hero {
+        min-height: 580px;
+        padding: 65px 7%;
+
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(248, 249, 255, 0.96) 0%,
+                rgba(248, 249, 255, 0.88) 65%,
+                rgba(248, 249, 255, 0.65) 100%
+            ),
+            url("/images/wide_clean_modern_soft_focus_tech_business_hero.png");
+
+        background-position: center, 65% center;
+    }
+
+    .hero-content {
+        width: 100%;
     }
 }
