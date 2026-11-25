@@ -43,6 +43,15 @@ nav {
     color: #2563eb;
 }
 
+.logo-secretary {
+    color: #0b08cf;
+}
+
+.logo-ai {
+    color: #fa2f14;
+    margin-left: 5px;
+}
+
 .nav-links {
     display: flex;
     align-items: center;
@@ -276,7 +285,7 @@ nav {
             rgba(248, 249, 255, 0.45) 58%,
             rgba(248, 249, 255, 0.05) 100%
         ),
-        url("/images/wide_clean_modern_soft_focus_tech_business_hero.png");
+        url("/images/Modern_Businesses.png");
 
     background-position: center, center right;
     background-size: cover, cover;
@@ -3143,7 +3152,7 @@ footer {
                 rgba(248, 249, 255, 0.88) 65%,
                 rgba(248, 249, 255, 0.65) 100%
             ),
-            url("/images/wide_clean_modern_soft_focus_tech_business_hero.png");
+            url("/images/Modern_Businesses.png");
 
         background-position: center, 65% center;
     }
